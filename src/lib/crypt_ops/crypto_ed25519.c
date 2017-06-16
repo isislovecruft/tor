@@ -110,6 +110,27 @@ static const ed25519_impl_t impl_donna = {
   ed25519_donna_scalarmult_with_group_order,
 };
 
+/** The ed25519-dalek implementation. This one is in pure-Rust and is
+ *  comparable in speed to donna, and about 20% faster than ref10 on
+ *  modern x86_64 machines. */
+static const ed25519_impl_t impl_dalek = {
+  ed25519_dalek_selftest,
+
+  ed25519_dalek_seckey,
+  ed25519_dalek_seckey_expand,
+  ed25519_dalek_pubkey,
+  ed25519_dalek_keygen,
+
+  ed25519_dalek_open,
+  ed25519_dalek_sign,
+  ed25519_sign_open_batch_dalek,
+
+  ed25519_dalek_blind_secret_key,
+  ed25519_dalek_blind_public_key,
+
+  ed25519_dalek_pubkey_from_curve25519_pubkey,
+};
+
 /** Which Ed25519 implementation are we using?  NULL if we haven't decided
  * yet. */
 static const ed25519_impl_t *ed25519_impl = NULL;
@@ -134,7 +155,7 @@ get_ed_impl(void)
 static const ed25519_impl_t *saved_ed25519_impl = NULL;
 /** For testing: Use the Ed25519 implementation called <b>name</b> until
  * crypto_ed25519_testing_restore_impl is called.  Recognized names are
- * "donna" and "ref10". */
+ * "donna" and "ref10" and "dalek". */
 void
 crypto_ed25519_testing_force_impl(const char *name)
 {
@@ -142,6 +163,8 @@ crypto_ed25519_testing_force_impl(const char *name)
   saved_ed25519_impl = ed25519_impl;
   if (! strcmp(name, "donna")) {
     ed25519_impl = &impl_donna;
+  } else if (! strcmp(name, "dalek")) {
+    ed25519_impl = &impl_dalek;
   } else {
     tor_assert(!strcmp(name, "ref10"));
     ed25519_impl = &impl_ref10;
@@ -740,21 +763,33 @@ ed25519_impl_spot_check,(void))
 
 /** Force the Ed25519 implementation to a given one, without sanity checking
  * the output.  Used for testing.
+ *
+ * If `which` is 0, use ref10, 1 for donna, and 2 for dalek.
  */
 void
-ed25519_set_impl_params(int use_donna)
+ed25519_set_impl_params(int which)
 {
-  if (use_donna)
-    ed25519_impl = &impl_donna;
-  else
+  if (which == 0) {
     ed25519_impl = &impl_ref10;
+  } else if (which == 1) {
+    ed25519_impl = &impl_donna;
+  } else if (which == 2) {
+    ed25519_impl = &impl_dalek;
+  } else {
+    log_warn(LD_CRYPTO,
+             "The ed25519 implementation specified by '%d' is unknown!", which);
+  }
 }
 
 /** Choose whether to use the Ed25519-donna implementation. */
 static void
 pick_ed25519_impl(void)
 {
+#ifdef USE_RUST
+  ed25519_impl = &impl_dalek;
+#else
   ed25519_impl = &impl_donna;
+#endif
 
   if (ed25519_impl_spot_check() == 0)
     return;
