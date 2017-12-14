@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "crypto",
+    "dalek",
     "external",
     "protover",
     "smartlist",
