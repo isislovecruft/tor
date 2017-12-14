@@ -110,7 +110,7 @@ static const ed25519_impl_t impl_donna = {
  *  comparable in speed to donna, and about 20% faster than ref10 on
  *  modern x86_64 machines. */
 static const ed25519_impl_t impl_dalek = {
-  ed25519_dalek_selftest,
+  NULL,
 
   ed25519_dalek_seckey,
   ed25519_dalek_seckey_expand,
@@ -119,7 +119,7 @@ static const ed25519_impl_t impl_dalek = {
 
   ed25519_dalek_open,
   ed25519_dalek_sign,
-  ed25519_sign_open_batch_dalek,
+  ed25519_dalek_sign_open_batch,
 
   ed25519_dalek_blind_secret_key,
   ed25519_dalek_blind_public_key,

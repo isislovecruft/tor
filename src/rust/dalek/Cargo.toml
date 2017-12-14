@@ -1,0 +1,17 @@
+[package]
+authors = ["The Tor Project",
+           "Isis Lovecruft <isis@torproject.org>"]
+name = "dalek"
+version = "0.0.1"
+
+[lib]
+name = "dalek"
+path = "lib.rs"
+crate_type = ["rlib", "staticlib"]
+
+[dependencies]
+libc = "*"
+
+[dependenvies.ed25519-dalek]
+version = "*"
+features = ["nightly"]
