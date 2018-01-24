@@ -1,7 +1,16 @@
-/* 
- * Copyright (c) 2017, The Tor Project, Inc.
- * Copyright (c) 2017, Isis Lovecruft
- * See LICENSE for licensing information */
+// Copyright (c) 2017-2018, The Tor Project, Inc.
+// Copyright (c) 2017-2018, isis lovecruft
+// See LICENSE for licensing information
 
 #[deny(missing_docs)]
-#[deny(fat_ptr_transmutes)]
+
+// External dependencies
+extern crate ed25519_dalek;
+extern crate libc;
+
+// Internal dependencies from src/rust/
+extern crate crypto;
+
+mod ffi;
+
+pub use ffi::*;

@@ -33,6 +33,7 @@
 
 #include "ed25519/ref10/ed25519_ref10.h"
 #include "ed25519/donna/ed25519_donna_tor.h"
+#include "ed25519/dalek/ed25519_dalek_tor.h"
 
 static void pick_ed25519_impl(void);
 
@@ -119,12 +120,13 @@ static const ed25519_impl_t impl_dalek = {
 
   ed25519_dalek_open,
   ed25519_dalek_sign,
-  ed25519_dalek_sign_open_batch,
+  NULL, // ed25519_dalek_sign_open_batch,
 
-  ed25519_dalek_blind_secret_key,
-  ed25519_dalek_blind_public_key,
+  NULL, // ed25519_dalek_blind_secret_key,
+  NULL, // ed25519_dalek_blind_public_key,
 
-  ed25519_dalek_pubkey_from_curve25519_pubkey,
+  NULL, // ed25519_dalek_pubkey_from_curve25519_pubkey,
+  NULL, // ed25519_donna_scalarmult_with_group_order,  /* XXX exposed from curve25519-dalek */
 };
 
 /** Which Ed25519 implementation are we using?  NULL if we haven't decided
