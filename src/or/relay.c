@@ -238,7 +238,7 @@ circuit_update_channel_usage(circuit_t *circ, cell_t *cell)
       return;
 
     if (circ->n_chan->channel_usage == CHANNEL_USED_FOR_FULL_CIRCS &&
-        cell->command == CELL_RELAY) {
+        cell->header.command == CELL_RELAY) {
       circ->n_chan->channel_usage = CHANNEL_USED_FOR_USER_TRAFFIC;
     }
   } else {
@@ -258,11 +258,11 @@ circuit_update_channel_usage(circuit_t *circ, cell_t *cell)
 
     if (!channel_is_client(or_circ->p_chan) ||
         (channel_is_client(or_circ->p_chan) && circ->n_chan)) {
-      if (cell->command == CELL_RELAY_EARLY) {
+      if (cell->header.command == CELL_RELAY_EARLY) {
         if (or_circ->p_chan->channel_usage < CHANNEL_USED_FOR_FULL_CIRCS) {
           or_circ->p_chan->channel_usage = CHANNEL_USED_FOR_FULL_CIRCS;
         }
-      } else if (cell->command == CELL_RELAY) {
+      } else if (cell->header.command == CELL_RELAY) {
         or_circ->p_chan->channel_usage = CHANNEL_USED_FOR_USER_TRAFFIC;
       }
     }
@@ -348,10 +348,10 @@ circuit_receive_relay_cell(cell_t *cell, circuit_t *circ,
 
   /* not recognized. pass it on. */
   if (cell_direction == CELL_DIRECTION_OUT) {
-    cell->circ_id = circ->n_circ_id; /* switch it */
+    cell->header.circ_id = circ->n_circ_id; /* switch it */
     chan = circ->n_chan;
   } else if (! CIRCUIT_IS_ORIGIN(circ)) {
-    cell->circ_id = TO_OR_CIRCUIT(circ)->p_circ_id; /* switch it */
+    cell->header.circ_id = TO_OR_CIRCUIT(circ)->p_circ_id; /* switch it */
     chan = TO_OR_CIRCUIT(circ)->p_chan;
   } else {
     log_fn(LOG_PROTOCOL_WARN, LD_OR,
@@ -375,8 +375,8 @@ circuit_receive_relay_cell(cell_t *cell, circuit_t *circ,
       or_circuit_t *splice_ = TO_OR_CIRCUIT(circ)->rend_splice;
       tor_assert(circ->purpose == CIRCUIT_PURPOSE_REND_ESTABLISHED);
       tor_assert(splice_->base_.purpose == CIRCUIT_PURPOSE_REND_ESTABLISHED);
-      cell->circ_id = splice_->p_circ_id;
-      cell->command = CELL_RELAY; /* can't be relay_early anyway */
+      cell->header.circ_id = splice_->p_circ_id;
+      cell->header.command = CELL_RELAY; /* can't be relay_early anyway */
       if ((reason = circuit_receive_relay_cell(cell, TO_CIRCUIT(splice_),
                                                CELL_DIRECTION_IN)) < 0) {
         log_warn(LD_REND, "Error relaying cell across rendezvous; closing "
@@ -1754,13 +1754,13 @@ connection_edge_process_relay_cell(cell_t *cell, circuit_t *circ,
                "'extend' cell received for non-zero stream. Dropping.");
         return 0;
       }
-      if (cell->command != CELL_RELAY_EARLY &&
+      if (cell->header.command != CELL_RELAY_EARLY &&
           !networkstatus_get_param(NULL,"AllowNonearlyExtend",0,0,1)) {
 #define EARLY_WARNING_INTERVAL 3600
         static ratelim_t early_warning_limit =
           RATELIM_INIT(EARLY_WARNING_INTERVAL);
         char *m;
-        if (cell->command == CELL_RELAY) {
+        if (cell->header.command == CELL_RELAY) {
           ++total_nonearly;
           if ((m = rate_limit_log(&early_warning_limit, approx_time()))) {
             double percentage = ((double)total_nonearly)/total_n_extend;
@@ -1774,7 +1774,7 @@ connection_edge_process_relay_cell(cell_t *cell, circuit_t *circ,
         } else {
           log_fn(LOG_WARN, domain,
                  "EXTEND cell received, in a cell with type %d! Dropping.",
-                 cell->command);
+                 cell->header.command);
         }
         return 0;
       }

@@ -418,16 +418,16 @@ cell_pack(packed_cell_t *dst, const cell_t *src, int wide_circ_ids)
 {
   char *dest = dst->body;
   if (wide_circ_ids) {
-    set_uint32(dest, htonl(src->circ_id));
+    set_uint32(dest, htonl(src->header.circ_id));
     dest += 4;
   } else {
     /* Clear the last two bytes of dest, in case we can accidentally
      * send them to the network somehow. */
     memset(dest+CELL_MAX_NETWORK_SIZE-2, 0, 2);
-    set_uint16(dest, htons(src->circ_id));
+    set_uint16(dest, htons(src->header.circ_id));
     dest += 2;
   }
-  set_uint8(dest, src->command);
+  set_uint8(dest, src->header.command);
   memcpy(dest+1, src->payload, CELL_PAYLOAD_SIZE);
 }
 
@@ -438,13 +438,13 @@ static void
 cell_unpack(cell_t *dest, const char *src, int wide_circ_ids)
 {
   if (wide_circ_ids) {
-    dest->circ_id = ntohl(get_uint32(src));
+    dest->header.circ_id = ntohl(get_uint32(src));
     src += 4;
   } else {
-    dest->circ_id = ntohs(get_uint16(src));
+    dest->header.circ_id = ntohs(get_uint16(src));
     src += 2;
   }
-  dest->command = get_uint8(src);
+  dest->header.command = get_uint8(src);
   memcpy(dest->payload, src+1, CELL_PAYLOAD_SIZE);
 }
 
@@ -1910,7 +1910,7 @@ or_handshake_state_record_cell(or_connection_t *conn,
   if (!incoming) {
     log_warn(LD_BUG, "We shouldn't be sending any non-variable-length cells "
              "while making a handshake digest.  But we think we are sending "
-             "one with type %d.", (int)cell->command);
+             "one with type %d.", (int)cell->header.command);
   }
   dptr = incoming ? &state->digest_received : &state->digest_sent;
   if (! *dptr)
@@ -1999,7 +1999,7 @@ connection_or_write_cell_to_buf(const cell_t *cell, or_connection_t *conn)
   cell_pack(&networkcell, cell, conn->wide_circ_ids);
 
   rep_hist_padding_count_write(PADDING_TYPE_TOTAL);
-  if (cell->command == CELL_PADDING)
+  if (cell->header.command == CELL_PADDING)
     rep_hist_padding_count_write(PADDING_TYPE_CELL);
 
   connection_buf_add(networkcell.body, cell_network_size, TO_CONN(conn));
@@ -2010,7 +2010,7 @@ connection_or_write_cell_to_buf(const cell_t *cell, or_connection_t *conn)
 
     if (TLS_CHAN_TO_BASE(conn->chan)->currently_padding) {
       rep_hist_padding_count_write(PADDING_TYPE_ENABLED_TOTAL);
-      if (cell->command == CELL_PADDING)
+      if (cell->header.command == CELL_PADDING)
         rep_hist_padding_count_write(PADDING_TYPE_ENABLED_CELL);
     }
   }

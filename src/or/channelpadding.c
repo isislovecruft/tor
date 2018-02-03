@@ -406,7 +406,7 @@ channelpadding_send_padding_cell_for_callback(channel_t *chan)
   /* Send the padding cell. This will cause the channel to get a
    * fresh timestamp_active */
   memset(&cell, 0, sizeof(cell));
-  cell.command = CELL_PADDING;
+  cell.header.command = CELL_PADDING;
   chan->write_cell(chan, &cell);
 }
 

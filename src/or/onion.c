@@ -768,7 +768,7 @@ parse_create2_payload(create_cell_t *cell_out, const uint8_t *p, size_t p_len)
 int
 create_cell_parse(create_cell_t *cell_out, const cell_t *cell_in)
 {
-  switch (cell_in->command) {
+  switch (cell_in->header.command) {
   case CELL_CREATE:
     if (tor_memeq(cell_in->payload, NTOR_CREATE_MAGIC, 16)) {
       create_cell_init(cell_out, CELL_CREATE, ONION_HANDSHAKE_TYPE_NTOR,
@@ -824,7 +824,7 @@ created_cell_parse(created_cell_t *cell_out, const cell_t *cell_in)
 {
   memset(cell_out, 0, sizeof(*cell_out));
 
-  switch (cell_in->command) {
+  switch (cell_in->header.command) {
   case CELL_CREATED:
     cell_out->cell_type = CELL_CREATED;
     cell_out->handshake_len = TAP_ONIONSKIN_REPLY_LEN;
@@ -1111,7 +1111,7 @@ create_cell_format_impl(cell_t *cell_out, const create_cell_t *cell_in,
     return -1;
 
   memset(cell_out->payload, 0, sizeof(cell_out->payload));
-  cell_out->command = cell_in->cell_type;
+  cell_out->header.command = cell_in->cell_type;
 
   p = cell_out->payload;
   space = sizeof(cell_out->payload);
@@ -1163,7 +1163,7 @@ created_cell_format(cell_t *cell_out, const created_cell_t *cell_in)
     return -1;
 
   memset(cell_out->payload, 0, sizeof(cell_out->payload));
-  cell_out->command = cell_in->cell_type;
+  cell_out->header.command = cell_in->cell_type;
 
   switch (cell_in->cell_type) {
   case CELL_CREATED:

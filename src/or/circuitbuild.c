@@ -743,7 +743,7 @@ circuit_deliver_create_cell(circuit_t *circ, const create_cell_t *create_cell,
   }
   log_debug(LD_CIRC,"Chosen circID %u.", (unsigned)id);
   circuit_set_n_circid_chan(circ, id, circ->n_chan);
-  cell.circ_id = circ->n_circ_id;
+  cell.header.circ_id = circ->n_circ_id;
 
   append_cell_to_circuit_queue(circ, circ->n_chan, &cell,
                                CELL_DIRECTION_OUT, 0);
@@ -1570,7 +1570,7 @@ onionskin_answer(or_circuit_t *circ,
              (int)created_cell->cell_type, (int)created_cell->handshake_len);
     return -1;
   }
-  cell.circ_id = circ->p_circ_id;
+  cell.header.circ_id = circ->p_circ_id;
 
   tmp_cpath = tor_malloc_zero(sizeof(crypt_path_t));
   tmp_cpath->magic = CRYPT_PATH_MAGIC;
