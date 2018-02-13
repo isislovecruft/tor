@@ -66,6 +66,25 @@ typedef struct create_cell_t {
   uint8_t onionskin[CELL_PAYLOAD_SIZE - 4];
 } create_cell_t;
 
+/**
+ * A parsed CREATE2V cell.
+ */
+typedef struct create2v_cell_t {
+  /**
+   * The body of the cell, containing the htype, hlen, hdata, and ignored
+   * (padding) fields.  Note that the body->hdata is not ready for actual
+   * parsing by handshake code until this struct's <b>finished</b> bit is set.
+   */
+  create2v_cell_body_t body;
+  /**
+   * Whether or not we're done parsing incoming fragments of this cell.  If the
+   * bit is set to 1, then we've collected all the data that the first cell
+   * fragment specified as the length of all fragments combined.  Otherwise, if
+   * 0, we're still waiting on incoming data.
+   */
+  unsigned int finished:1;  // XXXisis Ugh we're wasting 7 perfectly good bits here.
+} create2v_cell_t;
+
 /** A parsed CREATED, CREATED_FAST, or CREATED2 cell. */
 typedef struct created_cell_t {
   /** The cell command. One of CREATED{,_FAST,2} */

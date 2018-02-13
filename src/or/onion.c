@@ -53,7 +53,8 @@
  *     too long.
  *   <li>Packaging private keys on the server side in order to pass
  *     them to worker threads.
- *   <li>Encoding and decoding CREATE, CREATED, CREATE2, and CREATED2 cells.
+ *   <li>Encoding and decoding CREATE, CREATED, CREATE2, CREATED2, CREATE2V,
+ *       and CREATED2V cells.
  *   <li>Encoding and decodign EXTEND, EXTENDED, EXTEND2, and EXTENDED2
  *    relay cells.
  * </ul>
@@ -685,6 +686,8 @@ check_create_cell(const create_cell_t *cell, int unknown_ok)
     break;
   case CELL_CREATE2:
     break;
+  case CELL_CREATE2V:
+    break;
   default:
     return -1;
   }
@@ -762,7 +765,7 @@ parse_create2_payload(create_cell_t *cell_out, const uint8_t *p, size_t p_len)
  **/
 #define NTOR_CREATE_MAGIC "ntorNTORntorNTOR"
 
-/** Parse a CREATE, CREATE_FAST, or CREATE2 cell from <b>cell_in</b> into
+/** Parse a CREATE, CREATE_FAST, CREATE2, or CREATE2V cell from <b>cell_in</b> into
  * <b>cell_out</b>. Return 0 on success, -1 on failure. (We reject some
  * syntactically valid CREATE2 cells that we can't generate or react to.) */
 int
@@ -785,6 +788,10 @@ create_cell_parse(create_cell_t *cell_out, const cell_t *cell_in)
   case CELL_CREATE2:
     if (parse_create2_payload(cell_out, cell_in->payload,
                               CELL_PAYLOAD_SIZE) < 0)
+      return -1;
+    break;
+  case CELL_CREATE2V:
+    if (parse_create2v_payload(cell_out, cell_in->payload, CELL_PAYLOAD_SIZE)<0)
       return -1;
     break;
   default:
@@ -812,12 +819,17 @@ check_created_cell(const created_cell_t *cell)
     if (cell->handshake_len > RELAY_PAYLOAD_SIZE-2)
       return -1;
     break;
+    /* XXXXXisis I'm not sure about this part... should the created2v_cell_body_t be
+     * inside the created_cell_t?  */
+  case CELL_CREATED2V:
+    if (cell->handshake_len != 0)
+      return -1;
   }
-
+    
   return 0;
 }
 
-/** Parse a CREATED, CREATED_FAST, or CREATED2 cell from <b>cell_in</b> into
+/** Parse a CREATED, CREATED_FAST, CREATED2, or CREATED2V cell from <b>cell_in</b> into
  * <b>cell_out</b>. Return 0 on success, -1 on failure. */
 int
 created_cell_parse(created_cell_t *cell_out, const cell_t *cell_in)
@@ -845,6 +857,10 @@ created_cell_parse(created_cell_t *cell_out, const cell_t *cell_in)
       memcpy(cell_out->reply, p+2, cell_out->handshake_len);
       break;
     }
+  case CELL_CREATED2V:
+    cell_out->cell_type = CELL_CREATED2V;
+    cell_out->handshake_len = 0;
+    // XXX
   }
 
   return check_created_cell(cell_out);

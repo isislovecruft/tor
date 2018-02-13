@@ -69,7 +69,9 @@ static void command_handle_incoming_channel(channel_listener_t *listener,
 
 /* These are the main functions for processing cells */
 static void command_process_create_cell(cell_t *cell, channel_t *chan);
+static void command_process_create2v_cell(var_cell_t *cell, channet_t *chan);
 static void command_process_created_cell(cell_t *cell, channel_t *chan);
+static void command_process_created2v_cell(var_cell_t *cell, channet_t *chan);
 static void command_process_relay_cell(cell_t *cell, channel_t *chan);
 static void command_process_destroy_cell(cell_t *cell, channel_t *chan);
 
@@ -90,7 +92,9 @@ cell_command_to_string(uint8_t command)
     case CELL_NETINFO: return "netinfo";
     case CELL_RELAY_EARLY: return "relay_early";
     case CELL_CREATE2: return "create2";
+    case CELL_CREATE2V: return "create2v";
     case CELL_CREATED2: return "created2";
+    case CELL_CREATED2V: return "created2v";
     case CELL_VPADDING: return "vpadding";
     case CELL_CERTS: return "certs";
     case CELL_AUTH_CHALLENGE: return "auth_challenge";
@@ -181,12 +185,14 @@ command_process_cell(channel_t *chan, cell_t *cell)
     case CELL_CREATE:
     case CELL_CREATE_FAST:
     case CELL_CREATE2:
+    case CELL_CREATE2V:
       ++stats_n_create_cells_processed;
       PROCESS_CELL(create, cell, chan);
       break;
     case CELL_CREATED:
     case CELL_CREATED_FAST:
     case CELL_CREATED2:
+    case CELL_CREATED2V:
       ++stats_n_created_cells_processed;
       PROCESS_CELL(created, cell, chan);
       break;
@@ -221,7 +227,7 @@ command_process_var_cell(channel_t *chan, var_cell_t *var_cell)
 
   log_info(LD_PROTOCOL,
            "Received unexpected var_cell above the channel layer of type %d"
-           "; dropping it.",
+           "; dropping it.", // XXXisis do i need to change this
            var_cell->header.command);
 }
 
@@ -374,6 +380,18 @@ command_process_create_cell(cell_t *cell, channel_t *chan)
     }
     memwipe(keys, 0, sizeof(keys));
   }
+}
+
+/**
+ * Process a 'create2v' <b>cell</b> that just arrived from <b>chan</b>. Make a
+ * new circuit with the p_circ_id specified in cell. Put the circuit in state
+ * onionskin_pending, and pass the onionskin to the cpuworker. Circ will get
+ * picked up again when the cpuworker finishes decrypting it.
+ */
+static void
+command_process_create_cell(var_cell_t *cell, channel_t *chan)
+{
+
 }
 
 /** Process a 'created' <b>cell</b> that just arrived from <b>chan</b>.
