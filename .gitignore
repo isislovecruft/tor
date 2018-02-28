@@ -122,6 +122,7 @@ uptime-*.json
 # /scripts
 /scripts/maint/checkOptionDocs.pl
 /scripts/maint/updateVersions.pl
+/scripts/cargo_test
 
 # /src/
 /src/Makefile

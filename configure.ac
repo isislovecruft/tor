@@ -2235,6 +2235,12 @@ AC_CONFIG_FILES([
         scripts/maint/updateVersions.pl
 ])
 
+AC_CONFIG_FILES([
+        scripts/cargo_test
+], [
+	chmod +x scripts/cargo_test
+])
+
 if test "x$asciidoc" = "xtrue" && test "$ASCIIDOC" = "none"; then
   regular_mans="doc/tor doc/tor-gencert doc/tor-resolve doc/torify"
   for file in $regular_mans ; do

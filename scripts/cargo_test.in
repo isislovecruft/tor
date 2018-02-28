@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# tor cargo test.
+
+srcdir='@abs_top_builddir@/src'
+
+CARGO_HOME="$srcdir/rust"
+CARGO_TARGET_DIR="$CARGO_HOME/target"
+RUSTFLAGS='@RUSTFLAGS@'
+
+for d in or common ext/keccak-tiny ext/ed25519/ref10 ext/ed25519/donna trunnel trace; do
+    RUSTFLAGS="$RUSTFLAGS -L $srcdir/$d"
+done
+
+for l in tor-testing or-crypto-testing or-testing or-ctime-testing or-event-testing or-trunnel-testing or-trace curve25519_donna keccak-tiny ed25519_ref10 ed25519_donna; do
+    RUSTFLAGS="$RUSTFLAGS -l static=$l"
+done
+
+RUSTFLAGS="$RUSTFLAGS @TOR_ZLIB_LIBS@ @TOR_LIB_MATH@ @TOR_LIBEVENT_LIBS@ @TOR_OPENSSL_LIBS@ @TOR_LIB_WS32@ @TOR_LIB_GDI@ @TOR_LIB_USERENV@ @CURVE25519_LIBS@ @TOR_SYSTEMD_LIBS@ @TOR_LZMA_LIBS@ @TOR_ZSTD_LIBS@ @LIBS@"
+
+export CARGO_TARGET_DIR CARGO_HOME RUSTFLAGS
+
+exec "${CARGO:-cargo}" test ${CARGO_ONLINE-"--frozen"} "$@"

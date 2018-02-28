@@ -810,6 +810,7 @@ pub fn compute_for_old_tor(version: &str) -> &'static CStr {
 #[cfg(test)]
 mod test {
     use super::Version;
+    use super::compute_for_old_tor;
 
     #[test]
     fn test_versions_from_version_string() {
@@ -960,5 +961,10 @@ mod test {
                 contract_protocol_list(&versions)
             );
         }
+    }
+
+    #[test]
+    fn test_compute_for_old_tor() {
+        compute_for_old_tor("9999.9999.9999.9999");
     }
 }
