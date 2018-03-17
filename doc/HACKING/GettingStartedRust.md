@@ -159,10 +159,6 @@ dependency of other Rust modules):
 
 Everything should be tested full stop.  Even non-public functionality.
 
-Be sure to edit `.../tor/src/test/test_rust.sh` to add the name of your
-crate to the `crates` variable! This will ensure that `cargo test` is
-run on your crate.
-
 Configure Tor's build system to build with Rust enabled:
 
     ./configure --enable-fatal-warnings --enable-rust --enable-cargo-online-mode
@@ -174,6 +170,18 @@ Tor's test should be run by doing:
 Tor's integration tests should also pass:
 
     make test-stem
+
+During development, Rust tests can be run with:
+
+    make test-rust
+
+Testing a single crate can be done by changing directory to the crate to be
+tested, then running scripts/cargo_test from the build directory. For example,
+if your source directory is "$HOME/tor", your build directory is
+"/tmp/tor-build", and you want to run protover tests, use:
+
+    cd "$HOME/tor/src/rust/protover"
+    /tmp/tor-build/scripts/cargo_test
 
  Submitting a patch
 =====================
