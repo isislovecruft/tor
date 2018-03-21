@@ -29,6 +29,9 @@ const FIRST_TOR_VERSION_TO_ADVERTISE_PROTOCOLS: &'static str = "0.2.9.3-alpha";
 /// C_RUST_COUPLED: src/or/protover.c `MAX_PROTOCOLS_TO_EXPAND`
 pub(crate) const MAX_PROTOCOLS_TO_EXPAND: usize = (1<<16);
 
+/// The maximum size an `UnknownProtocol`'s name may be.
+pub(crate) const MAX_PROTOCOL_NAME_LENGTH: usize = 100;
+
 /// Known subprotocols in Tor. Indicates which subprotocol a relay supports.
 ///
 /// C_RUST_COUPLED: src/or/protover.h `protocol_type_t`
@@ -91,7 +94,11 @@ impl FromStr for UnknownProtocol {
     type Err = ProtoverError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(UnknownProtocol(s.to_string()))
+        if s.len() <= MAX_PROTOCOL_NAME_LENGTH {
+            Ok(UnknownProtocol(s.to_string()))
+        } else {
+            Err(ProtoverError::ExceedsNameLimit)
+        }
     }
 }
 
