@@ -772,20 +772,24 @@ pub fn compute_for_old_tor(version: &str) -> &'static CStr {
     let empty: &'static CStr = cstr!("");
 
     if c_tor_version_as_new_as(version, FIRST_TOR_VERSION_TO_ADVERTISE_PROTOCOLS) {
+        println!("new enough to support protocols");
         return empty;
     }
 
     if c_tor_version_as_new_as(version, "0.2.9.1-alpha") {
+        println!("newer than 0.2.9.1-alpha");
         return cstr!("Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 HSIntro=3 HSRend=1-2 \
                       Link=1-4 LinkAuth=1 Microdesc=1-2 Relay=1-2");
     }
 
     if c_tor_version_as_new_as(version, "0.2.7.5") {
+        println!("newer than 0.2.7.5");
         return cstr!("Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 HSIntro=3 HSRend=1 \
                       Link=1-4 LinkAuth=1 Microdesc=1-2 Relay=1-2");
     }
 
     if c_tor_version_as_new_as(version, "0.2.4.19") {
+        println!("newer than 0.2.4.19");
         return cstr!("Cons=1 Desc=1 DirCache=1 HSDir=1 HSIntro=3 HSRend=1 \
                       Link=1-4 LinkAuth=1 Microdesc=1 Relay=1-2");
     }
@@ -950,7 +954,16 @@ mod test {
     }
 
     #[test]
-    fn test_compute_for_old_tor() {
-        compute_for_old_tor("9999.9999.9999.9999");
+    fn test_compute_for_old_tor_new() {
+        let s = compute_for_old_tor("9999.9999.9999.9999");
+        assert!(s == cstr!(""));
+    }
+
+    #[test]
+    fn test_compute_for_old_tor_old() {
+        let s = compute_for_old_tor("0.2.6.2");
+        println!("{:?}", s);
+        assert!(s == cstr!("Cons=1 Desc=1 DirCache=1 HSDir=1 HSIntro=3 HSRend=1 \
+                            Link=1-4 LinkAuth=1 Microdesc=1 Relay=1-2"));
     }
 }
