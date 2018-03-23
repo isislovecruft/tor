@@ -155,6 +155,7 @@ src_test_test_SOURCES = \
 	src/test/test_router.c \
 	src/test/test_routerkeys.c \
 	src/test/test_routerlist.c \
+	src/test/test_routerparse.c \
 	src/test/test_routerset.c \
 	src/test/test_scheduler.c \
 	src/test/test_shared_random.c \

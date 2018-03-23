@@ -1247,6 +1247,7 @@ struct testgroup_t testgroups[] = {
   { "router/", router_tests },
   { "routerkeys/", routerkeys_tests },
   { "routerlist/", routerlist_tests },
+  { "routerparse/", routerparse_tests },
   { "routerset/" , routerset_tests },
   { "scheduler/", scheduler_tests },
   { "socks/", socks_tests },

@@ -242,6 +242,7 @@ extern struct testcase_t replaycache_tests[];
 extern struct testcase_t router_tests[];
 extern struct testcase_t routerkeys_tests[];
 extern struct testcase_t routerlist_tests[];
+extern struct testcase_t routerparse_tests[];
 extern struct testcase_t routerset_tests[];
 extern struct testcase_t scheduler_tests[];
 extern struct testcase_t storagedir_tests[];
