@@ -1,0 +1,4 @@
+  o Minor features (testing):
+    - Add unittests for Rust protover implementation of
+      protover::compute_for_old_tor() and all of the C functions it calls.
+      Closes 25605.
