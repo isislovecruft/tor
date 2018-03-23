@@ -950,7 +950,22 @@ mod test {
     }
 
     #[test]
-    fn test_compute_for_old_tor() {
-        compute_for_old_tor("9999.9999.9999.9999");
+    fn test_compute_for_old_tor_new() {
+        let s = compute_for_old_tor("Tor 9999.9999.9999.9999");
+        assert!(s == cstr!(""));
+    }
+
+    #[test]
+    fn test_compute_for_old_tor_alternate_impl() {
+        let s = compute_for_old_tor("Unicorn 1.2.3.4");
+        assert!(s == cstr!(""));
+    }
+
+    #[test]
+    fn test_compute_for_old_tor_old() {
+        let s = compute_for_old_tor("Tor 0.2.6.2");
+        println!("{:?}", s);
+        assert!(s == cstr!("Cons=1 Desc=1 DirCache=1 HSDir=1 HSIntro=3 HSRend=1 \
+                            Link=1-4 LinkAuth=1 Microdesc=1 Relay=1-2"));
     }
 }
