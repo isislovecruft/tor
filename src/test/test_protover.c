@@ -401,6 +401,60 @@ test_protover_supported_protocols(void *arg)
  ;
 }
 
+/**
+ * Calling protover_compute_for_old_tor() with a version older than
+ * 0.2.9.3-alpha should return a non-empty string.
+ */
+static void
+test_protover_compute_for_old_tor(void *arg)
+{
+  const char* computed;
+
+  (void)arg;
+
+  computed = protover_compute_for_old_tor("Tor 0.2.6.2");
+  tt_str_op(computed, OP_NE, "");
+
+ done:
+  ;
+}
+
+/**
+ * Calling protover_compute_for_old_tor() with the "Tor " part missing
+ * should return an empty string.
+ */
+static void
+test_protover_compute_for_old_tor_missing_platform_name(void *arg)
+{
+  const char* computed;
+
+  (void)arg;
+
+  computed = protover_compute_for_old_tor("0.2.6.2");
+  tt_str_op(computed, OP_EQ, "");
+
+ done:
+  ;
+}
+
+/**
+ * Calling protover_compute_for_old_tor() with the an imaginary Tor
+ * implementation name should return an empty string.
+ */
+static void
+test_protover_compute_for_old_tor_unknown_platform_name(void *arg)
+{
+  const char* computed;
+
+  (void)arg;
+
+  computed = protover_compute_for_old_tor("Unicorn 0.2.6.2");
+  tt_str_op(computed, OP_EQ, "");
+
+ done:
+  ;
+}
+
 #define PV_TEST(name, flags)                       \
   { #name, test_protover_ ##name, (flags), NULL, NULL }
 
@@ -413,6 +467,9 @@ struct testcase_t protover_tests[] = {
   PV_TEST(list_supports_protocol_returns_true, 0),
   PV_TEST(supports_version, 0),
   PV_TEST(supported_protocols, 0),
+  PV_TEST(compute_for_old_tor, 0),
+  PV_TEST(compute_for_old_tor_missing_platform_name, 0),
+  PV_TEST(compute_for_old_tor_unknown_platform_name, 0),
   END_OF_TESTCASES
 };
 
