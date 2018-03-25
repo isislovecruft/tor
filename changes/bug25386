@@ -1,0 +1,2 @@
+  o Minor features (testing):
+    - Fix calling C code from Rust tests. Closes ticket 25386.
