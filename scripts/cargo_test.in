@@ -6,7 +6,7 @@ srcdir='@abs_top_builddir@/src'
 
 CARGO_HOME="$srcdir/rust"
 CARGO_TARGET_DIR="$CARGO_HOME/target"
-RUSTFLAGS='@RUSTFLAGS@'
+RUSTFLAGS='@RUSTFLAGS@ @TOR_LDFLAGS_zlib@ @TOR_LDFLAGS_openssl@ @TOR_LDFLAGS_libevent@'
 
 for d in or common ext/keccak-tiny ext/ed25519/ref10 ext/ed25519/donna trunnel trace; do
     RUSTFLAGS="$RUSTFLAGS -L $srcdir/$d"
