@@ -199,7 +199,7 @@ static void
 test_bridges_get_configured_bridge_by_orports_digest(void *arg)
 {
   smartlist_t *orports = NULL;
-  smartlist_t *bridgelist = NULL;
+  const smartlist_t *bridgelist;
   const bridge_info_t *bridge1;
   const bridge_info_t *bridge2;
   const bridge_info_t *ret;
@@ -208,7 +208,7 @@ test_bridges_get_configured_bridge_by_orports_digest(void *arg)
   const char *digest;
 
   helper_add_bridges_to_bridgelist(arg);
-  bridgelist = (smartlist_t*)bridge_list_get();
+  bridgelist = bridge_list_get();
   tt_ptr_op(bridgelist, OP_NE, NULL);
 
   // This should be the bridge at 6.6.6.6:6666 with fingerprint
@@ -237,8 +237,7 @@ test_bridges_get_configured_bridge_by_orports_digest(void *arg)
   tt_mem_op(addrport1, OP_EQ, bridge_get_addr_port(ret), sizeof(ret));
 
  done:
-  if (orports)
-    smartlist_free(orports);
+  smartlist_free(orports);
 
   mark_bridge_list();
   sweep_bridge_list();
@@ -275,8 +274,7 @@ test_bridges_get_configured_bridge_by_addr_port_digest_digest_only(void *arg)
   tt_str_op("4.4.4.4", OP_EQ, ret_addr);
 
  done:
-  if (addr)
-    tor_free(addr);
+  tor_free(addr);
 
   mark_bridge_list();
   sweep_bridge_list();
@@ -308,8 +306,7 @@ test_bridges_get_configured_bridge_by_addr_port_digest_address_only(void *arg)
   tt_str_op("6.6.6.6", OP_EQ, ret_addr);
 
  done:
-  if (addr)
-    tor_free(addr);
+  tor_free(addr);
 
   mark_bridge_list();
   sweep_bridge_list();
@@ -341,8 +338,7 @@ test_bridges_get_configured_bridge_by_exact_addr_port_digest_donly(void *arg)
   tt_ptr_op(bridge, OP_EQ, NULL);
 
  done:
-  if (addr)
-    tor_free(addr);
+  tor_free(addr);
 
   mark_bridge_list();
   sweep_bridge_list();
@@ -377,8 +373,7 @@ test_bridges_get_configured_bridge_by_exact_addr_port_digest_both(void *arg)
   tt_str_op("4.4.4.4", OP_EQ, ret_addr);
 
  done:
-  if (addr)
-    tor_free(addr);
+  tor_free(addr);
 
   mark_bridge_list();
   sweep_bridge_list();
@@ -409,8 +404,7 @@ test_bridges_get_configured_bridge_by_exact_addr_port_digest_aonly(void *arg)
   tt_str_op("4.4.4.4", OP_EQ, ret_addr);
 
  done:
-  if (addr)
-    tor_free(addr);
+  tor_free(addr);
 
   mark_bridge_list();
   sweep_bridge_list();
@@ -494,8 +488,7 @@ test_bridges_bridge_resolve_conflicts(void *arg)
   tt_int_op(ret, OP_EQ, 0);
 
  done:
-  if (addr)
-    tor_free(addr);
+  tor_free(addr);
 
   mark_bridge_list();
   sweep_bridge_list();
@@ -551,8 +544,7 @@ test_bridges_get_transport_by_bridge_addrport_no_ptlist(void *arg)
   tt_ptr_op(transport, OP_EQ, NULL);
 
  done:
-  if (addr)
-    tor_free(addr);
+  tor_free(addr);
 
   mark_bridge_list();
   sweep_bridge_list();
@@ -592,10 +584,8 @@ test_bridges_get_transport_by_bridge_addrport(void *arg)
  done:
   UNMOCK(transport_get_by_name);
 
-  if (addr)
-    tor_free(addr);
-  if (transport)
-    transport_free(transport);
+  tor_free(addr);
+  transport_free(transport);
 
   mark_bridge_list();
   sweep_bridge_list();
