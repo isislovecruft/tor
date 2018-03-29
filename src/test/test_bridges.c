@@ -25,19 +25,19 @@
 /**
  * A mocked transport_t, constructed via mock_transport_get_by_name().
  */
-static transport_t* mock_transport = NULL;
+static transport_t *mock_transport = NULL;
 
 /**
  * Mock transport_get_by_name() to simply return a transport_t for the
  * transport name that was input to it.
  */
-static transport_t*
-mock_transport_get_by_name(const char* name)
+static transport_t *
+mock_transport_get_by_name(const char *name)
 {
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   uint16_t port = 9999;
   int socksv = 9;
-  char* args = tor_strdup("foo=bar");
+  char *args = tor_strdup("foo=bar");
 
   if (!mock_transport) {
     tor_addr_parse(addr, "99.99.99.99");
@@ -63,25 +63,25 @@ helper_add_bridges_to_bridgelist(void *arg)
    */
 
   (void)arg;
-  char* bridge0 = tor_strdup("6.6.6.6:6666");
-  char* bridge1 = tor_strdup("6.6.6.7:6667 "
+  char *bridge0 = tor_strdup("6.6.6.6:6666");
+  char *bridge1 = tor_strdup("6.6.6.7:6667 "
                              "A10C4F666D27364036B562823E5830BC448E046A");
-  char* bridge2 = tor_strdup("obfs4 198.245.60.51:443 "
+  char *bridge2 = tor_strdup("obfs4 198.245.60.51:443 "
                              "752CF7825B3B9EA6A98C83AC41F7099D67007EA5 "
                   "cert=xpmQtKUqQ/6v5X7ijgYE/f03+l2/EuQ1dexjyUhh16wQlu/"
                              "cpXUGalmhDIlhuiQPNEKmKw iat-mode=0");
-  char* bridge3 = tor_strdup("banana 5.5.5.5:5555 "
+  char *bridge3 = tor_strdup("banana 5.5.5.5:5555 "
                              "9D6AE1BD4FDF39721CE908966E79E16F9BFCCF2F");
-  char* bridge4 = tor_strdup("obfs4 1.2.3.4:1234 "
+  char *bridge4 = tor_strdup("obfs4 1.2.3.4:1234 "
                              "foo=abcdefghijklmnopqrstuvwxyz");
-  char* bridge5 = tor_strdup("apple 4.4.4.4:4444 "
+  char *bridge5 = tor_strdup("apple 4.4.4.4:4444 "
                              "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA "
                              "foo=abcdefghijklmnopqrstuvwxyz");
 
   mark_bridge_list();
 
 #define ADD_BRIDGE(bridge)                                          \
-  bridge_line_t* bridge_line_ ##bridge = parse_bridge_line(bridge); \
+  bridge_line_t *bridge_line_ ##bridge = parse_bridge_line(bridge); \
   if (!bridge_line_ ##bridge) {                                     \
     printf("Unparseable bridge line: '%s'", #bridge);               \
   } else {                                                          \
@@ -120,7 +120,7 @@ test_bridges_helper_func_add_bridges_to_bridgelist(void *arg)
 static void
 test_bridges_bridge_list_get_creates_new_bridgelist(void *arg)
 {
-  const smartlist_t* bridgelist = bridge_list_get();
+  const smartlist_t *bridgelist = bridge_list_get();
 
   (void)arg;
 
@@ -136,10 +136,10 @@ test_bridges_bridge_list_get_creates_new_bridgelist(void *arg)
 static void
 test_bridges_clear_bridge_list(void *arg)
 {
-  const smartlist_t* bridgelist;
-  const smartlist_t* bridgelist_after;
-  const bridge_info_t* bridge;
-  const bridge_info_t* bridge_after;
+  const smartlist_t *bridgelist;
+  const smartlist_t *bridgelist_after;
+  const bridge_info_t *bridge;
+  const bridge_info_t *bridge_after;
 
   helper_add_bridges_to_bridgelist(arg);
   bridgelist = bridge_list_get();
@@ -168,9 +168,9 @@ test_bridges_clear_bridge_list(void *arg)
 static void
 test_bridges_bridge_get_addrport(void *arg)
 {
-  smartlist_t* bridgelist;
-  const bridge_info_t* bridge;
-  const tor_addr_port_t* addrport;
+  smartlist_t *bridgelist;
+  const bridge_info_t *bridge;
+  const tor_addr_port_t *addrport;
 
   helper_add_bridges_to_bridgelist(arg);
   bridgelist = (smartlist_t*)bridge_list_get();
@@ -197,14 +197,14 @@ test_bridges_bridge_get_addrport(void *arg)
 static void
 test_bridges_get_configured_bridge_by_orports_digest(void *arg)
 {
-  smartlist_t* orports = NULL;
-  smartlist_t* bridgelist = NULL;
-  const bridge_info_t* bridge1;
-  const bridge_info_t* bridge2;
-  const bridge_info_t* ret;
-  tor_addr_port_t* addrport1;
-  tor_addr_port_t* addrport2;
-  const char* digest;
+  smartlist_t *orports = NULL;
+  smartlist_t *bridgelist = NULL;
+  const bridge_info_t *bridge1;
+  const bridge_info_t *bridge2;
+  const bridge_info_t *ret;
+  tor_addr_port_t *addrport1;
+  tor_addr_port_t *addrport2;
+  const char *digest;
 
   helper_add_bridges_to_bridgelist(arg);
   bridgelist = (smartlist_t*)bridge_list_get();
@@ -252,10 +252,10 @@ static void
 test_bridges_get_configured_bridge_by_addr_port_digest_digest_only(void *arg)
 {
   char digest[DIGEST_LEN];
-  bridge_info_t* bridge;
+  bridge_info_t *bridge;
   const char fingerprint[HEX_DIGEST_LEN] =
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   char ret_addr[16];
   uint16_t port = 11111;
   int ret;
@@ -289,8 +289,8 @@ test_bridges_get_configured_bridge_by_addr_port_digest_digest_only(void *arg)
 static void
 test_bridges_get_configured_bridge_by_addr_port_digest_address_only(void *arg)
 {
-  bridge_info_t* bridge;
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  bridge_info_t *bridge;
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   char ret_addr[16];
   uint16_t port = 6666;
   int ret;
@@ -322,10 +322,10 @@ static void
 test_bridges_get_configured_bridge_by_exact_addr_port_digest_donly(void *arg)
 {
   char digest[DIGEST_LEN];
-  bridge_info_t* bridge;
+  bridge_info_t *bridge;
   const char fingerprint[HEX_DIGEST_LEN] =
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   uint16_t port = 11111;
   int ret;
 
@@ -355,10 +355,10 @@ static void
 test_bridges_get_configured_bridge_by_exact_addr_port_digest_both(void *arg)
 {
   char digest[DIGEST_LEN];
-  bridge_info_t* bridge;
+  bridge_info_t *bridge;
   const char fingerprint[HEX_DIGEST_LEN] =
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   uint16_t port = 4444;
   char ret_addr[16];
   int ret;
@@ -390,8 +390,8 @@ test_bridges_get_configured_bridge_by_exact_addr_port_digest_both(void *arg)
 static void
 test_bridges_get_configured_bridge_by_exact_addr_port_digest_aonly(void *arg)
 {
-  bridge_info_t* bridge;
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  bridge_info_t *bridge;
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   uint16_t port = 4444;
   char ret_addr[16];
   int ret;
@@ -423,7 +423,7 @@ static void
 test_bridges_find_bridge_by_digest_known(void *arg)
 {
   char digest1[DIGEST_LEN];
-  bridge_info_t* bridge;
+  bridge_info_t *bridge;
   const char fingerprint[HEX_DIGEST_LEN] =
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
@@ -436,7 +436,7 @@ test_bridges_find_bridge_by_digest_known(void *arg)
 
   /* We have to call bridge_get_rsa_id_digest() here because the bridge_info_t
    * struct is opaquely defined in bridges.h. */
-  const uint8_t* digest2 = bridge_get_rsa_id_digest(bridge);
+  const uint8_t *digest2 = bridge_get_rsa_id_digest(bridge);
 
   tt_mem_op((char*)digest2, OP_EQ, digest1, DIGEST_LEN);
 
@@ -452,8 +452,8 @@ test_bridges_find_bridge_by_digest_known(void *arg)
 static void
 test_bridges_find_bridge_by_digest_unknown(void *arg)
 {
-  const char* fingerprint = "cccccccccccccccccccccccccccccccccccccccc";
-  bridge_info_t* bridge;
+  const char *fingerprint = "cccccccccccccccccccccccccccccccccccccccc";
+  bridge_info_t *bridge;
 
   helper_add_bridges_to_bridgelist(arg);
 
@@ -473,10 +473,10 @@ test_bridges_find_bridge_by_digest_unknown(void *arg)
 static void
 test_bridges_bridge_resolve_conflicts(void *arg)
 {
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   uint16_t port = 4444;
-  const char* digest = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-  const char* transport = "apple";
+  const char *digest = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+  const char *transport = "apple";
   int ret;
 
   helper_add_bridges_to_bridgelist(arg);
@@ -530,8 +530,8 @@ test_bridges_transport_is_needed(void *arg)
 static void
 test_bridges_get_transport_by_bridge_addrport_no_ptlist(void *arg)
 {
-  transport_t* transport = NULL;
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  transport_t *transport = NULL;
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   uint16_t port = 1234;
   int ret;
 
@@ -567,8 +567,8 @@ test_bridges_get_transport_by_bridge_addrport_no_ptlist(void *arg)
 static void
 test_bridges_get_transport_by_bridge_addrport(void *arg)
 {
-  transport_t* transport = NULL;
-  tor_addr_t* addr = tor_malloc(sizeof(tor_addr_t));
+  transport_t *transport = NULL;
+  tor_addr_t *addr = tor_malloc(sizeof(tor_addr_t));
   uint16_t port = 1234;
   int ret;
 
