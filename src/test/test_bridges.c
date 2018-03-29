@@ -95,6 +95,7 @@ helper_add_bridges_to_bridgelist(void *arg)
   ADD_BRIDGE(bridge3);
   ADD_BRIDGE(bridge4);
   ADD_BRIDGE(bridge5);
+#undef ADD_BRIDGES
 
   sweep_bridge_list();
 }
