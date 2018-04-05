@@ -178,13 +178,19 @@ parse_version_range(const char *s, const char *end_of_range,
   return -1;
 }
 
-/** Parse a single protocol entry from <b>s</b> up to an optional
+/**
+ * Parse a single protocol entry from <b>s</b> up to an optional
  * <b>end_of_entry</b> pointer, and return that protocol entry. Return NULL
  * on error.
  *
+ * If allow_long_proto_names is true, protocol names longer than
+ * MAX_PROTOCOL_NAME_LENGTH will be permitted.
+ *
  * A protocol entry has a keyword, an = sign, and zero or more ranges. */
 static proto_entry_t *
-parse_single_entry(const char *s, const char *end_of_entry)
+parse_single_entry(const char *s,
+                   const char *end_of_entry,
+                   bool allow_long_proto_names)
 {
   proto_entry_t *out = tor_malloc_zero(sizeof(proto_entry_t));
   const char *equals;
@@ -210,7 +216,9 @@ parse_single_entry(const char *s, const char *end_of_entry)
              "the Tor network truly supports protocol names larger than "
              "%ud characters. The offending string was: %s",
              MAX_PROTOCOL_NAME_LENGTH, escaped(out->name));
-    goto error;
+    if (!allow_long_proto_names) {
+      goto error;
+    }
   }
   out->name = tor_strndup(s, equals-s);
 
@@ -243,9 +251,12 @@ parse_single_entry(const char *s, const char *end_of_entry)
 /**
  * Parse the protocol list from <b>s</b> and return it as a smartlist of
  * proto_entry_t
+ *
+ * If allow_long_proto_names is true, protocol names longer than
+ * MAX_PROTOCOL_NAME_LENGTH will be permitted.
  */
 STATIC smartlist_t *
-parse_protocol_list(const char *s)
+parse_protocol_list(const char *s, bool allow_long_proto_names)
 {
   smartlist_t *entries = smartlist_new();
 
@@ -256,7 +267,7 @@ parse_protocol_list(const char *s)
     if (!end_of_entry)
       end_of_entry = s + strlen(s);
 
-    entry = parse_single_entry(s, end_of_entry);
+    entry = parse_single_entry(s, end_of_entry, allow_long_proto_names);
 
     if (! entry)
       goto error;
@@ -298,7 +309,7 @@ protocol_list_supports_protocol(const char *list, protocol_type_t tp,
   /* NOTE: This is a pretty inefficient implementation. If it ever shows
    * up in profiles, we should memoize it.
    */
-  smartlist_t *protocols = parse_protocol_list(list);
+  smartlist_t *protocols = parse_protocol_list(list, true);
   if (!protocols) {
     return 0;
   }
@@ -321,7 +332,7 @@ protocol_list_supports_protocol_or_later(const char *list,
   /* NOTE: This is a pretty inefficient implementation. If it ever shows
    * up in profiles, we should memoize it.
    */
-  smartlist_t *protocols = parse_protocol_list(list);
+  smartlist_t *protocols = parse_protocol_list(list, true);
   if (!protocols) {
     return 0;
   }
@@ -376,7 +387,7 @@ get_supported_protocol_list(void)
 {
   if (PREDICT_UNLIKELY(supported_protocol_list == NULL)) {
     supported_protocol_list =
-      parse_protocol_list(protover_get_supported_protocols());
+      parse_protocol_list(protover_get_supported_protocols(), true);
   }
   return supported_protocol_list;
 }
@@ -435,17 +446,21 @@ encode_protocol_list(const smartlist_t *sl)
 ///                 `MAX_PROTOCOLS_TO_EXPAND`
 static const int MAX_PROTOCOLS_TO_EXPAND = (1<<16);
 
-/** Voting helper: Given a list of proto_entry_t, return a newly allocated
+/**
+ * Voting helper: Given a list of proto_entry_t, return a newly allocated
  * smartlist of newly allocated strings, one for each included protocol
  * version. (So 'Foo=3,5-7' expands to a list of 'Foo=3', 'Foo=5', 'Foo=6',
  * 'Foo=7'.)
  *
  * Do not list any protocol version more than once.
  *
+ * If allow_long_proto_names is true, protocol names longer than
+ * MAX_PROTOCOL_NAME_LENGTH will be permitted.
+ *
  * Return NULL if the list would be too big.
  */
 static smartlist_t *
-expand_protocol_list(const smartlist_t *protos)
+expand_protocol_list(const smartlist_t *protos, bool allow_long_proto_names)
 {
   smartlist_t *expanded = smartlist_new();
   if (!protos)
@@ -459,7 +474,9 @@ expand_protocol_list(const smartlist_t *protos)
                "the Tor network truly supports protocol names larger than "
                "%ud characters. The offending string was: %s",
                MAX_PROTOCOL_NAME_LENGTH, escaped(name));
-      continue;
+      if (!allow_long_proto_names) {
+        continue;
+      }
     }
     SMARTLIST_FOREACH_BEGIN(ent->ranges, const proto_range_t *, range) {
       uint32_t u;
@@ -529,7 +546,7 @@ contract_protocol_list(const smartlist_t *proto_strings)
   SMARTLIST_FOREACH_BEGIN(proto_strings, const char *, s) {
     if (BUG(!s))
       continue;// LCOV_EXCL_LINE
-    proto_entry_t *ent = parse_single_entry(s, s+strlen(s));
+    proto_entry_t *ent = parse_single_entry(s, s+strlen(s), true);
     if (BUG(!ent))
       continue; // LCOV_EXCL_LINE
     smartlist_t *lst = strmap_get(entry_lists_by_name, ent->name);
@@ -618,25 +635,29 @@ contract_protocol_list(const smartlist_t *proto_strings)
  * allocated string encoding all of the protocols that are listed by at
  * least <b>threshold</b> of the inputs.
  *
+ * If allow_long_proto_names is true, protover_compute_vote() will not
+ * ignore protocol names longer than MAX_PROTOCOL_NAME_LENGTH.
+ *
  * The string is minimal and sorted according to the rules of
  * contract_protocol_list above.
  */
 char *
 protover_compute_vote(const smartlist_t *list_of_proto_strings,
-                      int threshold)
+                      int threshold, bool allow_long_proto_names)
 {
   smartlist_t *all_entries = smartlist_new();
 
   // First, parse the inputs and break them into singleton entries.
   SMARTLIST_FOREACH_BEGIN(list_of_proto_strings, const char *, vote) {
-    smartlist_t *unexpanded = parse_protocol_list(vote);
+    smartlist_t *unexpanded = parse_protocol_list(vote,allow_long_proto_names);
     if (! unexpanded) {
       log_warn(LD_NET, "I failed with parsing a protocol list from "
                "an authority. The offending string was: %s",
                escaped(vote));
       continue;
     }
-    smartlist_t *this_vote = expand_protocol_list(unexpanded);
+    smartlist_t *this_vote = expand_protocol_list(unexpanded,
+                                                  allow_long_proto_names);
     if (this_vote == NULL) {
       log_warn(LD_NET, "When expanding a protocol list from an authority, I "
                "got too many protocols. This is possibly an attack or a bug, "
@@ -701,7 +722,7 @@ protover_all_supported(const char *s, char **missing_out)
     return 1;
   }
 
-  smartlist_t *entries = parse_protocol_list(s);
+  smartlist_t *entries = parse_protocol_list(s, true);
   if (BUG(entries == NULL)) {
     log_warn(LD_NET, "Received an unparseable protocol list %s"
              " from the consensus", escaped(s));

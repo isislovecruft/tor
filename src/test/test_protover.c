@@ -25,7 +25,7 @@ test_protover_parse(void *arg)
   char *re_encoded = NULL;
 
   const char *orig = "Foo=1,3 Bar=3 Baz= Quux=9-12,14,15-16,900";
-  smartlist_t *elts = parse_protocol_list(orig);
+  smartlist_t *elts = parse_protocol_list(orig, true);
 
   tt_assert(elts);
   tt_int_op(smartlist_len(elts), OP_EQ, 4);
@@ -103,34 +103,76 @@ test_protover_parse_fail(void *arg)
   smartlist_t *elts;
 
   /* random junk */
-  elts = parse_protocol_list("!!3@*");
+  elts = parse_protocol_list("!!3@*", true);
   tt_ptr_op(elts, OP_EQ, NULL);
 
   /* Missing equals sign in an entry */
-  elts = parse_protocol_list("Link=4 Haprauxymatyve Desc=9");
+  elts = parse_protocol_list("Link=4 Haprauxymatyve Desc=9", true);
   tt_ptr_op(elts, OP_EQ, NULL);
 
   /* Missing word. */
-  elts = parse_protocol_list("Link=4 =3 Desc=9");
+  elts = parse_protocol_list("Link=4 =3 Desc=9", true);
   tt_ptr_op(elts, OP_EQ, NULL);
 
   /* Broken numbers */
-  elts = parse_protocol_list("Link=fred");
+  elts = parse_protocol_list("Link=fred", true);
   tt_ptr_op(elts, OP_EQ, NULL);
-  elts = parse_protocol_list("Link=1,fred");
+  elts = parse_protocol_list("Link=1,fred", true);
   tt_ptr_op(elts, OP_EQ, NULL);
-  elts = parse_protocol_list("Link=1,fred,3");
+  elts = parse_protocol_list("Link=1,fred,3", true);
   tt_ptr_op(elts, OP_EQ, NULL);
 
   /* Broken range */
-  elts = parse_protocol_list("Link=1,9-8,3");
+  elts = parse_protocol_list("Link=1,9-8,3", true);
   tt_ptr_op(elts, OP_EQ, NULL);
 
   /* Protocol name too long */
   elts = parse_protocol_list("DoSaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=1-65535",
+                             false);
   tt_ptr_op(elts, OP_EQ, NULL);
+
+#endif
+ done:
+  ;
+}
+
+static void
+test_protover_parse_protocol_list_allow_long_names(void *arg)
+{
+  (void)arg;
+#ifdef HAVE_RUST
+  /** This test is disabled on rust builds, because it only exists to test
+   * internal C functions. */
+  tt_skip();
+#else
+
+  smartlist_t *elts;
+  const proto_entry_t *e;
+  const proto_range_t *r;
+  const char *text = "DoSaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=1-65535";
+  char result[134];
+
+  strncpy(result, text, 133);
+  result[133] = '\0';
+
+  /* Protocol name too long */
+  elts = parse_protocol_list(text, true);
+  tt_ptr_op(elts, OP_NE, NULL);
+  tt_int_op(smartlist_len(elts), OP_EQ, 1);
+
+  e = smartlist_get(elts, 0);
+  tt_ptr_op(e, OP_NE, NULL);
+  tt_str_op(e->name, OP_EQ, result);
+  tt_int_op(smartlist_len(e->ranges), OP_EQ, 1);
+
+  r = smartlist_get(e->ranges, 0);
+  tt_ptr_op(r, OP_NE, NULL);
+  tt_int_op(r->low, OP_EQ, 1);
+  tt_int_op(r->high, OP_EQ, 65535);
 
 #endif
  done:
@@ -143,41 +185,44 @@ test_protover_vote(void *arg)
   (void) arg;
 
   smartlist_t *lst = smartlist_new();
-  char *result = protover_compute_vote(lst, 1);
+  char *result = protover_compute_vote(lst, 1, true);
+  const char *text = "DoSaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=1";
 
   tt_str_op(result, OP_EQ, "");
   tor_free(result);
 
   smartlist_add(lst, (void*) "Foo=1-10,500 Bar=1,3-7,8");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "Bar=1,3-8 Foo=1-10,500");
   tor_free(result);
 
   smartlist_add(lst, (void*) "Quux=123-456,78 Bar=2-6,8 Foo=9");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "Bar=1-8 Foo=1-10,500 Quux=78,123-456");
   tor_free(result);
 
-  result = protover_compute_vote(lst, 2);
+  result = protover_compute_vote(lst, 2, true);
   tt_str_op(result, OP_EQ, "Bar=3-6,8 Foo=9");
   tor_free(result);
 
   /* High threshold */
-  result = protover_compute_vote(lst, 3);
+  result = protover_compute_vote(lst, 3, true);
   tt_str_op(result, OP_EQ, "");
   tor_free(result);
 
   /* Bad votes: the result must be empty */
   smartlist_clear(lst);
   smartlist_add(lst, (void*) "Faux=10-5");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "");
   tor_free(result);
 
   /* This fails, since "-0" is not valid. */
   smartlist_clear(lst);
   smartlist_add(lst, (void*) "Faux=-0");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "");
   tor_free(result);
 
@@ -186,14 +231,14 @@ test_protover_vote(void *arg)
   /* Just below the threshold: Rust */
   smartlist_clear(lst);
   smartlist_add(lst, (void*) "Sleen=1-500");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "Sleen=1-500");
   tor_free(result);
 
   /* Just below the threshold: C */
   smartlist_clear(lst);
   smartlist_add(lst, (void*) "Sleen=1-65536");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "Sleen=1-65536");
   tor_free(result);
 
@@ -202,37 +247,40 @@ test_protover_vote(void *arg)
   /* By adding two votes, C allows us to exceed the limit */
   smartlist_add(lst, (void*) "Sleen=1-65536");
   smartlist_add(lst, (void*) "Sleen=100000");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "Sleen=1-65536,100000");
   tor_free(result);
 
   /* Large integers */
   smartlist_clear(lst);
   smartlist_add(lst, (void*) "Sleen=4294967294");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "Sleen=4294967294");
   tor_free(result);
 
   /* This parses, but fails at the vote stage */
   smartlist_clear(lst);
   smartlist_add(lst, (void*) "Sleen=4294967295");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "");
   tor_free(result);
 
   smartlist_clear(lst);
   smartlist_add(lst, (void*) "Sleen=4294967296");
-  result = protover_compute_vote(lst, 1);
+  result = protover_compute_vote(lst, 1, true);
   tt_str_op(result, OP_EQ, "");
   tor_free(result);
 
   /* Protocol name too long */
   smartlist_clear(lst);
-  smartlist_add(lst, (void*) "DoSaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-  result = protover_compute_vote(lst, 1);
+  smartlist_add(lst, (void*) text);
+  result = protover_compute_vote(lst, 1, false);
   tt_str_op(result, OP_EQ, "");
+  tor_free(result);
+
+  /* Still too long, but now we allow it. */
+  result = protover_compute_vote(lst, 1, true);
+  tt_str_op(result, OP_EQ, text);
   tor_free(result);
 
  done:
@@ -245,6 +293,9 @@ test_protover_all_supported(void *arg)
 {
   (void)arg;
   char *msg = NULL;
+  const char *text = "DoSaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa=1-65535";
 
   tt_assert(protover_all_supported(NULL, &msg));
   tt_ptr_op(msg, OP_EQ, NULL);
@@ -317,12 +368,8 @@ test_protover_all_supported(void *arg)
   tor_end_capture_bugs_();
 
   /* Protocol name too long */
-  tor_capture_bugs_(1);
-  tt_assert(protover_all_supported("DoSaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                                   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                                   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                                   "aaaaaaaaaaaa=1-65536", &msg));
-  tor_end_capture_bugs_();
+  tt_assert(! protover_all_supported(text, &msg));
+  tt_str_op(msg, OP_EQ, text);
 
  done:
   tor_end_capture_bugs_();
@@ -591,7 +638,7 @@ test_protover_vote_roundtrip(void *args)
     const char *expected_output = examples[u].expected_output;
 
     smartlist_add(votes, (void*)input);
-    result = protover_compute_vote(votes, 1);
+    result = protover_compute_vote(votes, 1, false);
     if (expected_output != NULL) {
       tt_str_op(result, OP_EQ, expected_output);
     } else {
@@ -613,6 +660,7 @@ test_protover_vote_roundtrip(void *args)
 struct testcase_t protover_tests[] = {
   PV_TEST(parse, 0),
   PV_TEST(parse_fail, 0),
+  PV_TEST(parse_protocol_list_allow_long_names, 0),
   PV_TEST(vote, 0),
   PV_TEST(all_supported, 0),
   PV_TEST(list_supports_protocol_for_unsupported_returns_false, 0),

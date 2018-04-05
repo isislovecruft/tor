@@ -4,6 +4,9 @@
 /* See LICENSE for licensing information */
 
 #define DIRVOTE_PRIVATE
+
+#include <stdbool.h> /* party like it's C99 */
+
 #include "or.h"
 #include "config.h"
 #include "dircollate.h"
@@ -1271,9 +1274,13 @@ get_nth_protocol_set_vote(int n, const networkstatus_t *vote)
 /** Considering the different recommended/required protocols sets as a
  * 4-element array, return a newly allocated string for the consensus value
  * for the n'th set.
+ *
+ * If allow_long_proto_names is true, protover_compute_vote() will not
+ * ignore protocol names longer than MAX_PROTOCOL_NAME_LENGTH.
  */
 static char *
-compute_nth_protocol_set(int n, int n_voters, const smartlist_t *votes)
+compute_nth_protocol_set(int n, int n_voters, const smartlist_t *votes,
+                         bool allow_long_proto_names)
 {
   const char *keyword;
   smartlist_t *proto_votes = smartlist_new();
@@ -1306,7 +1313,8 @@ compute_nth_protocol_set(int n, int n_voters, const smartlist_t *votes)
       smartlist_add(proto_votes, (void*)v);
   } SMARTLIST_FOREACH_END(ns);
 
-  char *protocols = protover_compute_vote(proto_votes, threshold);
+  char *protocols = protover_compute_vote(proto_votes, threshold,
+                                          allow_long_proto_names);
   smartlist_free(proto_votes);
 
   char *result = NULL;
@@ -1516,11 +1524,15 @@ networkstatus_compute_consensus(smartlist_t *votes,
     tor_free(flaglist);
   }
 
+  bool allow_long_proto_names =
+    consensus_method >= MIN_METHOD_FOR_LIMITED_PROTOCOL_NAMES;
+
   if (consensus_method >= MIN_METHOD_FOR_RECOMMENDED_PROTOCOLS) {
     int num_dirauth = get_n_authorities(V3_DIRINFO);
     int idx;
     for (idx = 0; idx < 4; ++idx) {
-      char *proto_line = compute_nth_protocol_set(idx, num_dirauth, votes);
+      char *proto_line = compute_nth_protocol_set(idx, num_dirauth, votes,
+                                                  allow_long_proto_names);
       if (BUG(!proto_line))
         continue;
       smartlist_add(chunks, proto_line);
