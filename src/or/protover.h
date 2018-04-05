@@ -9,6 +9,8 @@
 #ifndef TOR_PROTOVER_H
 #define TOR_PROTOVER_H
 
+#include <stdbool.h>
+
 #include "container.h"
 
 /** The first version of Tor that included "proto" entries in its
@@ -47,7 +49,8 @@ int protover_is_supported_here(protocol_type_t pr, uint32_t ver);
 const char *protover_get_supported_protocols(void);
 
 char *protover_compute_vote(const smartlist_t *list_of_proto_strings,
-                            int threshold);
+                            int threshold,
+                            bool allow_long_proto_names);
 const char *protover_compute_for_old_tor(const char *version);
 int protocol_list_supports_protocol(const char *list, protocol_type_t tp,
                                     uint32_t version);
@@ -78,7 +81,8 @@ typedef struct proto_entry_t {
 } proto_entry_t;
 
 #if !defined(HAVE_RUST) && defined(TOR_UNIT_TESTS)
-STATIC smartlist_t *parse_protocol_list(const char *s);
+STATIC smartlist_t *parse_protocol_list(const char *s,
+                                        bool allow_long_proto_names);
 STATIC char *encode_protocol_list(const smartlist_t *sl);
 STATIC const char *protocol_type_to_str(protocol_type_t pr);
 STATIC int str_to_protocol_type(const char *s, protocol_type_t *pr_out);
