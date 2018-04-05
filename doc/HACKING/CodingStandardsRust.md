@@ -332,10 +332,15 @@ Here are some additional bits of advice and rules:
    in C and Rust, so they can't be passed using FFI.
 
    Tor currently uses the following Rust primitive types from libc for FFI:
-   * defined-size integers: `uint32_t`
-   * native-sized integers: `c_int`
+   * defined-size integers: `uint32_t`, `uint16_t`, `uint8_t`, `int64_t`, etc.
+   * native-sized integers: `c_int`, `c_long`, `size_t`, etc.
    * native-sized floats: `c_double`
    * native-sized raw pointers: `* c_void`, `* c_char`, `** c_char`
+   * C99 booleans: `bool`†
+
+   † Rust's `bool`s are directly compatible with C99 `bool`s, no conversion
+   is necessary.  (That is, they are always `i8`s internally to the
+   compiler, and will not ever be `i1`s.)
 
    TODO: C smartlist to Stringlist conversion using FFI
 
