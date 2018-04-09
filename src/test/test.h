@@ -78,8 +78,7 @@
  * For use when you only want to test calling something, but not check
  * any values/pointers/etc afterwards.
  */
-#define tt_finished()                               \
-  tt_int_op(0, OP_EQ, 0);
+#define tt_finished() TT_EXIT_TEST_FUNCTION
 
 const char *get_fname(const char *name);
 const char *get_fname_rnd(const char *name);
