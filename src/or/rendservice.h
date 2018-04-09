@@ -12,8 +12,23 @@
 #ifndef TOR_RENDSERVICE_H
 #define TOR_RENDSERVICE_H
 
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "confline.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
+#include "hs_common.h"
 #include "hs_service.h"
+#include "or.h"
+#include "replaycache.h"
+#include "testsupport.h"
+#include "util.h"
+
+struct rend_intro_cell_s;
 
 typedef struct rend_intro_cell_s rend_intro_cell_t;
 

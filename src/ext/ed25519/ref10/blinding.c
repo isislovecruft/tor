@@ -1,13 +1,14 @@
 /* Added to ref10 for Tor. We place this in the public domain.  Alternatively,
  * you may have it under the Creative Commons 0 "CC0" license. */
-//#include "fe.h"
+
+#include <stdint.h>
+#include <string.h>
+
+#include "crypto_hash_sha512.h"
+#include "crypto_util.h"
+#include "ed25519_ref10.h"
 #include "ge.h"
 #include "sc.h"
-#include "crypto_hash_sha512.h"
-#include "ed25519_ref10.h"
-
-#include <string.h>
-#include "crypto_util.h"
 
 static void
 ed25519_ref10_gettweak(unsigned char *out, const unsigned char *param)

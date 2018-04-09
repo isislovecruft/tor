@@ -1,13 +1,10 @@
 /* Modified for Tor: new API, 64-byte secret keys. */
 
-#include "randombytes.h"
-#include <string.h>
-#include "crypto_sign.h"
 #include "crypto_hash_sha512.h"
-#include "ge.h"
-
-#include "crypto_rand.h"
+#include "crypto_sign.h"
 #include "crypto_util.h"
+#include "ge.h"
+#include "randombytes.h"
 
 int
 crypto_sign_seckey(unsigned char *sk)

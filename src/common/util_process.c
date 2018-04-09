@@ -10,6 +10,8 @@
  *    won't require linking against libevent.
  **/
 
+#include <stddef.h>
+
 #include "orconfig.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -19,11 +21,10 @@
 #include <sys/wait.h>
 #endif
 
-#include "compat.h"
-#include "util.h"
-#include "torlog.h"
-#include "util_process.h"
 #include "ht.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_process.h"
 
 /* ================================================== */
 /* Convenience structures for handlers for waitpid().

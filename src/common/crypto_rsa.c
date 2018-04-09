@@ -9,27 +9,31 @@
  * \brief Block of functions related with RSA utilities and operations.
  **/
 
+#include "compat.h"
 #include "crypto.h"
-#include "crypto_curve25519.h"
 #include "crypto_digest.h"
-#include "crypto_format.h"
-#include "compat_openssl.h"
 #include "crypto_rand.h"
 #include "crypto_rsa.h"
 #include "crypto_util.h"
+#include "di_ops.h"
+#include "torint.h"
+#include "util_bug.h"
 
 DISABLE_GCC_WARNING(redundant-decls)
 
-#include <openssl/err.h>
-#include <openssl/rsa.h>
-#include <openssl/pem.h>
-#include <openssl/evp.h>
-#include <openssl/engine.h>
-#include <openssl/rand.h>
+#include <limits.h>
+#include <openssl/bio.h>
 #include <openssl/bn.h>
-#include <openssl/dh.h>
-#include <openssl/conf.h>
-#include <openssl/hmac.h>
+#include <openssl/buffer.h>
+#include <openssl/crypto.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+#include <openssl/ossl_typ.h>
+#include <openssl/pem.h>
+#include <openssl/rsa.h>
+#include <stdio.h>
+#include <string.h>
+#include <syslog.h>
 
 ENABLE_GCC_WARNING(redundant-decls)
 

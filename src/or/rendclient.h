@@ -12,6 +12,11 @@
 #ifndef TOR_RENDCLIENT_H
 #define TOR_RENDCLIENT_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "container.h"
+#include "or.h"
 #include "rendcache.h"
 
 void rend_client_purge_state(void);

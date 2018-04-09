@@ -10,15 +10,25 @@
 
 #define SHARED_RANDOM_STATE_PRIVATE
 
-#include "or.h"
-#include "shared_random.h"
+#include <errno.h>
+#include <inttypes.h>
+#include <stddef.h>
+#include <string.h>
+
+#include "compat.h"
 #include "config.h"
 #include "confparse.h"
+#include "crypto_digest.h"
 #include "crypto_util.h"
 #include "dirvote.h"
 #include "networkstatus.h"
+#include "or.h"
 #include "router.h"
+#include "shared_random.h"
 #include "shared_random_state.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* Default filename of the shared random state on disk. */
 static const char default_fname[] = "sr-state";

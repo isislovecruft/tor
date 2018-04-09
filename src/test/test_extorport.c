@@ -4,16 +4,31 @@
 #define CONNECTION_PRIVATE
 #define EXT_ORPORT_PRIVATE
 #define MAIN_PRIVATE
-#include "or.h"
+#include <limits.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+
+#include "address.h"
 #include "buffers.h"
+#include "compat.h"
+#include "config.h"
 #include "connection.h"
 #include "connection_or.h"
-#include "config.h"
 #include "control.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
 #include "ext_orport.h"
 #include "main.h"
+#include "or.h"
 #include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* Test connection_or_remove_from_ext_or_id_map and
  * connection_or_set_ext_or_identifier */

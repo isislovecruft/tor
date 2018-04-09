@@ -3,19 +3,34 @@
 
 #define CONSDIFFMGR_PRIVATE
 
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <syslog.h>
+#include <time.h>
+
+#include "compat.h"
+#include "compress.h"
 #include "config.h"
+#include "confline.h"
 #include "conscache.h"
 #include "consdiff.h"
 #include "consdiffmgr.h"
+#include "container.h"
 #include "cpuworker.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
-#include "networkstatus.h"
-#include "routerparse.h"
-#include "workqueue.h"
-
-#include "test.h"
 #include "log_test_helpers.h"
+#include "networkstatus.h"
+#include "or.h"
+#include "routerparse.h"
+#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
+#include "workqueue.h"
 
 // ============================== Setup/teardown the consdiffmgr
 // These functions get run before/after each test in this module

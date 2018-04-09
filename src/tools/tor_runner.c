@@ -23,18 +23,14 @@
  * functions.  Don't add more dependencies!
  */
 
+#include "orconfig.h"
 #include "tor_api.h"
 #include "tor_api_internal.h"
-
-#include "orconfig.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
 #endif
 #include <stdlib.h>
 #include <string.h>

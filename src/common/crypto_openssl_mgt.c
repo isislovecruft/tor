@@ -10,22 +10,19 @@
  * \brief Block of functions related to operations from OpenSSL.
  **/
 
+#include "compat.h"
 #include "compat_openssl.h"
+#include "compat_threads.h"
 #include "crypto_openssl_mgt.h"
+#include "testsupport.h"
+#include "util.h"
 
 DISABLE_GCC_WARNING(redundant-decls)
 
-#include <openssl/err.h>
-#include <openssl/rsa.h>
-#include <openssl/pem.h>
-#include <openssl/evp.h>
-#include <openssl/engine.h>
-#include <openssl/rand.h>
-#include <openssl/bn.h>
-#include <openssl/dh.h>
-#include <openssl/conf.h>
-#include <openssl/hmac.h>
 #include <openssl/crypto.h>
+#include <openssl/opensslconf.h>
+#include <stdio.h>
+#include <string.h>
 
 ENABLE_GCC_WARNING(redundant-decls)
 

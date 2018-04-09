@@ -10,7 +10,18 @@
  * with "sr_" which stands for shared random.
  */
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
 #include "or.h"
+#include "testsupport.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /* Protocol version */
 #define SR_PROTO_VERSION  1

@@ -15,24 +15,30 @@
 #define CRYPTO_RAND_PRIVATE
 
 #ifdef _WIN32
-#include <windows.h>
 #include <wincrypt.h>
+#include <windows.h>
 #endif /* defined(_WIN32) */
 
-#include "crypto_rand.h"
-
-#include "container.h"
 #include "compat.h"
 #include "compat_openssl.h"
+#include "container.h"
+#include "crypto_rand.h"
 #include "crypto_util.h"
+#include "orconfig.h"
 #include "sandbox.h"
 #include "testsupport.h"
 #include "torlog.h"
 #include "util.h"
+#include "util_bug.h"
 #include "util_format.h"
 
 DISABLE_GCC_WARNING(redundant-decls)
+#include <limits.h>
+#include <openssl/ossl_typ.h>
 #include <openssl/rand.h>
+#include <openssl/sha.h>
+#include <string.h>
+
 ENABLE_GCC_WARNING(redundant-decls)
 
 #if __GNUC__ && GCC_VERSION >= 402
@@ -45,12 +51,6 @@ ENABLE_GCC_WARNING(redundant-decls)
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
-#ifdef HAVE_SYS_FCNTL_H
-#include <sys/fcntl.h>
-#endif
-#ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
 #endif
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>

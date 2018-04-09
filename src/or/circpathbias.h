@@ -12,6 +12,8 @@
 #ifndef TOR_CIRCPATHBIAS_H
 #define TOR_CIRCPATHBIAS_H
 
+#include "or.h"
+
 double pathbias_get_extreme_rate(const or_options_t *options);
 double pathbias_get_extreme_use_rate(const or_options_t *options);
 int pathbias_get_dropguards(const or_options_t *options);

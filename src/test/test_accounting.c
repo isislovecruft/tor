@@ -1,11 +1,17 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <time.h>
+
 #include "or.h"
 #include "test.h"
+#include "tinytest.h"
+#include "util_bug.h"
+
 #define HIBERNATE_PRIVATE
-#include "hibernate.h"
 #include "config.h"
+#include "hibernate.h"
+
 #define STATEFILE_PRIVATE
 #include "statefile.h"
 

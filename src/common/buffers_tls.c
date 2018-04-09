@@ -5,16 +5,15 @@
 /* See LICENSE for licensing information */
 
 #define BUFFERS_PRIVATE
-#include "orconfig.h"
+#include <limits.h>
 #include <stddef.h>
+
 #include "buffers.h"
 #include "buffers_tls.h"
-#include "compat.h"
-#include "compress.h"
-#include "util.h"
-#include "torint.h"
+#include "orconfig.h"
 #include "torlog.h"
 #include "tortls.h"
+#include "util_bug.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif

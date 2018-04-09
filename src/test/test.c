@@ -8,19 +8,27 @@
  * \brief Unit tests for many pieces of the lower level Tor modules.
  **/
 
-#include "orconfig.h"
-#include "crypto_rand.h"
-
+#include <stdint.h>
 #include <stdio.h>
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
+#include <string.h>
+#include <sys/param.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "crypto.h"
+#include "crypto_digest.h"
+#include "crypto_rand.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
+#include "orconfig.h"
+#include "torlog.h"
+#include "util_format.h"
 
 #ifdef _WIN32
 /* For mkdir() */
 #include <direct.h>
 #else
-#include <dirent.h>
 #endif /* defined(_WIN32) */
 
 /* These macros pull in declarations for some functions and structures that
@@ -39,28 +47,21 @@
 long int lround(double x);
 double fabs(double x);
 
-#include "or.h"
-#include "backtrace.h"
-#include "buffers.h"
 #include "circuitlist.h"
 #include "circuitstats.h"
-#include "compress.h"
-#include "config.h"
-#include "connection_edge.h"
-#include "rendcommon.h"
-#include "rendcache.h"
-#include "test.h"
+#include "crypto_curve25519.h"
 #include "main.h"
-#include "memarea.h"
 #include "onion.h"
-#include "onion_ntor.h"
 #include "onion_fast.h"
+#include "onion_ntor.h"
 #include "onion_tap.h"
-#include "policies.h"
+#include "or.h"
+#include "rendcache.h"
+#include "rendcommon.h"
 #include "rephist.h"
 #include "routerparse.h"
 #include "statefile.h"
-#include "crypto_curve25519.h"
+#include "test.h"
 
 /** Run unit tests for the onion handshake code. */
 static void

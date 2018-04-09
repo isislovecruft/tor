@@ -8,6 +8,11 @@
  * them to disk.
  */
 
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include "compat.h"
 #include "crypto.h"
 #include "crypto_digest.h"
 #include "crypto_pwbox.h"
@@ -15,8 +20,9 @@
 #include "crypto_s2k.h"
 #include "crypto_util.h"
 #include "di_ops.h"
-#include "util.h"
 #include "pwbox.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* 8 bytes "TORBOX00"
    1 byte: header len (H)

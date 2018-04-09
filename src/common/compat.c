@@ -16,9 +16,9 @@
 #include "compat.h"
 
 #ifdef _WIN32
-#include <winsock2.h>
-#include <windows.h>
 #include <sys/locking.h>
+#include <windows.h>
+#include <winsock2.h>
 #endif
 
 #ifdef HAVE_UNAME
@@ -26,9 +26,6 @@
 #endif
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_SYSCTL_H
-#include <sys/sysctl.h>
 #endif
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
@@ -42,9 +39,6 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_SYS_FCNTL_H
-#include <sys/fcntl.h>
-#endif
 #ifdef HAVE_PWD_H
 #include <pwd.h>
 #endif
@@ -56,9 +50,6 @@
 #endif
 #ifdef HAVE_ERRNO_H
 #include <errno.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
 #endif
 #ifdef HAVE_CRT_EXTERNS_H
 #include <crt_externs.h>
@@ -102,19 +93,11 @@ SecureZeroMemory(PVOID ptr, SIZE_T cnt)
 #elif defined(__APPLE__)
 #include <sys/ptrace.h>
 #endif /* defined(HAVE_SYS_PRCTL_H) && defined(__linux__) || ... */
-
-#ifdef HAVE_NETDB_H
-#include <netdb.h>
-#endif
-#ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h> /* FreeBSD needs this to know what version it is */
-#endif
+#include <limits.h>
+#include <linux/capability.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-#ifdef HAVE_SIGNAL_H
-#include <signal.h>
-#endif
+#include <syslog.h>
 #ifdef HAVE_MMAP
 #include <sys/mman.h>
 #endif
@@ -125,11 +108,14 @@ SecureZeroMemory(PVOID ptr, SIZE_T cnt)
 #include <sys/file.h>
 #endif
 
+#include "address.h"
+#include "compat_threads.h"
+#include "container.h"
+#include "sandbox.h"
+#include "torint.h"
 #include "torlog.h"
 #include "util.h"
-#include "container.h"
-#include "address.h"
-#include "sandbox.h"
+#include "util_bug.h"
 
 /* Inline the strl functions if the platform doesn't have them. */
 #ifndef HAVE_STRLCPY

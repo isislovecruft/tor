@@ -11,6 +11,9 @@
 #ifndef TOR_DI_OPS_H
 #define TOR_DI_OPS_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include "orconfig.h"
 #include "torint.h"
 

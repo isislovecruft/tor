@@ -91,37 +91,48 @@
  **/
 
 #define ROUTERLIST_PRIVATE
-#include "or.h"
-#include "backtrace.h"
+#include <errno.h>
+#include <limits.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <syslog.h>
+
 #include "bridges.h"
-#include "crypto_ed25519.h"
-#include "circuitstats.h"
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
 #include "control.h"
+#include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "crypto_format.h"
 #include "crypto_rand.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "dirserv.h"
-#include "dirvote.h"
 #include "entrynodes.h"
 #include "fp_pair.h"
-#include "geoip.h"
-#include "hibernate.h"
 #include "main.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "reasons.h"
-#include "rendcommon.h"
-#include "rendservice.h"
 #include "rephist.h"
 #include "router.h"
 #include "routerlist.h"
 #include "routerparse.h"
 #include "routerset.h"
-#include "sandbox.h"
 #include "torcert.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
+
+struct cert_list_t;
 
 // #define DEBUG_ROUTERLIST
 

@@ -11,6 +11,13 @@
 #ifndef TOR_TRANSPORTS_H
 #define TOR_TRANSPORTS_H
 
+#include <stdint.h>
+
+#include "address.h"
+#include "container.h"
+#include "testsupport.h"
+#include "util.h"
+
 /** Represents a pluggable transport used by a bridge. */
 typedef struct transport_t {
   /** SOCKS version: One of PROXY_SOCKS4, PROXY_SOCKS5. */

@@ -36,8 +36,10 @@
 #ifndef TOR_UTIL_BUG_H
 #define TOR_UTIL_BUG_H
 
-#include "orconfig.h"
+#include <stddef.h>
+
 #include "compat.h"
+#include "orconfig.h"
 #include "testsupport.h"
 
 /* Replace assert() with a variant that sends failures to the log before

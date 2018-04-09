@@ -5,11 +5,15 @@
 #ifndef TRUNNEL_CELL_INTRODUCE1_H
 #define TRUNNEL_CELL_INTRODUCE1_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "trunnel.h"
 
-struct trn_cell_extension_st;
 struct link_specifier_st;
+struct trn_cell_extension_st;
+
 #define TRUNNEL_SHA1_LEN 20
 #define TRUNNEL_REND_COOKIE_LEN 20
 #if !defined(TRUNNEL_OPAQUE) && !defined(TRUNNEL_OPAQUE_TRN_CELL_INTRODUCE1)

@@ -4,6 +4,19 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <netinet/in.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <syslog.h>
+
+#include "bridges.h"
+#include "buffers.h"
+#include "compat.h"
+#include "crypto_digest.h"
+#include "crypto_format.h"
+#include "di_ops.h"
+#include "ht.h"
 /**
  * \file connection_or.c
  * \brief Functions to handle OR connections, TLS handshaking, and
@@ -21,8 +34,12 @@
  * This module also implements the client side of the v3 Tor link handshake,
  **/
 #include "or.h"
-#include "bridges.h"
-#include "buffers.h"
+#include "siphash.h"
+#include "torlog.h"
+#include "tortls.h"
+#include "util_bug.h"
+#include "util_format.h"
+
 /*
  * Define this so we get channel internal functions, since we're implementing
  * part of a subclass (channel_tls_t).
@@ -30,9 +47,8 @@
 #define TOR_CHANNEL_INTERNAL_
 #define CONNECTION_OR_PRIVATE
 #include "channel.h"
+#include "channelpadding.h"
 #include "channeltls.h"
-#include "circuitbuild.h"
-#include "circuitlist.h"
 #include "circuitstats.h"
 #include "command.h"
 #include "config.h"
@@ -43,9 +59,8 @@
 #include "crypto_util.h"
 #include "dirserv.h"
 #include "entrynodes.h"
-#include "geoip.h"
-#include "main.h"
 #include "link_handshake.h"
+#include "main.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
@@ -56,10 +71,8 @@
 #include "router.h"
 #include "routerkeys.h"
 #include "routerlist.h"
-#include "ext_orport.h"
 #include "scheduler.h"
 #include "torcert.h"
-#include "channelpadding.h"
 
 static int connection_tls_finish_handshake(or_connection_t *conn);
 static int connection_or_launch_v3_or_handshake(or_connection_t *conn);

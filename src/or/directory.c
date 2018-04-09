@@ -5,45 +5,60 @@
 
 #define DIRECTORY_PRIVATE
 
-#include "or.h"
+#include <limits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <syslog.h>
+
 #include "backtrace.h"
 #include "bridges.h"
 #include "buffers.h"
-#include "circuitbuild.h"
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_edge.h"
-#include "conscache.h"
 #include "consdiff.h"
 #include "consdiffmgr.h"
 #include "control.h"
-#include "compat.h"
+#include "crypto_ed25519.h"
+#include "crypto_format.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "dirserv.h"
 #include "dirvote.h"
 #include "entrynodes.h"
 #include "geoip.h"
 #include "hs_cache.h"
+#include "hs_client.h"
 #include "hs_common.h"
 #include "hs_control.h"
-#include "hs_client.h"
 #include "main.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
 #include "policies.h"
 #include "relay.h"
+#include "rendcache.h"
 #include "rendclient.h"
 #include "rendcommon.h"
 #include "rendservice.h"
 #include "rephist.h"
 #include "router.h"
 #include "routerlist.h"
-#include "routerparse.h"
 #include "routerset.h"
 #include "shared_random.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
+
+struct consensus_cache_entry_t;
 
 #if defined(EXPORTMALLINFO) && defined(HAVE_MALLOC_H) && defined(HAVE_MALLINFO)
 #if !defined(OpenBSD)

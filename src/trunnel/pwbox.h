@@ -5,7 +5,10 @@
 #ifndef TRUNNEL_PWBOX_H
 #define TRUNNEL_PWBOX_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "trunnel.h"
 
 #define PWBOX0_CONST0 1414484546

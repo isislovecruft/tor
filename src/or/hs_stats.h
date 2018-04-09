@@ -6,6 +6,8 @@
  * \brief Header file for hs_stats.c
  **/
 
+#include <stdint.h>
+
 void hs_stats_note_introduce2_cell(int is_hsv3);
 uint32_t hs_stats_get_n_introduce2_v3_cells(void);
 uint32_t hs_stats_get_n_introduce2_v2_cells(void);

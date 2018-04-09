@@ -7,6 +7,13 @@
 #ifndef TOR_ADDRESSMAP_H
 #define TOR_ADDRESSMAP_H
 
+#include <stddef.h>
+#include <sys/un.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "or.h"
 #include "testsupport.h"
 
 void addressmap_init(void);

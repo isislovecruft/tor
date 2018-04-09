@@ -7,15 +7,21 @@
  * \brief Unittests for code in src/or/router.c
  **/
 
-#include "or.h"
+#include <string.h>
+#include <time.h>
+
 #include "config.h"
 #include "crypto_curve25519.h"
 #include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "or.h"
 #include "router.h"
-#include "routerlist.h"
-
 /* Test suite stuff */
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 NS_DECL(const routerinfo_t *, router_get_my_routerinfo, (void));
 

@@ -7,6 +7,8 @@
 #ifndef TOR_BUFFERS_TLS_H
 #define TOR_BUFFERS_TLS_H
 
+#include <stddef.h>
+
 struct buf_t;
 struct tor_tls_t;
 

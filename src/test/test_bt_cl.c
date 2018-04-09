@@ -1,14 +1,17 @@
 /* Copyright (c) 2012-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
+#include <syslog.h>
+#include <unistd.h>
+
+#include "orconfig.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* To prevent 'assert' from going away. */
 #undef TOR_COVERAGE
-#include "or.h"
-#include "util.h"
 #include "backtrace.h"
 #include "torlog.h"
 

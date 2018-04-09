@@ -1,27 +1,37 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
-#include <math.h>
 #include <event2/event.h>
+#include <limits.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/sysmacros.h>
+#include <sys/types.h>
+
+#include "circuitmux.h"
+#include "compat.h"
+#include "container.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 #define SCHEDULER_KIST_PRIVATE
 #define TOR_CHANNEL_INTERNAL_
 #define CHANNEL_PRIVATE_
-#include "or.h"
-#include "config.h"
-#include "compat_libevent.h"
 #include "channel.h"
 #include "channeltls.h"
-#include "connection.h"
+#include "compat_libevent.h"
+#include "config.h"
 #include "networkstatus.h"
-#define SCHEDULER_PRIVATE_
-#include "scheduler.h"
+#include "or.h"
 
-/* Test suite stuff */
-#include "test.h"
+#define SCHEDULER_PRIVATE_
 #include "fakechans.h"
+#include "scheduler.h"
 
 /* Shamelessly stolen from compat_libevent.c */
 #define V(major, minor, patch) \

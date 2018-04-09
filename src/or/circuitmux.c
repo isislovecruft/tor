@@ -69,11 +69,22 @@
  *     made to attach all existing circuits to the new policy.
  **/
 
-#include "or.h"
+#include <stddef.h>
+
 #include "channel.h"
 #include "circuitlist.h"
 #include "circuitmux.h"
+#include "compat.h"
+#include "ht.h"
+#include "or.h"
 #include "relay.h"
+#include "tor_queue.h"
+#include "torlog.h"
+#include "util_bug.h"
+
+struct chanid_circid_muxinfo_map;
+struct chanid_circid_muxinfo_t;
+struct circuit_muxinfo_s;
 
 /*
  * Private typedefs for circuitmux.c

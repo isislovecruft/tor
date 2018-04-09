@@ -26,17 +26,16 @@
 #include "tinytest_local.h"
 #endif
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
 #ifndef NO_FORKING
 
 #ifdef _WIN32
 #include <windows.h>
 #else
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #endif
@@ -57,7 +56,6 @@
 #endif
 
 #include "tinytest.h"
-#include "tinytest_macros.h"
 
 #define LONGEST_TEST_NAME 16384
 

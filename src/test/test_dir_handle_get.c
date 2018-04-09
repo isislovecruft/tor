@@ -9,35 +9,53 @@
 #define CONFIG_PRIVATE
 #define RENDCACHE_PRIVATE
 
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <time.h>
+
+#include "address.h"
+#include "compat.h"
+#include "compress.h"
 #include "config.h"
 #include "connection.h"
 #include "consdiffmgr.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
 #include "directory.h"
-#include "test.h"
-#include "compress.h"
-#include "rendcommon.h"
-#include "rendcache.h"
-#include "router.h"
-#include "routerlist.h"
-#include "rend_test_helpers.h"
-#include "microdesc.h"
-#include "test_helpers.h"
-#include "nodelist.h"
-#include "entrynodes.h"
-#include "routerparse.h"
-#include "networkstatus.h"
-#include "proto_http.h"
-#include "geoip.h"
 #include "dirserv.h"
 #include "dirvote.h"
+#include "entrynodes.h"
+#include "geoip.h"
 #include "log_test_helpers.h"
+#include "microdesc.h"
+#include "networkstatus.h"
+#include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
+#include "proto_http.h"
+#include "rend_test_helpers.h"
+#include "rendcache.h"
+#include "rendcommon.h"
+#include "router.h"
+#include "routerlist.h"
+#include "routerparse.h"
+#include "test.h"
+#include "test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 #ifdef _WIN32
 /* For mkdir() */
 #include <direct.h>
 #else
-#include <dirent.h>
 #endif /* defined(_WIN32) */
 
 #ifdef HAVE_CFLAG_WOVERLENGTH_STRINGS

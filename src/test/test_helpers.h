@@ -4,6 +4,10 @@
 #ifndef TOR_TEST_HELPERS_H
 #define TOR_TEST_HELPERS_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "address.h"
 #include "or.h"
 
 const char *get_yesterday_date_str(void);

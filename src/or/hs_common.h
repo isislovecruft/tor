@@ -9,10 +9,21 @@
 #ifndef TOR_HS_COMMON_H
 #define TOR_HS_COMMON_H
 
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
 
+#include "address.h"
+#include "container.h"
+#include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
 /* Trunnel */
 #include "ed25519_cert.h"
+#include "or.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "util.h"
 
 /* Protocol version 2. Use this instead of hardcoding "2" in the code base,
  * this adds a clearer semantic to the value when used. */

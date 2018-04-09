@@ -27,12 +27,16 @@
  * invoked from onion.c.
  **/
 
-#include "or.h"
-#include "config.h"
-#include "crypto_rand.h"
+#include <string.h>
+#include <sys/types.h>
+
 #include "crypto_util.h"
+#include "di_ops.h"
 #include "onion_tap.h"
-#include "rephist.h"
+#include "or.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /*----------------------------------------------------------------------*/
 

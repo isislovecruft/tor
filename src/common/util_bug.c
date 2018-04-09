@@ -7,11 +7,14 @@
  * \file util_bug.c
  **/
 
-#include "orconfig.h"
-#include "util_bug.h"
-#include "torlog.h"
+#include <syslog.h>
+
 #include "backtrace.h"
 #include "container.h"
+#include "compat.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 #ifdef __COVERITY__
 int bug_macro_deadcode_dummy__ = 0;

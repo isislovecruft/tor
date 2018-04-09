@@ -7,6 +7,13 @@
 #ifndef EXT_ORPORT_H
 #define EXT_ORPORT_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
 int connection_ext_or_start_auth(or_connection_t *or_conn);
 
 ext_or_cmd_t *ext_or_cmd_new(uint16_t len);

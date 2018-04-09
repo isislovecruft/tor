@@ -42,6 +42,8 @@
 #ifndef TOR_PUBSUB_H
 #define TOR_PUBSUB_H
 
+#include <stdint.h>
+
 #include "torint.h"
 
 /**

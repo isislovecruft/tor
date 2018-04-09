@@ -4,13 +4,18 @@
 #define TOR_CHANNEL_INTERNAL_
 #define CIRCUITMUX_PRIVATE
 #define RELAY_PRIVATE
-#include "or.h"
+#include <stddef.h>
+
 #include "channel.h"
 #include "circuitmux.h"
 #include "circuitmux_ewma.h"
+#include "compat.h"
+#include "or.h"
 #include "relay.h"
 #include "scheduler.h"
-#include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 /* XXXX duplicated function from test_circuitlist.c */
 static channel_t *

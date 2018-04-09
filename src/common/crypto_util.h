@@ -13,6 +13,9 @@
 #ifndef TOR_CRYPTO_UTIL_H
 #define TOR_CRYPTO_UTIL_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include "torint.h"
 
 /** OpenSSL-based utility functions. */

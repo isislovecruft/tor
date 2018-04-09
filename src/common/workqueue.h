@@ -4,6 +4,8 @@
 #ifndef TOR_WORKQUEUE_H
 #define TOR_WORKQUEUE_H
 
+#include <stdint.h>
+
 #include "compat.h"
 
 /** A replyqueue is used to tell the main thread about the outcome of

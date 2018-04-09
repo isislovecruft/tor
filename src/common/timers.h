@@ -8,6 +8,8 @@
 #include "testsupport.h"
 
 struct monotime_t;
+struct timeval;
+
 typedef struct timeout tor_timer_t;
 typedef void (*timer_cb_fn_t)(tor_timer_t *, void *,
                               const struct monotime_t *);

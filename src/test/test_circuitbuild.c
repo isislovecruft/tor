@@ -5,12 +5,18 @@
 
 #define CIRCUITBUILD_PRIVATE
 
-#include "or.h"
-#include "test.h"
-#include "test_helpers.h"
-#include "log_test_helpers.h"
-#include "config.h"
+#include <stddef.h>
+
 #include "circuitbuild.h"
+#include "compat.h"
+#include "container.h"
+#include "log_test_helpers.h"
+#include "or.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 /* Dummy nodes smartlist for testing */
 static smartlist_t dummy_nodes;

@@ -4,12 +4,23 @@
 /* Unit tests for handling different kinds of relay cell */
 
 #define RELAY_PRIVATE
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <time.h>
+
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_edge.h"
+#include "or.h"
 #include "relay.h"
 #include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torint.h"
 
 static int srm_ncalls;
 static entry_connection_t *srm_conn;

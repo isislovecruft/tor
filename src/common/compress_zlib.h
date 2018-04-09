@@ -11,6 +11,11 @@
 #ifndef TOR_COMPRESS_ZLIB_H
 #define TOR_COMPRESS_ZLIB_H
 
+#include <stddef.h>
+
+#include "compress.h"
+#include "util.h"
+
 int tor_zlib_method_supported(void);
 
 const char *tor_zlib_get_version_str(void);

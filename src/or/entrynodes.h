@@ -12,7 +12,22 @@
 #ifndef TOR_ENTRYNODES_H
 #define TOR_ENTRYNODES_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
 #include "handles.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
+struct circuit_guard_state_t;
+struct entry_guard_restriction_t;
+struct entry_guard_t;
+struct guard_selection_s;
 
 /* Forward declare for guard_selection_t; entrynodes.c has the real struct */
 typedef struct guard_selection_s guard_selection_t;
@@ -590,6 +605,7 @@ void remove_all_entry_guards_for_guard_selection(guard_selection_t *gs);
 void remove_all_entry_guards(void);
 
 struct bridge_info_t;
+
 void entry_guard_learned_bridge_identity(const tor_addr_port_t *addrport,
                                          const uint8_t *rsa_id_digest);
 

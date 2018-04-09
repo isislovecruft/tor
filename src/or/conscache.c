@@ -1,12 +1,17 @@
 /* Copyright (c) 2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
+#include <errno.h>
+#include <string.h>
 
+#include "compat.h"
 #include "config.h"
 #include "conscache.h"
 #include "crypto_util.h"
 #include "storagedir.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 #define CCE_MAGIC 0x17162253
 

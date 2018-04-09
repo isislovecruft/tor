@@ -3,46 +3,44 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
 #define CONFIG_PRIVATE
 #define PT_PRIVATE
 #define ROUTERSET_PRIVATE
-#include "or.h"
+#include <errno.h>
+#include <limits.h>
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/un.h>
+#include <syslog.h>
+#include <time.h>
+#include <unistd.h>
+
 #include "address.h"
 #include "addressmap.h"
 #include "bridges.h"
-#include "circuitmux_ewma.h"
-#include "circuitbuild.h"
+#include "compat.h"
 #include "config.h"
-#include "confparse.h"
-#include "connection.h"
-#include "connection_edge.h"
-#include "test.h"
-#include "util.h"
-#include "connection_or.h"
-#include "control.h"
-#include "cpuworker.h"
+#include "confline.h"
+#include "container.h"
+#include "crypto_digest.h"
 #include "dirserv.h"
-#include "dirvote.h"
-#include "dns.h"
-#include "entrynodes.h"
-#include "transports.h"
-#include "ext_orport.h"
-#include "geoip.h"
-#include "hibernate.h"
-#include "main.h"
 #include "networkstatus.h"
-#include "nodelist.h"
-#include "policies.h"
-#include "rendclient.h"
-#include "rendservice.h"
+#include "or.h"
 #include "router.h"
 #include "routerlist.h"
-#include "routerset.h"
-#include "statefile.h"
-
+#include "test.h"
 #include "test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torint.h"
+#include "torlog.h"
+#include "transports.h"
+#include "util.h"
 
 static void
 test_config_addressmap(void *arg)
@@ -3708,7 +3706,6 @@ static void
 test_config_default_fallback_dirs(void *arg)
 {
   const char *fallback[] = {
-#include "../or/fallback_dirs.inc"
     NULL
   };
 

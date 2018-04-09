@@ -12,6 +12,17 @@
 #ifndef TOR_POLICIES_H
 #define TOR_POLICIES_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/un.h>
+
+#include "address.h"
+#include "confline.h"
+#include "container.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
 /* (length of
  * "accept6 [ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff]/128:65535-65535\n"
  * plus a terminating NUL, rounded up to a nice number.)

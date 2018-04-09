@@ -1,23 +1,27 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
 #define CONNECTION_PRIVATE
 #define CONNECTION_EDGE_PRIVATE
 
-#include "or.h"
-#include "test.h"
+#include <sys/socket.h>
+#include <time.h>
 
 #include "addressmap.h"
+#include "compat.h"
 #include "config.h"
-#include "confparse.h"
+#include "confline.h"
 #include "connection.h"
 #include "connection_edge.h"
-#include "nodelist.h"
-
 #include "hs_cache.h"
+#include "hs_common.h"
+#include "or.h"
 #include "rendcache.h"
+#include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torint.h"
+#include "util.h"
 
 static void *
 entryconn_rewrite_setup(const struct testcase_t *tc)

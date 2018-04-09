@@ -14,10 +14,9 @@
  * instead.
  **/
 
-#include "orconfig.h"
+#include <string.h>
+#include <sys/param.h>
 
-#include "util.h"
-#include "torlog.h"
 #include "compress.h"
 #include "compress_none.h"
 

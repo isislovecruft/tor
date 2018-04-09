@@ -26,12 +26,14 @@
 #ifndef TIMEOUT_H
 #define TIMEOUT_H
 
+#include <inttypes.h>   /* PRIu64 PRIx64 PRIX64 uint64_t */
 #include <stdbool.h>    /* bool */
+#include <stdint.h>
 #include <stdio.h>      /* FILE */
 
-#include <inttypes.h>   /* PRIu64 PRIx64 PRIX64 uint64_t */
-
 #include "tor_queue.h"  /* TAILQ(3) */
+
+struct timeouts;
 
 
 /*

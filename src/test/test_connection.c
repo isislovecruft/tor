@@ -1,27 +1,31 @@
 /* Copyright (c) 2015-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
 #define CONNECTION_PRIVATE
 #define MAIN_PRIVATE
 #define CONNECTION_OR_PRIVATE
 
-#include "or.h"
-#include "test.h"
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
 
+#include "compat.h"
 #include "connection.h"
+#include "connection_or.h"
+#include "container.h"
 #include "hs_common.h"
 #include "main.h"
-#include "microdesc.h"
-#include "nodelist.h"
 #include "networkstatus.h"
+#include "nodelist.h"
+#include "or.h"
 #include "rendcache.h"
-#include "directory.h"
-#include "connection_or.h"
-
 #include "test_connection.h"
 #include "test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 static void * test_conn_get_basic_setup(const struct testcase_t *tc);
 static int test_conn_get_basic_teardown(const struct testcase_t *tc,

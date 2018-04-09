@@ -11,7 +11,17 @@
 #ifndef TOR_ROUTERLIST_H
 #define TOR_ROUTERLIST_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "crypto_rsa.h"
+#include "or.h"
 #include "testsupport.h"
+#include "util.h"
+
+struct routerset_t;
 
 int get_n_authorities(dirinfo_type_t type);
 int trusted_dirs_reload_certs(void);

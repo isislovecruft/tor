@@ -14,21 +14,28 @@
 
 #define STATUS_PRIVATE
 
-#include "or.h"
-#include "circuituse.h"
-#include "config.h"
-#include "status.h"
-#include "nodelist.h"
-#include "relay.h"
-#include "router.h"
+#include <syslog.h>
+
 #include "circuitlist.h"
-#include "main.h"
-#include "rephist.h"
-#include "hibernate.h"
-#include "statefile.h"
-#include "hs_stats.h"
-#include "hs_service.h"
+#include "circuituse.h"
+#include "compat.h"
+#include "config.h"
+#include "container.h"
 #include "dos.h"
+#include "hibernate.h"
+#include "hs_service.h"
+#include "hs_stats.h"
+#include "main.h"
+#include "nodelist.h"
+#include "or.h"
+#include "relay.h"
+#include "rephist.h"
+#include "router.h"
+#include "statefile.h"
+#include "status.h"
+#include "torlog.h"
+#include "tortls.h"
+#include "util.h"
 
 static void log_accounting(const time_t now, const or_options_t *options);
 #include "geoip.h"

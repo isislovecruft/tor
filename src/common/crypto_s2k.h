@@ -7,7 +7,11 @@
 #ifndef TOR_CRYPTO_S2K_H_INCLUDED
 #define TOR_CRYPTO_S2K_H_INCLUDED
 
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
+
+#include "testsupport.h"
 #include "torint.h"
 
 /** Length of RFC2440-style S2K specifier: the first 8 bytes are a salt, the

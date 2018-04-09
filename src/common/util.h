@@ -11,18 +11,31 @@
 #ifndef TOR_UTIL_H
 #define TOR_UTIL_H
 
-#include "orconfig.h"
-#include "torint.h"
-#include "compat.h"
-#include "di_ops.h"
-#include "testsupport.h"
+#include <fcntl.h>
+#include <limits.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "compat.h"
+#include "di_ops.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "torint.h"
 #ifdef _WIN32
 /* for the correct alias to struct stat */
 #include <sys/stat.h>
 #endif
 #include "util_bug.h"
+
+struct process_environment_t;
+struct process_handle_t;
+struct timeval;
 
 #ifndef O_BINARY
 #define O_BINARY 0
@@ -245,6 +258,7 @@ char *tor_escape_str_for_pt_args(const char *string,
                                  const char *chars_to_escape);
 
 struct smartlist_t;
+
 int tor_vsscanf(const char *buf, const char *pattern, va_list ap) \
   CHECK_SCANF(2, 0);
 int tor_sscanf(const char *buf, const char *pattern, ...)
@@ -466,6 +480,7 @@ void set_environment_variable_in_smartlist(struct smartlist_t *env_vars,
 
 #ifdef UTIL_PRIVATE
 struct waitpid_callback_t;
+
 /** Structure to represent the state of a process with which Tor is
  * communicating. The contents of this structure are private to util.c */
 struct process_handle_t {

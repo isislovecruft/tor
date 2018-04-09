@@ -8,9 +8,19 @@
 
 #include "procmon.h"
 
-#include "util.h"
-
 #include <event2/event.h>
+#include <event2/util.h>
+#include <limits.h>
+#include <stddef.h>
+#include <sys/time.h>
+#include <syslog.h>
+
+#include "compat_libevent.h"
+#include "orconfig.h"
+#include "util.h"
+#include "util_bug.h"
+
+struct event_base;
 
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>

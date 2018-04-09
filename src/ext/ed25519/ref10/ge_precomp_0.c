@@ -1,3 +1,4 @@
+#include "ed25519/ref10/fe.h"
 #include "ge.h"
 
 void ge_precomp_0(ge_precomp *h)

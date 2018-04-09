@@ -7,6 +7,8 @@
 #ifndef TOR_CONFLINE_H
 #define TOR_CONFLINE_H
 
+#include <stddef.h>
+
 #include "container.h"
 
 /** Ordinary configuration line. */

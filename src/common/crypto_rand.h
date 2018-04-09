@@ -13,6 +13,12 @@
 #ifndef TOR_CRYPTO_RAND_H
 #define TOR_CRYPTO_RAND_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "compat.h"
+#include "testsupport.h"
 #include "torint.h"
 #include "util.h"
 
@@ -28,6 +34,7 @@ time_t crypto_rand_time_range(time_t min, time_t max);
 uint64_t crypto_rand_uint64(uint64_t max);
 double crypto_rand_double(void);
 struct tor_weak_rng_t;
+
 void crypto_seed_weak_rng(struct tor_weak_rng_t *rng);
 int crypto_init_siphash_key(void);
 
@@ -35,6 +42,7 @@ char *crypto_random_hostname(int min_rand_len, int max_rand_len,
                              const char *prefix, const char *suffix);
 
 struct smartlist_t;
+
 void *smartlist_choose(const struct smartlist_t *sl);
 void smartlist_shuffle(struct smartlist_t *sl);
 int crypto_force_rand_ssleay(void);

@@ -7,31 +7,46 @@
 
 #define HS_CIRCUIT_PRIVATE
 
-#include "or.h"
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/types.h>
+#include <syslog.h>
+#include <time.h>
+
+#include "address.h"
 #include "circpathbias.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuituse.h"
 #include "config.h"
+#include "container.h"
+#include "crypto.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
 #include "crypto_rand.h"
+#include "crypto_rsa.h"
 #include "crypto_util.h"
-#include "nodelist.h"
-#include "policies.h"
-#include "relay.h"
-#include "rendservice.h"
-#include "rephist.h"
-#include "router.h"
-
-#include "hs_cell.h"
-#include "hs_ident.h"
-#include "hs_ntor.h"
-#include "hs_service.h"
-#include "hs_circuit.h"
-
+#include "di_ops.h"
 /* Trunnel. */
 #include "ed25519_cert.h"
-#include "hs/cell_common.h"
-#include "hs/cell_establish_intro.h"
+#include "hs_cell.h"
+#include "hs_circuit.h"
+#include "hs_circuitmap.h"
+#include "hs_common.h"
+#include "hs_ident.h"
+#include "hs_intropoint.h"
+#include "hs_ntor.h"
+#include "hs_service.h"
+#include "nodelist.h"
+#include "or.h"
+#include "relay.h"
+#include "rendservice.h"
+#include "replaycache.h"
+#include "router.h"
+#include "torcert.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* A circuit is about to become an e2e rendezvous circuit. Check
  * <b>circ_purpose</b> and ensure that it's properly set. Return true iff

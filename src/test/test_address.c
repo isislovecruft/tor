@@ -3,17 +3,15 @@
 
 #define ADDRESS_PRIVATE
 
-#include "orconfig.h"
-
 #ifdef _WIN32
-#include <winsock2.h>
 /* For access to structs needed by GetAdaptersAddresses */
 #include <iphlpapi.h>
+#include <winsock2.h>
 #endif
 
 #ifdef HAVE_IFADDRS_TO_SMARTLIST
-#include <net/if.h>
 #include <ifaddrs.h>
+#include <net/if.h>
 #endif
 
 #ifdef HAVE_IFCONF_TO_SMARTLIST
@@ -23,10 +21,25 @@
 #include <net/if.h>
 #endif /* defined(HAVE_IFCONF_TO_SMARTLIST) */
 
-#include "or.h"
+#include <ifaddrs.h>
+#include <net/if.h>
+#include <netinet/in.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <syslog.h>
+
 #include "address.h"
-#include "test.h"
+#include "compat.h"
+#include "container.h"
+#include "di_ops.h"
 #include "log_test_helpers.h"
+#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 /** Return 1 iff <b>sockaddr1</b> and <b>sockaddr2</b> represent
  * the same IP address and port combination. Otherwise, return 0.

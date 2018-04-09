@@ -12,7 +12,19 @@
 #ifndef TOR_CONFIG_H
 #define TOR_CONFIG_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/socket.h>
+#include <time.h>
+
+#include "address.h"
+#include "confline.h"
+#include "confparse.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "or.h"
 #include "testsupport.h"
+#include "util.h"
 
 #if defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(DARWIN)
 #define KERNEL_MAY_SUPPORT_IPFW

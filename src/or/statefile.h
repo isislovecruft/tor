@@ -7,6 +7,15 @@
 #ifndef TOR_STATEFILE_H
 #define TOR_STATEFILE_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "address.h"
+#include "confline.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
 MOCK_DECL(or_state_t *,get_or_state,(void));
 int did_last_state_file_write_fail(void);
 int or_state_save(time_t now);

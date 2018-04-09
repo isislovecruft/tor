@@ -13,14 +13,28 @@
 
 #define CONSDIFFMGR_PRIVATE
 
-#include "or.h"
+#include <string.h>
+
+#include "compat.h"
+#include "compat_threads.h"
 #include "config.h"
+#include "confline.h"
 #include "conscache.h"
 #include "consdiff.h"
 #include "consdiffmgr.h"
 #include "cpuworker.h"
+#include "crypto_digest.h"
+#include "di_ops.h"
+#include "ht.h"
 #include "networkstatus.h"
+#include "or.h"
+#include "orconfig.h"
 #include "routerparse.h"
+#include "siphash.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 #include "workqueue.h"
 
 /**

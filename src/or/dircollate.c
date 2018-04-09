@@ -23,7 +23,17 @@
 
 #define DIRCOLLATE_PRIVATE
 #include "dircollate.h"
+
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+
+#include "crypto_digest.h"
+#include "di_ops.h"
 #include "dirvote.h"
+#include "orconfig.h"
+#include "siphash.h"
+#include "util_bug.h"
 
 static void dircollator_collate_by_rsa(dircollator_t *dc);
 static void dircollator_collate_by_ed25519(dircollator_t *dc);

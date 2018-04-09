@@ -4,7 +4,15 @@
 #ifndef TOR_ROUTERKEYS_H
 #define TOR_ROUTERKEYS_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "crypto_curve25519.h"
 #include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "or.h"
+#include "testsupport.h"
 
 #define INIT_ED_KEY_CREATE                      (1u<<0)
 #define INIT_ED_KEY_REPLACE                     (1u<<1)
@@ -21,6 +29,7 @@
 #define INIT_ED_KEY_EXPLICIT_FNAME              (1u<<12)
 
 struct tor_cert_st;
+
 ed25519_keypair_t *ed_key_init_from_file(const char *fname, uint32_t flags,
                                          int severity,
                                          const ed25519_keypair_t *signing_key,

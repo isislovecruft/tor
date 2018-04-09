@@ -1,14 +1,30 @@
 /* Copyright (c) 2013-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <syslog.h>
+
+#include "address.h"
+#include "compat.h"
+#include "confline.h"
+#include "container.h"
 #include "or.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+
 #define CONFIG_PRIVATE
 #include "config.h"
 #include "router.h"
 #include "routerparse.h"
+
 #define POLICIES_PRIVATE
 #include "policies.h"
-#include "test.h"
 
 /* Helper: assert that short_policy parses and writes back out as itself,
    or as <b>expected</b> if that's provided. */

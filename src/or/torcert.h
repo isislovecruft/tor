@@ -4,7 +4,18 @@
 #ifndef TORCERT_H_INCLUDED
 #define TORCERT_H_INCLUDED
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "crypto_digest.h"
 #include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "or.h"
+#include "testsupport.h"
+#include "tortls.h"
+#include "util.h"
 
 #define SIGNED_KEY_TYPE_ED25519     0x01
 

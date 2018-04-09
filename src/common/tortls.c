@@ -14,49 +14,65 @@
  * functions and variables.)
  */
 
+#include "crypto_openssl_mgt.h"
+#include "di_ops.h"
 #include "orconfig.h"
+#include "util_bug.h"
 
 #define TORTLS_PRIVATE
 #define TORTLS_OPENSSL_PRIVATE
 
-#include <assert.h>
 #ifdef _WIN32 /*wrkard for dtls1.h >= 0.9.8m of "#include <winsock.h>"*/
   #include <winsock2.h>
   #include <ws2tcpip.h>
 #endif
 
+#include "compat.h"
 #include "crypto.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
-#include "compat.h"
 
 /* Some versions of OpenSSL declare SSL_get_selected_srtp_profile twice in
  * srtp.h. Suppress the GCC warning so we can build with -Wredundant-decl. */
 DISABLE_GCC_WARNING(redundant-decls)
 
+#include <errno.h>
+#include <limits.h>
+#include <netinet/in.h>
+#include <openssl/buffer.h>
+#include <openssl/crypto.h>
+#include <openssl/ec.h>
+#include <openssl/evp.h>
+#include <openssl/obj_mac.h>
+#include <openssl/objects.h>
 #include <openssl/opensslv.h>
+#include <openssl/x509.h>
+#include <openssl/x509_vfy.h>
+#include <sys/param.h>
+#include <syslog.h>
 
 #ifdef OPENSSL_NO_EC
 #error "We require OpenSSL with ECC support"
 #endif
 
-#include <openssl/ssl.h>
-#include <openssl/ssl3.h>
-#include <openssl/err.h>
-#include <openssl/tls1.h>
 #include <openssl/asn1.h>
 #include <openssl/bio.h>
 #include <openssl/bn.h>
+#include <openssl/err.h>
 #include <openssl/rsa.h>
+#include <openssl/ssl.h>
+#include <openssl/ssl3.h>
+#include <openssl/tls1.h>
 
 ENABLE_GCC_WARNING(redundant-decls)
 
 #define TORTLS_PRIVATE
+#include <string.h>
+
+#include "container.h"
+#include "torlog.h"
 #include "tortls.h"
 #include "util.h"
-#include "torlog.h"
-#include "container.h"
-#include <string.h>
 
 #define X509_get_notBefore_const(cert) \
   ((const ASN1_TIME*) X509_get_notBefore((X509 *)cert))
@@ -661,7 +677,6 @@ static const char UNRESTRICTED_SERVER_CIPHER_LIST[] =
 /** List of ciphers that clients should advertise, omitting items that
  * our OpenSSL doesn't know about. */
 static const char CLIENT_CIPHER_LIST[] =
-#include "ciphers.inc"
   /* Tell it not to use SSLv2 ciphers, so that it can select an SSLv3 version
    * of any cipher we say. */
   "!SSLv2"

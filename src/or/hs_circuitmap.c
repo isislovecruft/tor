@@ -13,10 +13,14 @@
 
 #define HS_CIRCUITMAP_PRIVATE
 
-#include "or.h"
-#include "config.h"
 #include "circuitlist.h"
+#include "di_ops.h"
 #include "hs_circuitmap.h"
+#include "or.h"
+#include "siphash.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /************************** HS circuitmap code *******************************/
 

@@ -1,14 +1,22 @@
 /* Copyright (c) 2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
-#include "config.h"
-#include "conscache.h"
-#include "test.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
 
-#ifdef HAVE_UTIME_H
-#include <utime.h>
-#endif
+#include "compat.h"
+#include "config.h"
+#include "confline.h"
+#include "conscache.h"
+#include "container.h"
+#include "or.h"
+#include "orconfig.h"
+#include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 static void
 test_conscache_open_failure(void *arg)

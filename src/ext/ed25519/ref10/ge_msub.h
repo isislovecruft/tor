@@ -38,6 +38,9 @@
 /* qhasm: YpX1 = Y1+X1 */
 /* asm 1: fe_add(>YpX1=fe#1,<Y1=fe#12,<X1=fe#11); */
 /* asm 2: fe_add(>YpX1=r->X,<Y1=p->Y,<X1=p->X); */
+#include "ed25519/ref10/fe.h"
+#include "ed25519/ref10/ge.h"
+
 fe_add(r->X,p->Y,p->X);
 
 /* qhasm: YmX1 = Y1-X1 */

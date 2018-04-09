@@ -7,18 +7,27 @@
  * \brief Implement introductions points and rendezvous points.
  **/
 
-#include "or.h"
+#include <netinet/in.h>
+#include <string.h>
+
 #include "channel.h"
 #include "circuitlist.h"
 #include "circuituse.h"
+#include "compat.h"
 #include "config.h"
 #include "crypto.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
 #include "dos.h"
-#include "relay.h"
-#include "rendmid.h"
-#include "rephist.h"
 #include "hs_circuitmap.h"
 #include "hs_intropoint.h"
+#include "or.h"
+#include "relay.h"
+#include "rendmid.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** Respond to an ESTABLISH_INTRO cell by checking the signed data and
  * setting the circuit's purpose and service pk digest.

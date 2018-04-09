@@ -6,9 +6,15 @@
  * \brief Unit tests for publish-subscribe abstraction.
  **/
 
-#include "or.h"
-#include "test.h"
+#include <stddef.h>
+
+#include "compat.h"
 #include "pubsub.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+
+struct foobar_event_data_t;
+struct foobar_subscriber_data_t;
 
 DECLARE_PUBSUB_STRUCT_TYPES(foobar)
 DECLARE_PUBSUB_TOPIC(foobar)

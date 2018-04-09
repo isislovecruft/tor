@@ -12,6 +12,12 @@
 #ifndef TOR_ONION_FAST_H
 #define TOR_ONION_FAST_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "crypto_digest.h"
+#include "util.h"
+
 #define CREATE_FAST_LEN DIGEST_LEN
 #define CREATED_FAST_LEN (DIGEST_LEN*2)
 

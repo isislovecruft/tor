@@ -13,13 +13,16 @@
 #ifndef TOR_CRYPTO_H
 #define TOR_CRYPTO_H
 
-#include "orconfig.h"
-
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
-#include "torint.h"
+#include <sys/types.h>
+
 #include "compat.h"
-#include "util.h"
 #include "crypto_rsa.h"
+#include "orconfig.h"
+#include "torint.h"
+#include "util.h"
 
 /** Length of our symmetric cipher's keys of 128-bit. */
 #define CIPHER_KEY_LEN 16
@@ -105,6 +108,7 @@ int crypto_expand_key_material_rfc5869_sha256(
 /* Prototypes for private functions only used by tortls.c, crypto.c, and the
  * unit tests. */
 struct dh_st;
+
 struct dh_st *crypto_dh_get_dh_(crypto_dh_t *dh);
 
 void crypto_add_spaces_to_fp(char *out, size_t outlen, const char *in);

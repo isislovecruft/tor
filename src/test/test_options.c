@@ -4,20 +4,33 @@
 /* See LICENSE for licensing information */
 
 #define CONFIG_PRIVATE
-#include "or.h"
-#include "confparse.h"
+#include <stdint.h>
+#include <string.h>
+#include <syslog.h>
+
+#include "address.h"
+#include "compat.h"
 #include "config.h"
-#include "test.h"
+#include "confline.h"
+#include "confparse.h"
+#include "container.h"
 #include "geoip.h"
+#include "or.h"
+#include "orconfig.h"
+#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 #define ROUTERSET_PRIVATE
-#include "routerset.h"
-#include "main.h"
 #include "log_test_helpers.h"
-
-#include "sandbox.h"
-#include "memarea.h"
+#include "main.h"
 #include "policies.h"
+#include "routerset.h"
+#include "sandbox.h"
 #include "test_helpers.h"
 
 #define NS_MODULE test_options

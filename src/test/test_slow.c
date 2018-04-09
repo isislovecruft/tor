@@ -9,14 +9,8 @@
  **/
 
 #include "orconfig.h"
-
-#include <stdio.h>
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
-
-#include "or.h"
 #include "test.h"
+#include "tinytest.h"
 
 struct testgroup_t testgroups[] = {
   { "slow/crypto/", slow_crypto_tests },

@@ -9,6 +9,9 @@
 #ifndef _TOR_FP_PAIR_H
 #define _TOR_FP_PAIR_H
 
+#include <stddef.h>
+
+#include "or.h"
 /*
  * Declare fp_pair_map_t functions and structs
  */

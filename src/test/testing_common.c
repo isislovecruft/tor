@@ -8,30 +8,47 @@
  * \brief Common pieces to implement unit tests.
  **/
 
-#include "orconfig.h"
-#include "or.h"
-#include "control.h"
-#include "config.h"
-#include "crypto_rand.h"
-#include "rephist.h"
-#include "backtrace.h"
-#include "test.h"
-#include "channelpadding.h"
-
+#include <errno.h>
 #include <stdio.h>
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <syslog.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "backtrace.h"
+#include "channelpadding.h"
+#include "compat.h"
+#include "compat_libevent.h"
+#include "compat_threads.h"
+#include "compat_time.h"
+#include "compress.h"
+#include "config.h"
+#include "container.h"
+#include "control.h"
+#include "crypto.h"
+#include "crypto_ed25519.h"
+#include "crypto_rand.h"
+#include "or.h"
+#include "orconfig.h"
+#include "rephist.h"
+#include "test.h"
+#include "tinytest.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 #ifdef _WIN32
 /* For mkdir() */
 #include <direct.h>
 #else
-#include <dirent.h>
 #endif /* defined(_WIN32) */
 
 #ifdef USE_DMALLOC
 #include <dmalloc.h>
+
 #include "main.h"
 #endif
 

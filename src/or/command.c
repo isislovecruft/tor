@@ -29,6 +29,23 @@
  * complexity, are passed off to relay.c.
  **/
 
+#include <string.h>
+#include <syslog.h>
+#include <time.h>
+
+#include "channel.h"
+#include "circuitbuild.h"
+#include "circuitlist.h"
+#include "command.h"
+#include "compat.h"
+#include "config.h"
+#include "cpuworker.h"
+#include "crypto_digest.h"
+#include "crypto_util.h"
+#include "dos.h"
+#include "hibernate.h"
+#include "nodelist.h"
+#include "onion.h"
 /* In-points to command.c:
  *
  * - command_process_cell(), called from
@@ -37,24 +54,12 @@
  *   called when channels are created in circuitbuild.c
  */
 #include "or.h"
-#include "channel.h"
-#include "circuitbuild.h"
-#include "circuitlist.h"
-#include "command.h"
-#include "connection.h"
-#include "connection_or.h"
-#include "config.h"
-#include "control.h"
-#include "cpuworker.h"
-#include "crypto_util.h"
-#include "dos.h"
-#include "hibernate.h"
-#include "nodelist.h"
-#include "onion.h"
-#include "rephist.h"
 #include "relay.h"
+#include "rephist.h"
 #include "router.h"
-#include "routerlist.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** How many CELL_CREATE cells have we received, ever? */
 uint64_t stats_n_create_cells_processed = 0;

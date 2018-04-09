@@ -1,10 +1,21 @@
 /* Copyright (c) 2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
+#include "compat.h"
+#include "confline.h"
+#include "container.h"
 #include "crypto_rand.h"
+#include "orconfig.h"
 #include "storagedir.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 #ifdef HAVE_UTIME_H
 #include <utime.h>

@@ -21,19 +21,32 @@
  * each guard, and stored persistently in the state file.
  */
 
-#include "or.h"
+#include <netinet/in.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
+#include "address.h"
 #include "channel.h"
 #include "circpathbias.h"
-#include "circuitbuild.h"
 #include "circuitlist.h"
-#include "circuituse.h"
 #include "circuitstats.h"
-#include "connection_edge.h"
+#include "circuituse.h"
+#include "compat.h"
+#include "compat_time.h"
 #include "config.h"
+#include "connection_edge.h"
+#include "container.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
+#include "di_ops.h"
 #include "entrynodes.h"
 #include "networkstatus.h"
+#include "or.h"
 #include "relay.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 static void pathbias_count_successful_close(origin_circuit_t *circ);
 static void pathbias_count_collapse(origin_circuit_t *circ);

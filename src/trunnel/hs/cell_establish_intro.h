@@ -5,10 +5,14 @@
 #ifndef TRUNNEL_CELL_ESTABLISH_INTRO_H
 #define TRUNNEL_CELL_ESTABLISH_INTRO_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "trunnel.h"
 
 struct trn_cell_extension_st;
+
 #define TRUNNEL_SHA3_256_LEN 32
 #if !defined(TRUNNEL_OPAQUE) && !defined(TRUNNEL_OPAQUE_TRN_CELL_ESTABLISH_INTRO)
 struct trn_cell_establish_intro_st {

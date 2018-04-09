@@ -6,18 +6,26 @@
  * \brief Wrappers and utility functions for Libevent.
  */
 
-#include "orconfig.h"
 #include "compat.h"
+#include "compat_time.h"
+#include "orconfig.h"
+#include "util_bug.h"
+
 #define COMPAT_LIBEVENT_PRIVATE
-#include "compat_libevent.h"
-
-#include "crypto_rand.h"
-
-#include "util.h"
-#include "torlog.h"
-
 #include <event2/event.h>
-#include <event2/thread.h>
+#include <event2/util.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
+
+#include "compat_libevent.h"
+#include "crypto_rand.h"
+#include "torlog.h"
+#include "util.h"
+
+struct event;
+struct event_base;
 
 /** A string which, if it appears in a libevent log, should be ignored. */
 static const char *suppress_msg = NULL;

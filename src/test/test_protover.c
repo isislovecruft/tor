@@ -3,13 +3,17 @@
 
 #define PROTOVER_PRIVATE
 
-#include "orconfig.h"
-#include "test.h"
+#include <stddef.h>
+#include <stdint.h>
 
-#include "protover.h"
-
-#include "or.h"
+#include "compat.h"
 #include "connection_or.h"
+#include "container.h"
+#include "protover.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 static void
 test_protover_parse(void *arg)

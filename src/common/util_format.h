@@ -7,8 +7,12 @@
 #ifndef TOR_UTIL_FORMAT_H
 #define TOR_UTIL_FORMAT_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include "testsupport.h"
 #include "torint.h"
+#include "util.h"
 
 /** @{ */
 /** These macros don't check for overflow.  Use them only for constant inputs

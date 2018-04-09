@@ -4,9 +4,13 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
+#include <netinet/in.h>
+#include <stdint.h>
+
 #include "buffers.h"
+#include "compat.h"
 #include "ext_orport.h"
+#include "or.h"
 #include "proto_ext_or.h"
 
 /** The size of the header of an Extended ORPort message: 2 bytes for

@@ -25,23 +25,33 @@
 
 #define CIRCUITSTATS_PRIVATE
 
-#include "or.h"
 #include "circuitbuild.h"
+#include "circuitlist.h"
 #include "circuitstats.h"
+#include "circuituse.h"
+#include "compat.h"
+#include "compat_time.h"
 #include "config.h"
-#include "confparse.h"
+#include "confline.h"
+#include "container.h"
 #include "control.h"
 #include "crypto_rand.h"
 #include "main.h"
 #include "networkstatus.h"
+#include "or.h"
 #include "rendclient.h"
 #include "rendservice.h"
 #include "statefile.h"
-#include "circuitlist.h"
-#include "circuituse.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 #undef log
+#include <limits.h>
 #include <math.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/time.h>
 
 static void cbt_control_event_buildtimeout_set(
                                   const circuit_build_times_t *cbt,

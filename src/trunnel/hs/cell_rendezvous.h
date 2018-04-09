@@ -5,7 +5,10 @@
 #ifndef TRUNNEL_CELL_RENDEZVOUS_H
 #define TRUNNEL_CELL_RENDEZVOUS_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "trunnel.h"
 
 #define TRUNNEL_REND_COOKIE_LEN 20

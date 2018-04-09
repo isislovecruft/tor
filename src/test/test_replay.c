@@ -3,10 +3,14 @@
 
 #define REPLAYCACHE_PRIVATE
 
-#include "orconfig.h"
-#include "or.h"
+#include <string.h>
+#include <time.h>
+
+#include "compat.h"
+#include "container.h"
 #include "replaycache.h"
-#include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
 
 static const char *test_buffer =
   "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed do eiusmod"

@@ -1,17 +1,20 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
+#include <stddef.h>
+#include <sys/stat.h>
+
+#include "compat.h"
 #include "or.h"
 
 #ifdef _WIN32
 #include <direct.h>
 #else
-#include <dirent.h>
 #endif
 
 #include "config.h"
 #include "test.h"
+#include "testsupport.h"
 #include "util.h"
 
 #ifdef _WIN32

@@ -13,10 +13,11 @@
 #ifndef TOR_CRYPTO_OPENSSL_H
 #define TOR_CRYPTO_OPENSSL_H
 
-#include <stdio.h>
-#include "util.h"
-
 #include <openssl/engine.h>
+#include <openssl/opensslv.h>
+#include <stdio.h>
+
+#include "util.h"
 
 /*
   Macro to create an arbitrary OpenSSL version number as used by

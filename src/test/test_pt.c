@@ -3,20 +3,26 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
 #define PT_PRIVATE
 #define UTIL_PRIVATE
 #define STATEFILE_PRIVATE
 #define CONTROL_PRIVATE
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+
+#include "address.h"
+#include "compat.h"
 #include "config.h"
-#include "confparse.h"
+#include "confline.h"
+#include "container.h"
 #include "control.h"
-#include "transports.h"
-#include "circuitbuild.h"
-#include "util.h"
+#include "or.h"
 #include "statefile.h"
-#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "transports.h"
+#include "util.h"
 
 static void
 reset_mp(managed_proxy_t *mp)

@@ -10,7 +10,12 @@
  * \brief Formatting and parsing code for crypto-related data structures.
  */
 
+#include <errno.h>
+#include <string.h>
+
+#include "compat.h"
 #include "orconfig.h"
+#include "util_bug.h"
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
 #endif
@@ -22,7 +27,6 @@
 #include "crypto_util.h"
 #include "util.h"
 #include "util_format.h"
-#include "torlog.h"
 
 /** Write the <b>datalen</b> bytes from <b>data</b> to the file named
  * <b>fname</b> in the tagged-data format.  This format contains a

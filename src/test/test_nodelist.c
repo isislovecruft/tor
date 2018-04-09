@@ -6,12 +6,22 @@
  * \brief Unit tests for nodelist related functions.
  **/
 
-#include "or.h"
+#include <string.h>
+
+#include "compat.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
 #include "crypto_rand.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
 #include "torcert.h"
-#include "test.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** Test the case when node_get_by_id() returns NULL,
  * node_get_verbose_nickname_by_id should return the base 16 encoding

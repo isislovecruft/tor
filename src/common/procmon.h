@@ -11,8 +11,10 @@
 
 #include "compat.h"
 #include "compat_libevent.h"
-
 #include "torlog.h"
+#include "util.h"
+
+struct event_base;
 
 typedef struct tor_process_monitor_t tor_process_monitor_t;
 

@@ -112,31 +112,36 @@
 
 #define ENTRYNODES_PRIVATE
 
-#include "or.h"
-#include "channel.h"
+#include <limits.h>
+#include <string.h>
+#include <sys/param.h>
+
 #include "bridges.h"
 #include "circpathbias.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuitstats.h"
+#include "compat.h"
 #include "config.h"
-#include "confparse.h"
-#include "connection.h"
+#include "confline.h"
 #include "control.h"
 #include "crypto_rand.h"
-#include "directory.h"
+#include "di_ops.h"
 #include "entrynodes.h"
-#include "main.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
 #include "policies.h"
 #include "router.h"
 #include "routerlist.h"
-#include "routerparse.h"
 #include "routerset.h"
-#include "transports.h"
 #include "statefile.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** A list of existing guard selection contexts. */
 static smartlist_t *guard_contexts = NULL;

@@ -2,11 +2,19 @@
 /* See LICENSE for licensing information */
 
 #include <event2/event.h>
+#include <stddef.h>
+#include <sys/param.h>
+#include <sys/types.h>
 
+#include "compat.h"
+#include "container.h"
 #include "or.h"
-#include "config.h"
+#include "torlog.h"
+#include "util_bug.h"
+
 #define TOR_CHANNEL_INTERNAL_
 #include "channel.h"
+
 #define SCHEDULER_PRIVATE_
 #include "scheduler.h"
 

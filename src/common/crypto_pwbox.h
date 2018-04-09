@@ -4,6 +4,9 @@
 #ifndef CRYPTO_PWBOX_H_INCLUDED_
 #define CRYPTO_PWBOX_H_INCLUDED_
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include "torint.h"
 
 #define UNPWBOX_OKAY 0

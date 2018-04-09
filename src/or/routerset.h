@@ -11,6 +11,14 @@
 #ifndef TOR_ROUTERSET_H
 #define TOR_ROUTERSET_H
 
+#include <stdint.h>
+
+#include "address.h"
+#include "container.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
 routerset_t *routerset_new(void);
 void routerset_refresh_countries(routerset_t *rs);
 int routerset_parse(routerset_t *target, const char *s,
@@ -27,6 +35,7 @@ int routerset_contains_routerstatus(const routerset_t *set,
 int routerset_contains_extendinfo(const routerset_t *set,
                                   const extend_info_t *ei);
 struct bridge_info_t;
+
 int routerset_contains_bridge(const routerset_t *set,
                               const struct bridge_info_t *bridge);
 int routerset_contains_node(const routerset_t *set, const node_t *node);

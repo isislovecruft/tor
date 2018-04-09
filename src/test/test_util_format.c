@@ -1,12 +1,19 @@
 /* Copyright (c) 2010-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include "or.h"
+#include <limits.h>
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
-#include "test.h"
-
+#include "compat.h"
 #include "crypto_rand.h"
+#include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+
 #define UTIL_FORMAT_PRIVATE
 #include "util_format.h"
 

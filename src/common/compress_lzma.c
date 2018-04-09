@@ -11,16 +11,20 @@
  * instead.
  **/
 
-#include "orconfig.h"
+#include <limits.h>
+#include <lzma/base.h>
+#include <lzma/container.h>
+#include <lzma/lzma.h>
+#include <lzma/version.h>
+#include <stdint.h>
 
-#include "util.h"
-#include "torlog.h"
+#include "compat_threads.h"
 #include "compress.h"
 #include "compress_lzma.h"
-
-#ifdef HAVE_LZMA
-#include <lzma.h>
-#endif
+#include "orconfig.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** The maximum amount of memory we allow the LZMA decoder to use, in bytes. */
 #define MEMORY_LIMIT (16 * 1024 * 1024)

@@ -4,12 +4,19 @@
 
 #define CONSDIFF_PRIVATE
 
-#include "or.h"
-#include "test.h"
+#include <stdint.h>
+#include <string.h>
+#include <syslog.h>
 
+#include "compat.h"
 #include "consdiff.h"
-#include "memarea.h"
+#include "container.h"
 #include "log_test_helpers.h"
+#include "memarea.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
 
 #define tt_str_eq_line(a,b) \
   tt_assert(line_str_eq((b),(a)))

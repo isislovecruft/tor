@@ -4,12 +4,22 @@
 #define CONNECTION_PRIVATE
 #define TOR_CHANNEL_INTERNAL_
 #define CONTROL_PRIVATE
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/time.h>
+
 #include "channel.h"
 #include "channeltls.h"
+#include "compat.h"
 #include "connection.h"
+#include "container.h"
 #include "control.h"
+#include "or.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 static void
 help_test_bucket_note_empty(uint32_t expected_msec_since_midnight,

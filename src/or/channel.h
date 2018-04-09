@@ -9,10 +9,25 @@
 #ifndef TOR_CHANNEL_H
 #define TOR_CHANNEL_H
 
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "address.h"
 #include "circuitmux.h"
-#include "timers.h"
+#include "compat_time.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
 #include "handles.h"
+#include "ht.h"
+#include "or.h"
+#include "testsupport.h"
+#include "timers.h"
+#include "tor_queue.h"
+#include "util.h"
 
 /* Channel handler function pointer typedefs */
 typedef void (*channel_listener_fn_ptr)(channel_listener_t *, channel_t *);

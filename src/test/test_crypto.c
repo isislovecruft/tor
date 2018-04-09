@@ -3,18 +3,38 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "compat.h"
+#include "crypto.h"
+#include "crypto_digest.h"
+#include "crypto_format.h"
+#include "crypto_openssl_mgt.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
 #include "orconfig.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util_format.h"
+
 #define CRYPTO_CURVE25519_PRIVATE
 #define CRYPTO_RAND_PRIVATE
-#include "or.h"
-#include "test.h"
 #include "aes.h"
-#include "util.h"
-#include "siphash.h"
 #include "crypto_curve25519.h"
 #include "crypto_ed25519.h"
 #include "crypto_rand.h"
 #include "ed25519_vectors.inc"
+#include "siphash.h"
+#include "test.h"
+#include "util.h"
 
 /** Run unit tests for Diffie-Hellman functionality. */
 static void

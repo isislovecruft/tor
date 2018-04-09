@@ -13,10 +13,16 @@
 #ifndef TOR_CRYPTO_DIGEST_H
 #define TOR_CRYPTO_DIGEST_H
 
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include "container.h"
+#include "orconfig.h"
 #include "torint.h"
+#include "util.h"
+
+struct smartlist_t;
 
 /** Length of the output of our message digest. */
 #define DIGEST_LEN 20

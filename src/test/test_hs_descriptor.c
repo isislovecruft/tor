@@ -8,18 +8,32 @@
 
 #define HS_DESCRIPTOR_PRIVATE
 
-#include "crypto_ed25519.h"
-#include "crypto_digest.h"
-#include "crypto_rand.h"
-#include "ed25519_cert.h"
-#include "or.h"
-#include "hs_descriptor.h"
-#include "test.h"
-#include "torcert.h"
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <time.h>
 
+#include "address.h"
+#include "compat.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_format.h"
+#include "ed25519_cert.h"
+#include "hs_descriptor.h"
 #include "hs_test_helpers.h"
-#include "test_helpers.h"
 #include "log_test_helpers.h"
+#include "orconfig.h"
+#include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torcert.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_format.h"
 
 #ifdef HAVE_CFLAG_WOVERLENGTH_STRINGS
 DISABLE_GCC_WARNING(overlength-strings)
@@ -27,6 +41,7 @@ DISABLE_GCC_WARNING(overlength-strings)
  * at large. */
 #endif
 #include "test_hs_descriptor.inc"
+
 ENABLE_GCC_WARNING(overlength-strings)
 
 /* Test certificate encoding put in a descriptor. */

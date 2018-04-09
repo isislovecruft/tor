@@ -29,18 +29,28 @@
  */
 
 #define STATEFILE_PRIVATE
-#include "or.h"
+#include <errno.h>
+#include <netinet/in.h>
+#include <stddef.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "circuitstats.h"
+#include "compat.h"
 #include "config.h"
 #include "confparse.h"
 #include "connection.h"
+#include "container.h"
 #include "control.h"
 #include "entrynodes.h"
 #include "hibernate.h"
+#include "or.h"
 #include "rephist.h"
 #include "router.h"
-#include "sandbox.h"
 #include "statefile.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 /** A list of state-file "abbreviations," for compatibility. */
 static config_abbrev_t state_abbrevs_[] = {

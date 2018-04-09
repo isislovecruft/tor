@@ -12,6 +12,18 @@
 #ifndef TOR_ROUTERPARSE_H
 #define TOR_ROUTERPARSE_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
+#include "or.h"
+#include "testsupport.h"
+
+struct digest_ri_map_t;
+
 int router_get_router_hash(const char *s, size_t s_len, char *digest);
 int router_get_dir_hash(const char *s, char *digest);
 int router_get_networkstatus_v3_hashes(const char *s,
@@ -120,6 +132,7 @@ MOCK_DECL(STATIC dumped_desc_t *, dump_desc_populate_one_file,
 STATIC void dump_desc_populate_fifo_from_directory(const char *dirname);
 STATIC void dump_desc_fifo_cleanup(void);
 struct memarea_t;
+
 STATIC routerstatus_t *routerstatus_parse_entry_from_string(
                                      struct memarea_t *area,
                                      const char **s, smartlist_t *tokens,

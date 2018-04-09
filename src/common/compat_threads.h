@@ -6,9 +6,15 @@
 #ifndef TOR_COMPAT_THREADS_H
 #define TOR_COMPAT_THREADS_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "compat.h"
 #include "orconfig.h"
-#include "torint.h"
 #include "testsupport.h"
+#include "torint.h"
+
+struct timeval;
 
 #if defined(HAVE_PTHREAD_H) && !defined(_WIN32)
 #include <pthread.h>

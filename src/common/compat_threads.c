@@ -11,13 +11,14 @@
  *  modules.)
  */
 
-#include "orconfig.h"
-#include <stdlib.h>
+#include <errno.h>
+#include <sys/socket.h>
+
 #include "compat.h"
 #include "compat_threads.h"
-
+#include "orconfig.h"
 #include "util.h"
-#include "torlog.h"
+#include "util_bug.h"
 
 #ifdef HAVE_SYS_EVENTFD_H
 #include <sys/eventfd.h>

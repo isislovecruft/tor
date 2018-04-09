@@ -9,8 +9,15 @@
 #ifndef TOR_RENDCACHE_H
 #define TOR_RENDCACHE_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "container.h"
 #include "or.h"
 #include "rendcommon.h"
+#include "testsupport.h"
+#include "util.h"
 
 /** How old do we let hidden service descriptors get before discarding
  * them as too old? */

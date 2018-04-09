@@ -46,7 +46,14 @@
  **/
 
 #define RELAY_PRIVATE
-#include "or.h"
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/un.h>
+#include <syslog.h>
+#include <time.h>
+
 #include "addressmap.h"
 #include "backtrace.h"
 #include "buffers.h"
@@ -54,13 +61,17 @@
 #include "circpathbias.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
+#include "circuitmux.h"
 #include "circuituse.h"
+#include "compat_time.h"
 #include "compress.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_edge.h"
 #include "connection_or.h"
 #include "control.h"
+#include "crypto.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
 #include "geoip.h"
@@ -69,16 +80,19 @@
 #include "networkstatus.h"
 #include "nodelist.h"
 #include "onion.h"
+#include "or.h"
 #include "policies.h"
 #include "reasons.h"
 #include "relay.h"
 #include "rendcache.h"
 #include "rendcommon.h"
-#include "router.h"
-#include "routerlist.h"
-#include "routerparse.h"
-#include "scheduler.h"
 #include "rephist.h"
+#include "router.h"
+#include "scheduler.h"
+#include "tor_queue.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 static edge_connection_t *relay_lookup_conn(circuit_t *circ, cell_t *cell,
                                             cell_direction_t cell_direction,

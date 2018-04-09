@@ -6,10 +6,12 @@
  * \brief Functions for data-independent operations.
  **/
 
-#include "orconfig.h"
+#include <string.h>
+
 #include "di_ops.h"
-#include "torlog.h"
+#include "orconfig.h"
 #include "util.h"
+#include "util_bug.h"
 
 /**
  * Timing-safe version of memcmp.  As memcmp, compare the <b>sz</b> bytes at

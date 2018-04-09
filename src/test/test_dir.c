@@ -3,8 +3,35 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
+#include <limits.h>
 #include <math.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <syslog.h>
+#include <time.h>
+
+#include "address.h"
+#include "compat.h"
+#include "compress.h"
+#include "container.h"
+#include "crypto.h"
+#include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "crypto_format.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 #define CONFIG_PRIVATE
 #define CONTROL_PRIVATE
@@ -17,9 +44,6 @@
 #define NETWORKSTATUS_PRIVATE
 #define RELAY_PRIVATE
 
-#include "or.h"
-#include "bridges.h"
-#include "confparse.h"
 #include "config.h"
 #include "control.h"
 #include "crypto_ed25519.h"
@@ -29,8 +53,11 @@
 #include "dirvote.h"
 #include "entrynodes.h"
 #include "hibernate.h"
+#include "log_test_helpers.h"
 #include "memarea.h"
 #include "networkstatus.h"
+#include "or.h"
+#include "relay.h"
 #include "router.h"
 #include "routerkeys.h"
 #include "routerlist.h"
@@ -40,8 +67,6 @@
 #include "test.h"
 #include "test_dir_common.h"
 #include "torcert.h"
-#include "relay.h"
-#include "log_test_helpers.h"
 
 #define NS_MODULE dir
 

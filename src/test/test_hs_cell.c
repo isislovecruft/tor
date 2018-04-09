@@ -9,18 +9,27 @@
 #define HS_INTROPOINT_PRIVATE
 #define HS_SERVICE_PRIVATE
 
-#include "test.h"
-#include "test_helpers.h"
-#include "log_test_helpers.h"
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
 
+#include "compat.h"
+#include "crypto_digest.h"
 #include "crypto_ed25519.h"
 #include "crypto_rand.h"
+/* Trunnel. */
+#include "hs/cell_establish_intro.h"
 #include "hs_cell.h"
 #include "hs_intropoint.h"
 #include "hs_service.h"
-
-/* Trunnel. */
-#include "hs/cell_establish_intro.h"
+#include "log_test_helpers.h"
+#include "or.h"
+#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
 
 /** We simulate the creation of an outgoing ESTABLISH_INTRO cell, and then we
  *  parse it from the receiver side. */

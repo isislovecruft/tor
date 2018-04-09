@@ -4,10 +4,24 @@
 /* See LICENSE for licensing information */
 
 #define ADDRESSMAP_PRIVATE
-#include "orconfig.h"
-#include "or.h"
-#include "test.h"
+#include <netinet/in.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <syslog.h>
+
+#include "address.h"
 #include "addressmap.h"
+#include "compat.h"
+#include "di_ops.h"
+#include "orconfig.h"
+#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
 
 /** Mocking replacement: only handles localhost. */
 static int

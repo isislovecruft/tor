@@ -55,21 +55,25 @@
 
 #define ROUTERPARSE_PRIVATE
 
-#include "or.h"
-#include "circuitstats.h"
+#include "address.h"
+#include "compat.h"
 #include "config.h"
+#include "crypto.h"
+#include "crypto_curve25519.h"
+#include "crypto_ed25519.h"
+#include "crypto_format.h"
 #include "crypto_util.h"
-#include "dirserv.h"
+#include "di_ops.h"
 #include "dirvote.h"
 #include "entrynodes.h"
 #include "memarea.h"
 #include "microdesc.h"
 #include "networkstatus.h"
+#include "or.h"
 #include "parsecommon.h"
 #include "policies.h"
 #include "protover.h"
 #include "rendcommon.h"
-#include "rephist.h"
 #include "router.h"
 #include "routerkeys.h"
 #include "routerlist.h"
@@ -77,9 +81,26 @@
 #include "sandbox.h"
 #include "shared_random.h"
 #include "torcert.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
+
+struct digest_ri_map_t;
 
 #undef log
+#include <errno.h>
+#include <limits.h>
 #include <math.h>
+#include <netinet/in.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <syslog.h>
 
 /****************************************************************************/
 

@@ -11,19 +11,28 @@
  * Bridges are fixed entry nodes, used for censorship circumvention.
  **/
 
-#include "or.h"
+#include <string.h>
+#include <sys/socket.h>
+
 #include "bridges.h"
-#include "circuitbuild.h"
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
+#include "crypto_digest.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "entrynodes.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "router.h"
 #include "routerlist.h"
 #include "routerset.h"
+#include "torlog.h"
 #include "transports.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** Information about a configured bridge. Currently this just matches the
  * ones in the torrc file, but one day we may be able to learn about new

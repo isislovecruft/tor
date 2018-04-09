@@ -13,19 +13,18 @@
  * detect crashes.
  */
 
-#include "orconfig.h"
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "compat.h"
-#include "util.h"
+#include "compat_threads.h"
+#include "orconfig.h"
 #include "torlog.h"
+#include "util.h"
 
 #ifdef HAVE_EXECINFO_H
 #include <execinfo.h>
-#endif
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
@@ -34,7 +33,6 @@
 #ifdef HAVE_CYGWIN_SIGNAL_H
 #include <cygwin/signal.h>
 #elif defined(HAVE_SYS_UCONTEXT_H)
-#include <sys/ucontext.h>
 #elif defined(HAVE_UCONTEXT_H)
 #include <ucontext.h>
 #endif /* defined(HAVE_CYGWIN_SIGNAL_H) || ... */

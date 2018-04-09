@@ -12,6 +12,11 @@
 #ifndef TOR_DNS_H
 #define TOR_DNS_H
 
+#include <stdint.h>
+
+#include "or.h"
+#include "testsupport.h"
+
 /** Lowest value for DNS ttl that a server will give. */
 #define MIN_DNS_TTL_AT_EXIT (5*60)
 /** Highest value for DNS ttl that a server will give. */

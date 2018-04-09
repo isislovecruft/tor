@@ -9,12 +9,20 @@
  * \brief Functions to send messages to log files or the console.
  **/
 
-#include "orconfig.h"
-#include <stdarg.h>
 #include <assert.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdio.h>
 // #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <syslog.h>
+
+#include "compat_threads.h"
+#include "compat_time.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "util_bug.h"
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
@@ -24,17 +32,15 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
 #include "compat.h"
 #include "util.h"
+
 #define LOG_PRIVATE
-#include "torlog.h"
 #include "container.h"
+#include "torlog.h"
 #ifdef HAVE_ANDROID_LOG_H
 #include <android/log.h>
 #endif // HAVE_ANDROID_LOG_H.
@@ -340,7 +346,6 @@ log_tor_version(logfile_t *lf, int reset)
 static const char bug_suffix[] = " (on Tor " VERSION
 #ifndef _MSC_VER
   " "
-#include "micro-revision.i"
 #endif
   ")";
 

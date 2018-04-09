@@ -4,6 +4,9 @@
 #ifndef TOR_STATUS_H
 #define TOR_STATUS_H
 
+#include <stdint.h>
+#include <time.h>
+
 #include "testsupport.h"
 
 int log_heartbeat(time_t now);

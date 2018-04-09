@@ -1,24 +1,37 @@
 /* Copyright (c) 2010-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include "or.h"
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <time.h>
 
+#include "address.h"
+#include "compat.h"
 #include "config.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "di_ops.h"
 #include "dirvote.h"
 #include "microdesc.h"
 #include "networkstatus.h"
+#include "or.h"
+#include "orconfig.h"
 #include "routerlist.h"
 #include "routerparse.h"
-#include "torcert.h"
-
 #include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torcert.h"
+#include "util.h"
+#include "util_format.h"
 
 #ifdef _WIN32
 /* For mkdir() */
 #include <direct.h>
 #else
-#include <dirent.h>
 #endif /* defined(_WIN32) */
 
 static const char test_md1[] =

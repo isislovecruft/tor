@@ -5,12 +5,19 @@
 
 #define CONNECTION_PRIVATE
 
-#include "or.h"
+#include <string.h>
+
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_or.h"
+#include "container.h"
 #include "main.h"
-#include "test.h"
+#include "or.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 static or_options_t mock_options;
 

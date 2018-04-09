@@ -8,23 +8,38 @@
  * \brief Benchmarks for lower level Tor modules.
  **/
 
-#include "orconfig.h"
-
-#include "or.h"
-#include "onion_tap.h"
-#include "relay.h"
-#include <openssl/opensslv.h>
-#include <openssl/evp.h>
 #include <openssl/ec.h>
 #include <openssl/ecdh.h>
 #include <openssl/obj_mac.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <syslog.h>
+#include <time.h>
 
+#include "or.h"
+#include "compat_threads.h"
+#include "compress.h"
 #include "config.h"
+#include "consdiff.h"
+#include "container.h"
+#include "crypto.h"
 #include "crypto_curve25519.h"
-#include "onion_ntor.h"
+#include "crypto_digest.h"
 #include "crypto_ed25519.h"
 #include "crypto_rand.h"
-#include "consdiff.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
+#include "onion_ntor.h"
+#include "onion_tap.h"
+#include "orconfig.h"
+#include "relay.h"
+#include "siphash.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 #if defined(HAVE_CLOCK_GETTIME) && defined(CLOCK_PROCESS_CPUTIME_ID)
 static uint64_t nanostart;

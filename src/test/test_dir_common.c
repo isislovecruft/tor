@@ -3,15 +3,23 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
 #define DIRVOTE_PRIVATE
-#include "test.h"
+#include <string.h>
+
+#include "address.h"
+#include "compat.h"
 #include "container.h"
-#include "or.h"
+#include "crypto_digest.h"
 #include "dirvote.h"
 #include "nodelist.h"
+#include "or.h"
 #include "routerlist.h"
+#include "routerparse.h"
+#include "test.h"
 #include "test_dir_common.h"
+#include "tinytest_macros.h"
+#include "torint.h"
+#include "util.h"
 
 void dir_common_setup_vote(networkstatus_t **vote, time_t now);
 networkstatus_t * dir_common_add_rs_and_parse(networkstatus_t *vote,

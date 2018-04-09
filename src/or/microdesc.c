@@ -8,19 +8,34 @@
  *  less-frequently-changing router information.
  */
 
-#include "or.h"
-#include "circuitbuild.h"
+#include <errno.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include "compat.h"
 #include "config.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "dirserv.h"
-#include "entrynodes.h"
+#include "ht.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
-#include "router.h"
 #include "routerlist.h"
 #include "routerparse.h"
+#include "siphash.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** A data structure to hold a bunch of cached microdescriptors.  There are
  * two active files in the cache: a "cache file" that we mmap, and a "journal

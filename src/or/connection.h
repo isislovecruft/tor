@@ -12,8 +12,24 @@
 #ifndef TOR_CONNECTION_H
 #define TOR_CONNECTION_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "address.h"
 /* XXXX For buf_datalen in inline function */
 #include "buffers.h"
+#include "compat.h"
+#include "container.h"
+#include "or.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util.h"
+
+struct sockaddr;
+struct timeval;
 
 const char *conn_type_to_string(int type);
 const char *conn_state_to_string(int type, int state);

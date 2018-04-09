@@ -3,16 +3,35 @@
 
 #define SCHEDULER_KIST_PRIVATE
 
+#include <errno.h>
 #include <event2/event.h>
+#include <inttypes.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <sys/types.h>
 
-#include "or.h"
 #include "buffers.h"
+#include "compat.h"
+#include "compat_time.h"
 #include "config.h"
 #include "connection.h"
+#include "container.h"
+#include "ht.h"
 #include "networkstatus.h"
+#include "or.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+
 #define TOR_CHANNEL_INTERNAL_
 #include "channel.h"
 #include "channeltls.h"
+
 #define SCHEDULER_PRIVATE_
 #include "scheduler.h"
 

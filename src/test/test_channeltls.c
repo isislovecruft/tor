@@ -1,25 +1,31 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
 #include <math.h>
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
 
 #define TOR_CHANNEL_INTERNAL_
-#include "or.h"
 #include "address.h"
 #include "buffers.h"
 #include "channel.h"
 #include "channeltls.h"
-#include "connection_or.h"
+#include "compat.h"
 #include "config.h"
+#include "connection_or.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "fakechans.h"
+#include "or.h"
 /* For init/free stuff */
 #include "scheduler.h"
-#include "tortls.h"
-
-/* Test suite stuff */
 #include "test.h"
-#include "fakechans.h"
+#include "testsupport.h"
+#include "tortls.h"
+#include "util.h"
 
 /* The channeltls unit tests */
 static void test_channeltls_create(void *arg);

@@ -9,8 +9,16 @@
 #ifndef TOR_CIRCUITMUX_H
 #define TOR_CIRCUITMUX_H
 
+#include <stdint.h>
+
+#include "container.h"
 #include "or.h"
 #include "testsupport.h"
+#include "util.h"
+
+struct circuitmux_policy_circ_data_s;
+struct circuitmux_policy_data_s;
+struct circuitmux_policy_s;
 
 typedef struct circuitmux_policy_s circuitmux_policy_t;
 typedef struct circuitmux_policy_data_s circuitmux_policy_data_t;

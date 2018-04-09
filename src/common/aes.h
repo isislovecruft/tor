@@ -8,6 +8,10 @@
 #ifndef TOR_AES_H
 #define TOR_AES_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "util.h"
 /**
  * \file aes.h
  * \brief Headers for aes.c

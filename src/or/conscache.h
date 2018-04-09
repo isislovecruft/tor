@@ -4,7 +4,16 @@
 #ifndef TOR_CONSCACHE_H
 #define TOR_CONSCACHE_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "confline.h"
+#include "container.h"
 #include "handles.h"
+#include "util.h"
+
+struct consensus_cache_entry_t;
 
 typedef struct consensus_cache_entry_t consensus_cache_entry_t;
 typedef struct consensus_cache_t consensus_cache_t;
@@ -19,6 +28,7 @@ void consensus_cache_free_(consensus_cache_t *cache);
 #define consensus_cache_free(cache) \
   FREE_AND_NULL(consensus_cache_t, consensus_cache_free_, (cache))
 struct sandbox_cfg_elem;
+
 int consensus_cache_may_overallocate(consensus_cache_t *cache);
 int consensus_cache_register_with_sandbox(consensus_cache_t *cache,
                                           struct sandbox_cfg_elem **cfg);

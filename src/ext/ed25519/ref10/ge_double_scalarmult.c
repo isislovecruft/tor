@@ -33,7 +33,6 @@ static void slide(signed char *r,const unsigned char *a)
 }
 
 static ge_precomp Bi[8] = {
-#include "base2.h"
 } ;
 
 /*

@@ -4,6 +4,9 @@
 #ifndef TOR_BACKTRACE_H
 #define TOR_BACKTRACE_H
 
+#include <stddef.h>
+#include <ucontext.h>
+
 #include "orconfig.h"
 
 void log_backtrace(int severity, int domain, const char *msg);

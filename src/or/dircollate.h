@@ -12,8 +12,13 @@
 #ifndef TOR_DIRCOLLATE_H
 #define TOR_DIRCOLLATE_H
 
-#include "testsupport.h"
+#include "container.h"
+#include "ht.h"
 #include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
+struct dircollator_s;
 
 typedef struct dircollator_s dircollator_t;
 
@@ -31,6 +36,7 @@ vote_routerstatus_t **dircollator_get_votes_for_router(dircollator_t *dc,
 
 #ifdef DIRCOLLATE_PRIVATE
 struct ddmap_entry_s;
+
 typedef HT_HEAD(double_digest_map, ddmap_entry_s) double_digest_map_t;
 /** A dircollator keeps track of all the routerstatus entries in a
  * set of networkstatus votes, and matches them by an appropriate rule. */

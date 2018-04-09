@@ -15,16 +15,26 @@
 
 #define ADDRESSMAP_PRIVATE
 
-#include "or.h"
+#include <netinet/in.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+
 #include "addressmap.h"
 #include "circuituse.h"
+#include "compat.h"
 #include "config.h"
-#include "connection_edge.h"
 #include "control.h"
 #include "crypto_rand.h"
 #include "dns.h"
 #include "nodelist.h"
+#include "or.h"
 #include "routerset.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** A client-side struct to remember requests to rewrite addresses
  * to new addresses. These structs are stored in the hash table

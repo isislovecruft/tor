@@ -10,7 +10,9 @@
 
 #define ADDRESS_PRIVATE
 
+#include "di_ops.h"
 #include "orconfig.h"
+#include "siphash.h"
 
 #ifdef _WIN32
 /* For access to structs needed by GetAdaptersAddresses */
@@ -29,23 +31,19 @@
 #if _WIN32_WINNT < 0x0501
 #error "winver too low"
 #endif
-#include <winsock2.h>
+#include <iphlpapi.h>
 #include <process.h>
 #include <windows.h>
-#include <iphlpapi.h>
+#include <winsock2.h>
 #endif /* defined(_WIN32) */
 
-#include "compat.h"
-#include "util.h"
-#include "util_format.h"
 #include "address.h"
-#include "torlog.h"
+#include "compat.h"
 #include "container.h"
 #include "sandbox.h"
-
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
+#include "torlog.h"
+#include "util.h"
+#include "util_format.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -55,17 +53,11 @@
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#endif
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #endif
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
-#endif
-#ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h> /* FreeBSD needs this to know what version it is */
 #endif
 #ifdef HAVE_SYS_UN_H
 #include <sys/un.h>
@@ -79,11 +71,6 @@
 #ifdef HAVE_NET_IF_H
 #include <net/if.h>
 #endif
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 
 /* tor_addr_is_null() and maybe other functions rely on AF_UNSPEC being 0 to
  * work correctly. Bail out here if we've found a platform where AF_UNSPEC

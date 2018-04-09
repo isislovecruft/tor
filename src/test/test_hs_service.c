@@ -22,39 +22,54 @@
 #define HS_CLIENT_PRIVATE
 #define ROUTERPARSE_PRIVATE
 
-#include "test.h"
-#include "test_helpers.h"
-#include "log_test_helpers.h"
-#include "rend_test_helpers.h"
-#include "hs_test_helpers.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <syslog.h>
+#include <time.h>
 
-#include "or.h"
-#include "config.h"
+#include "address.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuituse.h"
+#include "compat.h"
+#include "config.h"
+#include "container.h"
+#include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
 #include "crypto_rand.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
 #include "dirvote.h"
-#include "networkstatus.h"
-#include "nodelist.h"
-#include "relay.h"
-#include "routerparse.h"
-
+#include "ed25519_cert.h"
+#include "hs_circuit.h"
+#include "hs_circuitmap.h"
+#include "hs_client.h"
 #include "hs_common.h"
 #include "hs_config.h"
+#include "hs_descriptor.h"
 #include "hs_ident.h"
 #include "hs_intropoint.h"
 #include "hs_ntor.h"
-#include "hs_circuit.h"
 #include "hs_service.h"
-#include "hs_client.h"
-#include "main.h"
+#include "log_test_helpers.h"
+#include "networkstatus.h"
+#include "nodelist.h"
+#include "or.h"
+#include "relay.h"
 #include "rendservice.h"
+#include "routerparse.h"
 #include "statefile.h"
-#include "shared_random_state.h"
-
-/* Trunnel */
-#include "hs/cell_establish_intro.h"
+#include "test.h"
+#include "test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torcert.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 static networkstatus_t mock_ns;
 

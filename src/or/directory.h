@@ -12,7 +12,23 @@
 #ifndef TOR_DIRECTORY_H
 #define TOR_DIRECTORY_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "address.h"
+#include "compress.h"
+#include "confline.h"
+#include "container.h"
+#include "crypto_digest.h"
 #include "hs_ident.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
+struct circuit_guard_state_t;
+struct directory_request_t;
 
 int directories_have_accepted_server_descriptor(void);
 void directory_post_to_dirservers(uint8_t dir_purpose, uint8_t router_purpose,
@@ -218,6 +234,7 @@ struct directory_request_t {
 };
 
 struct get_handler_args_t;
+
 STATIC int handle_get_hs_descriptor_v3(dir_connection_t *conn,
                                        const struct get_handler_args_t *args);
 STATIC int directory_handle_command(dir_connection_t *conn);

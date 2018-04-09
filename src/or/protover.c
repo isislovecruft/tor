@@ -23,9 +23,14 @@
 
 #define PROTOVER_PRIVATE
 
-#include "or.h"
+#include <string.h>
+
+#include "compat.h"
 #include "protover.h"
 #include "routerparse.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 #ifndef HAVE_RUST
 

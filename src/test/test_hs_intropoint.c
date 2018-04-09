@@ -11,27 +11,39 @@
 #define RENDSERVICE_PRIVATE
 #define CIRCUITLIST_PRIVATE
 
-#include "test.h"
-#include "log_test_helpers.h"
-#include "crypto_rand.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/types.h>
+#include <syslog.h>
 
-#include "or.h"
 #include "circuitlist.h"
 #include "circuituse.h"
-#include "ht.h"
-#include "relay.h"
-#include "rendservice.h"
-
+#include "compat.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_rand.h"
+#include "crypto_rsa.h"
+#include "hs/cell_common.h"
+/* Trunnel. */
+#include "hs/cell_establish_intro.h"
+#include "hs/cell_introduce1.h"
 #include "hs_cell.h"
 #include "hs_circuitmap.h"
 #include "hs_common.h"
 #include "hs_intropoint.h"
 #include "hs_service.h"
-
-/* Trunnel. */
-#include "hs/cell_establish_intro.h"
-#include "hs/cell_introduce1.h"
-#include "hs/cell_common.h"
+#include "ht.h"
+#include "log_test_helpers.h"
+#include "or.h"
+#include "relay.h"
+#include "rendservice.h"
+#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 static size_t
 new_establish_intro_cell(const char *circ_nonce,

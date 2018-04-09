@@ -39,9 +39,9 @@ typedef struct sandbox_cfg_elem sandbox_cfg_t;
  */
 #ifdef USE_LIBSECCOMP
 
-#include <sys/ucontext.h>
-#include <seccomp.h>
 #include <netdb.h>
+#include <seccomp.h>
+#include <sys/ucontext.h>
 
 #define PARAM_PTR 0
 #define PARAM_NUM 1
@@ -108,6 +108,7 @@ typedef struct {
 int sandbox_add_addrinfo(const char *addr);
 
 struct addrinfo;
+
 /** Replacement for getaddrinfo(), using pre-recorded results. */
 int sandbox_getaddrinfo(const char *name, const char *servname,
                         const struct addrinfo *hints,

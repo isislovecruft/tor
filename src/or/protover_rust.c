@@ -7,9 +7,6 @@
  * and safe translation/handling between the Rust/C boundary.
  */
 
-#include "or.h"
-#include "protover.h"
-
 #ifdef HAVE_RUST
 
 /* Define for compatibility, used in main.c */

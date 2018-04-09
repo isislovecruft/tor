@@ -3,11 +3,22 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
+#include "compat.h"
+#include "container.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
+#include "di_ops.h"
 #include "fp_pair.h"
+#include "or.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 /** Helper: return a tristate based on comparing the strings in *<b>a</b> and
  * *<b>b</b>. */

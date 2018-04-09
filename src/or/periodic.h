@@ -4,6 +4,10 @@
 #ifndef TOR_PERIODIC_H
 #define TOR_PERIODIC_H
 
+#include <time.h>
+
+#include "or.h"
+
 #define PERIODIC_EVENT_NO_UPDATE (-1)
 
 /** Callback function for a periodic event to take action.  The return value

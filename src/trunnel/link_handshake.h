@@ -5,7 +5,10 @@
 #ifndef TRUNNEL_LINK_HANDSHAKE_H
 #define TRUNNEL_LINK_HANDSHAKE_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "trunnel.h"
 
 #define CERTTYPE_RSA1024_ID_LINK 1

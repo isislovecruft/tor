@@ -4,6 +4,13 @@
 #ifndef TOR_HS_NTOR_H
 #define TOR_HS_NTOR_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "crypto.h"
+#include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
 #include "or.h"
 
 /* Output length of KDF for key expansion */

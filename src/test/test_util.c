@@ -3,21 +3,33 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include "compat.h"
+#include "compat_time.h"
+#include "compress.h"
+#include "confline.h"
+#include "container.h"
+#include "di_ops.h"
 #include "orconfig.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
+
 #define COMPAT_PRIVATE
 #define COMPAT_TIME_PRIVATE
 #define CONTROL_PRIVATE
 #define UTIL_PRIVATE
-#include "or.h"
-#include "buffers.h"
+#include "compress_zstd.h"
 #include "config.h"
 #include "control.h"
 #include "crypto_rand.h"
-#include "test.h"
-#include "memarea.h"
-#include "util_process.h"
 #include "log_test_helpers.h"
-#include "compress_zstd.h"
+#include "memarea.h"
+#include "test.h"
 
 #ifdef HAVE_PWD_H
 #include <pwd.h>
@@ -31,9 +43,23 @@
 #ifdef _WIN32
 #include <tchar.h>
 #endif
-#include <math.h>
-#include <ctype.h>
+socket_type.h>/socket_type.h>
+#include <errno.h>
+#include <fcntl.h>
 #include <float.h>
+#include <limits.h>
+#include <math.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <syslog.h>
+#include <time.h>
+#include <unistd.h>
 
 #define INFINITY_DBL ((double)INFINITY)
 #define NAN_DBL ((double)NAN)

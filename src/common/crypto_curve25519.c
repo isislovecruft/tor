@@ -16,20 +16,20 @@
  */
 
 #define CRYPTO_CURVE25519_PRIVATE
-#include "orconfig.h"
-#ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
-#endif
-#include "container.h"
+#include <string.h>
+#include <sys/types.h>
+
+#include "compat.h"
 #include "crypto_curve25519.h"
-#include "crypto_digest.h"
 #include "crypto_format.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
-#include "util.h"
-#include "torlog.h"
-
+#include "di_ops.h"
 #include "ed25519/donna/ed25519_donna_tor.h"
+#include "orconfig.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* ==============================
    Part 1: wrap a suitable curve25519 implementation as curve25519_impl

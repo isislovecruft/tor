@@ -11,12 +11,16 @@
  * that they fire.  See periodic_events[] in main.c for examples.
  */
 
-#include "or.h"
+#include <event2/event.h>
+#include <event2/util.h>
+#include <sys/time.h>
+
 #include "compat_libevent.h"
 #include "config.h"
+#include "or.h"
 #include "periodic.h"
-
-#include <event2/event.h>
+#include "torlog.h"
+#include "util_bug.h"
 
 /** We disable any interval greater than this number of seconds, on the
  * grounds that it is probably an absolute time mistakenly passed in as a

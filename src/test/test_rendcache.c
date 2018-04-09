@@ -1,18 +1,31 @@
 /* Copyright (c) 2010-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include "or.h"
+#include <errno.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
 
+#include "compat.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "or.h"
+#include "rendcommon.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_format.h"
+
 #define RENDCACHE_PRIVATE
-#include "rendcache.h"
-#include "router.h"
-#include "routerlist.h"
 #include "config.h"
 #include "hs_common.h"
-#include "rend_test_helpers.h"
 #include "log_test_helpers.h"
+#include "rend_test_helpers.h"
+#include "rendcache.h"
+#include "router.h"
 
 #define NS_MODULE rend_cache
 

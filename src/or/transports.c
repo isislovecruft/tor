@@ -90,17 +90,20 @@
  **/
 
 #define PT_PRIVATE
-#include "or.h"
+#include <string.h>
+
 #include "bridges.h"
+#include "compat.h"
 #include "config.h"
-#include "circuitbuild.h"
-#include "transports.h"
-#include "util.h"
+#include "control.h"
+#include "ext_orport.h"
+#include "or.h"
 #include "router.h"
 #include "statefile.h"
-#include "connection_or.h"
-#include "ext_orport.h"
-#include "control.h"
+#include "torlog.h"
+#include "transports.h"
+#include "util.h"
+#include "util_bug.h"
 
 static process_environment_t *
 create_managed_proxy_environment(const managed_proxy_t *mp);

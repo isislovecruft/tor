@@ -1,11 +1,15 @@
 /* Copyright (c) 2016-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include "test.h"
+#include <stddef.h>
 
-#include "util.h"
+#include "compat.h"
 #include "handles.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+
+struct demo_handle_t;
 
 typedef struct demo_t {
   HANDLE_ENTRY(demo, demo_t);

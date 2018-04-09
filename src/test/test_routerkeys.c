@@ -3,16 +3,31 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
 #define ROUTER_PRIVATE
-#include "or.h"
+#include <netinet/in.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <syslog.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "compat.h"
 #include "config.h"
+#include "crypto.h"
+#include "crypto_curve25519.h"
+#include "crypto_ed25519.h"
+#include "crypto_format.h"
+#include "crypto_rsa.h"
+#include "or.h"
 #include "router.h"
 #include "routerkeys.h"
-#include "util.h"
-#include "crypto.h"
-#include "torcert.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torcert.h"
+#include "torlog.h"
+#include "util.h"
 
 #ifdef _WIN32
 /* For mkdir() */

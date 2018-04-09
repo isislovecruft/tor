@@ -1,10 +1,19 @@
 /* Copyright (c) 2013-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include "or.h"
-#include "torlog.h"
+#include <stdint.h>
+#include <string.h>
+#include <syslog.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "compat.h"
+#include "container.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
 
 static void
 dummy_cb_fn(int severity, uint32_t domain, const char *msg)

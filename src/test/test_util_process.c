@@ -2,14 +2,13 @@
 /* See LICENSE for licensing information */
 
 #define UTIL_PROCESS_PRIVATE
-#include "orconfig.h"
-#include "or.h"
-
-#include "test.h"
-
-#include "util_process.h"
+#include <ctime>
 
 #include "log_test_helpers.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util_process.h"
 
 #ifndef _WIN32
 #define NS_MODULE util_process

@@ -8,25 +8,29 @@
  * \brief Common compression API.
  **/
 
-#include "orconfig.h"
-
-#include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
-#include <assert.h>
 #include <string.h>
+#include <sys/param.h>
+
+#include "compat.h"
+#include "compat_threads.h"
+#include "di_ops.h"
+#include "orconfig.h"
 #include "torint.h"
+#include "util_bug.h"
 
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
 
-#include "util.h"
-#include "torlog.h"
 #include "compress.h"
 #include "compress_lzma.h"
 #include "compress_none.h"
 #include "compress_zlib.h"
 #include "compress_zstd.h"
+#include "torlog.h"
+#include "util.h"
 
 /** Total number of bytes allocated for compression state overhead. */
 static atomic_counter_t total_compress_allocation;

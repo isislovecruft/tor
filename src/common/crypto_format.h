@@ -7,9 +7,13 @@
 #ifndef TOR_CRYPTO_FORMAT_H
 #define TOR_CRYPTO_FORMAT_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+
+#include "crypto_ed25519.h"
 #include "testsupport.h"
 #include "torint.h"
-#include "crypto_ed25519.h"
 
 int crypto_write_tagged_contents_to_file(const char *fname,
                                          const char *typestring,

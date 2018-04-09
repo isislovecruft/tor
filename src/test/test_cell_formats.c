@@ -3,25 +3,33 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
 #define CONNECTION_EDGE_PRIVATE
 #define RELAY_PRIVATE
-#include "or.h"
-#include "channel.h"
-#include "connection_edge.h"
-#include "connection_or.h"
-#include "config.h"
-#include "crypto_rand.h"
-#include "onion.h"
-#include "onion_tap.h"
-#include "onion_fast.h"
-#include "onion_ntor.h"
-#include "relay.h"
-#include "test.h"
-
+#include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
+
+#include "address.h"
+#include "channel.h"
+#include "compat.h"
+#include "config.h"
+#include "connection_edge.h"
+#include "connection_or.h"
+#include "container.h"
+#include "crypto_ed25519.h"
+#include "crypto_rand.h"
+#include "onion.h"
+#include "onion_fast.h"
+#include "onion_ntor.h"
+#include "onion_tap.h"
+#include "or.h"
+#include "relay.h"
+#include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 static void
 test_cfmt_relay_header(void *arg)

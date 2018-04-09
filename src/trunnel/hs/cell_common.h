@@ -5,7 +5,10 @@
 #ifndef TRUNNEL_CELL_COMMON_H
 #define TRUNNEL_CELL_COMMON_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "trunnel.h"
 
 #if !defined(TRUNNEL_OPAQUE) && !defined(TRUNNEL_OPAQUE_TRN_CELL_EXTENSION_FIELDS)

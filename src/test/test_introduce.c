@@ -1,10 +1,18 @@
 /* Copyright (c) 2012-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+
+#include "compat.h"
 #include "crypto.h"
-#include "or.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 #define RENDSERVICE_PRIVATE
 #include "rendservice.h"

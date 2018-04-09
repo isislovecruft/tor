@@ -9,8 +9,13 @@
 #ifndef TOR_CHANNELTLS_H
 #define TOR_CHANNELTLS_H
 
-#include "or.h"
+#include <stdint.h>
+
+#include "address.h"
 #include "channel.h"
+#include "crypto_ed25519.h"
+#include "or.h"
+#include "testsupport.h"
 
 #define BASE_CHAN_TO_TLS(c) (channel_tls_from_base((c)))
 #define TLS_CHAN_TO_BASE(c) (channel_tls_to_base((c)))

@@ -9,32 +9,33 @@
  * process control.
  **/
 
+#include "compat_threads.h"
+#include "di_ops.h"
 #include "orconfig.h"
+#include "util_bug.h"
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
 #define UTIL_PRIVATE
-#include "util.h"
-#include "torlog.h"
-#include "crypto_digest.h"
-#include "torint.h"
 #include "container.h"
-#include "address.h"
+#include "crypto_digest.h"
 #include "sandbox.h"
-#include "backtrace.h"
-#include "util_process.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util.h"
 #include "util_format.h"
+#include "util_process.h"
 
 #ifdef _WIN32
-#include <io.h>
 #include <direct.h>
+#include <io.h>
 #include <process.h>
 #include <tchar.h>
 #include <winbase.h>
 #else /* !(defined(_WIN32)) */
 #include <dirent.h>
-#include <pwd.h>
 #include <grp.h>
+#include <pwd.h>
 #endif /* defined(_WIN32) */
 
 /* math.h needs this on Linux */
@@ -42,17 +43,14 @@
 #define _USE_ISOC99_ 1
 #endif
 #include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
 #include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <syslog.h>
 
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
 #endif
 #ifdef HAVE_ERRNO_H
 #include <errno.h>
@@ -68,9 +66,6 @@
 #endif
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
-#endif
-#ifdef HAVE_SYS_FCNTL_H
-#include <sys/fcntl.h>
 #endif
 #ifdef HAVE_TIME_H
 #include <time.h>
@@ -106,6 +101,7 @@
 #ifdef USE_DMALLOC
  #undef strndup
  #include <dmalloc.h>
+
  /* Macro to pass the extra dmalloc args to another function. */
  #define DMALLOC_FN_ARGS , file, line
 

@@ -5,21 +5,36 @@
 #define MAIN_PRIVATE
 #define NETWORKSTATUS_PRIVATE
 #define TOR_TIMERS_PRIVATE
-#include "or.h"
-#include "test.h"
-#include "testsupport.h"
+#include <event2/event.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+
+#include "buffers.h"
+#include "channel.h"
+#include "channelpadding.h"
+#include "channelpadding_negotiation.h"
+#include "channeltls.h"
+#include "compat.h"
+#include "compat_libevent.h"
+#include "compat_time.h"
+#include "config.h"
 #include "connection.h"
 #include "connection_or.h"
-#include "channel.h"
-#include "channeltls.h"
-#include "channelpadding.h"
-#include "compat_libevent.h"
-#include "config.h"
-#include <event2/event.h>
-#include "compat_time.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "log_test_helpers.h"
 #include "main.h"
 #include "networkstatus.h"
-#include "log_test_helpers.h"
+#include "or.h"
+#include "test.h"
+#include "timers.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "tortls.h"
+#include "util.h"
 
 int channelpadding_get_netflow_inactive_timeout_ms(channel_t *chan);
 int64_t channelpadding_compute_time_until_pad_for_netflow(channel_t *chan);

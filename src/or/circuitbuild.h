@@ -12,6 +12,19 @@
 #ifndef TOR_CIRCUITBUILD_H
 #define TOR_CIRCUITBUILD_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "crypto_curve25519.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
 int route_len_for_purpose(uint8_t purpose, extend_info_t *exit_ei);
 char *circuit_list_path(origin_circuit_t *circ, int verbose);
 char *circuit_list_path_for_controller(origin_circuit_t *circ);
@@ -35,6 +48,7 @@ int circuit_init_cpath_crypto(crypt_path_t *cpath,
                               const char *key_data, size_t key_data_len,
                               int reverse, int is_hs_v3);
 struct created_cell_t;
+
 int circuit_finish_handshake(origin_circuit_t *circ,
                              const struct created_cell_t *created_cell);
 int circuit_truncated(origin_circuit_t *circ, crypt_path_t *layer,

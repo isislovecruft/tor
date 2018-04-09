@@ -12,7 +12,17 @@
 #ifndef TOR_DIRVOTE_H
 #define TOR_DIRVOTE_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
+#include "or.h"
 #include "testsupport.h"
+#include "util.h"
 
 /*
  * Ideally, assuming synced clocks, we should only need 1 second for each of:

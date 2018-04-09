@@ -29,13 +29,14 @@
     Jean-Philippe Aumasson (https://131002.net/siphash/siphash24.c)
 */
 
-#include "torint.h"
-#include "siphash.h"
-/* for tor_assert */
-#include "util.h"
+#include <stddef.h>
+#include <stdint.h>
 /* for memcpy */
 #include <string.h>
+
 #include "byteorder.h"
+#include "siphash.h"
+#include "util_bug.h"
 
 #define ROTATE(x, b) (uint64_t)( ((x) << (b)) | ( (x) >> (64 - (b))) )
 

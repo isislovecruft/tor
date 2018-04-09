@@ -28,15 +28,31 @@
  */
 
 #define GEOIP_PRIVATE
-#include "or.h"
-#include "ht.h"
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <syslog.h>
+
 #include "buffers.h"
+#include "compat.h"
+#include "compat_time.h"
 #include "config.h"
+#include "container.h"
 #include "control.h"
-#include "dnsserv.h"
+#include "crypto_digest.h"
+#include "di_ops.h"
 #include "dos.h"
 #include "geoip.h"
+#include "ht.h"
+#include "or.h"
 #include "routerlist.h"
+#include "siphash.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 static void init_geoip_countries(void);
 

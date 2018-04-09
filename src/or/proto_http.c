@@ -5,9 +5,15 @@
 /* See LICENSE for licensing information */
 
 #define PROTO_HTTP_PRIVATE
-#include "or.h"
+#include <limits.h>
+#include <string.h>
+
 #include "buffers.h"
+#include "compat.h"
 #include "proto_http.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** Return true if <b>cmd</b> looks like a HTTP (proxy) request. */
 int

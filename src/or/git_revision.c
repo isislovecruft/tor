@@ -10,8 +10,5 @@
  * src/or/include.am, and is usually right.
  */
 const char tor_git_revision[] =
-#ifndef _MSC_VER
-#include "micro-revision.i"
-#endif
   "";
 

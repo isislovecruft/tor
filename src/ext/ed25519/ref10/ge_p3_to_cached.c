@@ -1,3 +1,4 @@
+#include "ed25519/ref10/fe.h"
 #include "ge.h"
 
 /*
@@ -5,7 +6,6 @@ r = p
 */
 
 static const fe d2 = {
-#include "d2.h"
 } ;
 
 extern void ge_p3_to_cached(ge_cached *r,const ge_p3 *p)

@@ -7,9 +7,12 @@
  * \brief DOCDOC
  */
 
-#include "orconfig.h"
-#include "pubsub.h"
+#include <stddef.h>
+
 #include "container.h"
+#include "pubsub.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** Helper: insert <b>s</b> into <b>topic's</b> list of subscribers, keeping
  * them sorted in priority order. */

@@ -6,8 +6,16 @@
 #ifndef TOR_CONTAINER_H
 #define TOR_CONTAINER_H
 
-#include "util.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
+#include "compat.h"
+#include "orconfig.h"
 #include "siphash.h"
+#include "testsupport.h"
+#include "util.h"
 
 /** A resizeable list of pointers, with associated helpful functionality.
  *

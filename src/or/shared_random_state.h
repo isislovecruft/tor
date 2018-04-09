@@ -4,7 +4,13 @@
 #ifndef TOR_SHARED_RANDOM_STATE_H
 #define TOR_SHARED_RANDOM_STATE_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "confline.h"
+#include "container.h"
 #include "shared_random.h"
+#include "testsupport.h"
 
 /* Action that can be performed on the state for any objects. */
 typedef enum {

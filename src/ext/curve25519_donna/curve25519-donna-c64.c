@@ -22,10 +22,8 @@
  * from the sample implementation.
  */
 
-#include "orconfig.h"
-
+#include <stdint.h>
 #include <string.h>
-#include "torint.h"
 
 typedef uint8_t u8;
 typedef uint64_t limb;

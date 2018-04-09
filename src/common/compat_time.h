@@ -18,7 +18,11 @@
 #ifndef TOR_COMPAT_TIME_H
 #define TOR_COMPAT_TIME_H
 
+#include <stdint.h>
+#include <sys/time.h>
+
 #include "orconfig.h"
+#include "testsupport.h"
 #ifdef _WIN32
 #undef HAVE_CLOCK_GETTIME
 #endif

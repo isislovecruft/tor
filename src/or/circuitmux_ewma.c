@@ -30,14 +30,24 @@
 
 #define TOR_CIRCUITMUX_EWMA_C_
 
-#include "orconfig.h"
-
 #include <math.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/time.h>
 
-#include "or.h"
 #include "circuitmux.h"
 #include "circuitmux_ewma.h"
+#include "compat_libevent.h"
+#include "container.h"
 #include "networkstatus.h"
+#include "or.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+
+struct cell_ewma_s;
+struct ewma_policy_circ_data_s;
+struct ewma_policy_data_s;
 
 /*** EWMA parameter #defines ***/
 

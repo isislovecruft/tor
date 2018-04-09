@@ -1,8 +1,10 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include <math.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <syslog.h>
 #include <time.h>
 
 #define CONNECTION_PRIVATE
@@ -13,29 +15,40 @@
 #define NETWORKSTATUS_PRIVATE
 #define ROUTERLIST_PRIVATE
 #define TOR_UNIT_TESTING
-#include "or.h"
+#include "address.h"
+#include "buffers.h"
+#include "compat.h"
 #include "config.h"
+#include "confline.h"
 #include "connection.h"
 #include "container.h"
-#include "control.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "dirvote.h"
 #include "entrynodes.h"
 #include "hibernate.h"
+#include "log_test_helpers.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "router.h"
 #include "routerlist.h"
-#include "routerset.h"
 #include "routerparse.h"
+#include "routerset.h"
 #include "shared_random.h"
 #include "statefile.h"
 #include "test.h"
 #include "test_dir_common.h"
-#include "log_test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 void construct_consensus(char **consensus_text_md);
 

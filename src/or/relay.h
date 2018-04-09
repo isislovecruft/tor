@@ -12,6 +12,16 @@
 #ifndef TOR_RELAY_H
 #define TOR_RELAY_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "address.h"
+#include "compat.h"
+#include "container.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
 extern uint64_t stats_n_relay_cells_relayed;
 extern uint64_t stats_n_relay_cells_delivered;
 

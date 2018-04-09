@@ -2,17 +2,17 @@
 /* See LICENSE for licensing information */
 
 #define COMPAT_LIBEVENT_PRIVATE
-#include "orconfig.h"
-#include "or.h"
-
-#include "test.h"
-
-#include "compat_libevent.h"
-
 #include <event2/event.h>
-#include <event2/thread.h>
+#include <stddef.h>
+#include <syslog.h>
 
+#include "compat.h"
+#include "compat_libevent.h"
+#include "container.h"
 #include "log_test_helpers.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
 
 #define NS_MODULE compat_libevent
 

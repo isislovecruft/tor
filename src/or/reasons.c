@@ -14,9 +14,14 @@
  * to another.
  **/
 
+#include <errno.h>
+#include <stddef.h>
+
 #include "or.h"
-#include "config.h"
 #include "reasons.h"
+#include "torlog.h"
+#include "tortls.h"
+#include "util_bug.h"
 
 /***************************** Edge (stream) reasons **********************/
 

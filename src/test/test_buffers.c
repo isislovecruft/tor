@@ -5,13 +5,25 @@
 
 #define BUFFERS_PRIVATE
 #define PROTO_HTTP_PRIVATE
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
 #include "buffers.h"
 #include "buffers_tls.h"
+#include "compat.h"
+#include "compat_time.h"
+#include "compress.h"
 #include "crypto_rand.h"
 #include "proto_http.h"
-#include "proto_socks.h"
 #include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "tortls.h"
+#include "util.h"
 
 /** Run unit tests for buffers.c */
 static void

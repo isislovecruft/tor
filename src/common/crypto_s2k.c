@@ -12,15 +12,20 @@
 
 #define CRYPTO_S2K_PRIVATE
 
-#include "compat.h"
+#include <limits.h>
+#include <openssl/evp.h>
+#include <string.h>
+
 #include "crypto.h"
 #include "crypto_digest.h"
 #include "crypto_rand.h"
 #include "crypto_s2k.h"
 #include "crypto_util.h"
+#include "di_ops.h"
+#include "orconfig.h"
+#include "torint.h"
 #include "util.h"
-
-#include <openssl/evp.h>
+#include "util_bug.h"
 
 #if defined(HAVE_LIBSCRYPT_H) && defined(HAVE_LIBSCRYPT_SCRYPT)
 #define HAVE_SCRYPT

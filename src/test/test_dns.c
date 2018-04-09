@@ -1,13 +1,23 @@
 /* Copyright (c) 2015-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
+#include "address.h"
+#include "compat.h"
+#include "dns_structs.h"
 #include "or.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 #define DNS_PRIVATE
 
-#include "dns.h"
 #include "connection.h"
+#include "dns.h"
 #include "router.h"
 
 #define NS_MODULE dns

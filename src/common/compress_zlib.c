@@ -11,12 +11,12 @@
  * instead.
  **/
 
-#include "orconfig.h"
-
-#include "util.h"
-#include "torlog.h"
+#include "compat_threads.h"
 #include "compress.h"
 #include "compress_zlib.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* zlib 1.2.4 and 1.2.5 do some "clever" things with macros.  Instead of
    saying "(defined(FOO) ? FOO : 0)" they like to say "FOO-0", on the theory
@@ -38,6 +38,9 @@
 #define off64_t int64_t
 #endif
 
+#include <features.h>
+#include <limits.h>
+#include <stdint.h>
 #include <zlib.h>
 
 #if defined ZLIB_VERNUM && ZLIB_VERNUM < 0x1200

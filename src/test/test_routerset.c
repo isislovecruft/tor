@@ -3,13 +3,24 @@
 
 #define ROUTERSET_PRIVATE
 
-#include "or.h"
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+
+#include "address.h"
+#include "compat.h"
+#include "container.h"
 #include "geoip.h"
-#include "routerset.h"
-#include "routerparse.h"
-#include "policies.h"
 #include "nodelist.h"
+#include "or.h"
+#include "policies.h"
+#include "routerparse.h"
+#include "routerset.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 #define NS_MODULE routerset
 

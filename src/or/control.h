@@ -12,6 +12,22 @@
 #ifndef TOR_CONTROL_H
 #define TOR_CONTROL_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "address.h"
+#include "compat.h"
+#include "confline.h"
+#include "container.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "or.h"
+#include "testsupport.h"
+#include "torlog.h"
+
+struct timeval;
+
 void control_initialize_event_queue(void);
 
 void control_update_global_event_mask(void);

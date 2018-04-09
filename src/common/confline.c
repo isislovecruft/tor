@@ -4,11 +4,14 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <string.h>
+
 #include "compat.h"
 #include "confline.h"
+#include "container.h"
 #include "torlog.h"
 #include "util.h"
-#include "container.h"
+#include "util_bug.h"
 
 static int config_get_lines_aux(const char *string, config_line_t **result,
                                 int extended, int allow_include,

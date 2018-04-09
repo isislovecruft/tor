@@ -12,6 +12,11 @@
 #ifndef TOR_REASONS_H
 #define TOR_REASONS_H
 
+#include <stdint.h>
+
+#include "compat.h"
+#include "or.h"
+
 const char *stream_end_reason_to_control_string(int reason);
 const char *stream_end_reason_to_string(int reason);
 socks5_reply_status_t stream_end_reason_to_socks5_response(int reason);

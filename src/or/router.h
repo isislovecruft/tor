@@ -12,7 +12,20 @@
 #ifndef TOR_ROUTER_H
 #define TOR_ROUTER_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/un.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "crypto_curve25519.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
+#include "or.h"
 #include "testsupport.h"
+#include "util.h"
 
 crypto_pk_t *get_onion_key(void);
 time_t get_onion_key_set_at(void);

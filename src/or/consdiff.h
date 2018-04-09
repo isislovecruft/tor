@@ -5,7 +5,13 @@
 #ifndef TOR_CONSDIFF_H
 #define TOR_CONSDIFF_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "container.h"
+#include "crypto_digest.h"
 #include "or.h"
+#include "testsupport.h"
 
 char *consensus_diff_generate(const char *cons1,
                               const char *cons2);

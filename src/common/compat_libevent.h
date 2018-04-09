@@ -4,10 +4,16 @@
 #ifndef TOR_COMPAT_LIBEVENT_H
 #define TOR_COMPAT_LIBEVENT_H
 
+#include <event2/event.h>
+#include <sys/sysmacros.h>
+
 #include "orconfig.h"
 #include "testsupport.h"
+#include "util.h"
 
-#include <event2/event.h>
+struct event;
+struct event_base;
+struct timeval;
 
 void configure_libevent_logging(void);
 void suppress_libevent_log_msg(const char *msg);

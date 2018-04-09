@@ -5,14 +5,19 @@
 
 #define CIRCUITLIST_PRIVATE
 
-#include "or.h"
-#include "test.h"
-#include "test_helpers.h"
-#include "config.h"
+#include <time.h>
+
+#include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuituse.h"
-#include "circuitbuild.h"
+#include "compat.h"
 #include "nodelist.h"
+#include "or.h"
+#include "test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 static void
 test_circuit_is_available_for_use_ret_false_when_marked_for_close(void *arg)

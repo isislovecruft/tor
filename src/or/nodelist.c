@@ -40,30 +40,40 @@
 
 #define NODELIST_PRIVATE
 
-#include "or.h"
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <syslog.h>
+#include <time.h>
+
 #include "address.h"
 #include "address_set.h"
 #include "config.h"
 #include "control.h"
+#include "crypto_digest.h"
+#include "di_ops.h"
 #include "dirserv.h"
 #include "entrynodes.h"
 #include "geoip.h"
-#include "hs_common.h"
 #include "hs_client.h"
+#include "hs_common.h"
+#include "hs_service.h"
+#include "ht.h"
 #include "main.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
-#include "protover.h"
 #include "rendservice.h"
 #include "router.h"
 #include "routerlist.h"
-#include "routerparse.h"
 #include "routerset.h"
+#include "siphash.h"
 #include "torcert.h"
-
-#include <string.h>
+#include "torlog.h"
+#include "util.h"
+#include "util_format.h"
 
 static void nodelist_drop_node(node_t *node, int remove_from_ht);
 #define node_free(val) \

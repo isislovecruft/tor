@@ -1,13 +1,27 @@
 /* Copyright (c) 2016-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 #define CRYPTO_ED25519_PRIVATE
-#include "orconfig.h"
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/param.h>
+#include <syslog.h>
+
 #include "backtrace.h"
+#include "compat_threads.h"
+#include "compress.h"
 #include "config.h"
-#include "fuzzing.h"
-#include "crypto.h"
 #include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "fuzzing.h"
+#include "or.h"
+#include "siphash.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 static or_options_t *mock_options = NULL;
 static const or_options_t *

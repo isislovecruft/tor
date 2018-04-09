@@ -1,28 +1,45 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
 #define CHANNELTLS_PRIVATE
 #define CONNECTION_PRIVATE
 #define TOR_CHANNEL_INTERNAL_
 #define TORTLS_PRIVATE
 
-#include "compat.h"
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <syslog.h>
+#include <time.h>
 
-#include "or.h"
+#include "address.h"
+#include "channel.h"
+#include "channeltls.h"
+#include "circuitmux.h"
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_or.h"
-#include "channeltls.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
 #include "link_handshake.h"
-#include "router.h"
+#include "log_test_helpers.h"
+#include "or.h"
 #include "routerkeys.h"
 #include "scheduler.h"
-#include "torcert.h"
-
 #include "test.h"
-#include "log_test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torcert.h"
+#include "tortls.h"
+#include "util.h"
+#include "util_bug.h"
 
 static var_cell_t *mock_got_var_cell = NULL;
 

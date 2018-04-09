@@ -2,6 +2,10 @@
 /* See LICENSE for licensing information */
 
 /** Some constants used by test_connection and helpers */
+#include <sys/socket.h>
+
+#include "address.h"
+
 #define TEST_CONN_FAMILY        (AF_INET)
 #define TEST_CONN_ADDRESS       "127.0.0.1"
 #define TEST_CONN_PORT          (12345)

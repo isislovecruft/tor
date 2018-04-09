@@ -2,16 +2,27 @@
 /* See LICENSE for licensing information */
 
 #define CONTROL_PRIVATE
-#include "or.h"
+#include <string.h>
+
+#include "address.h"
 #include "bridges.h"
+#include "compat.h"
+#include "container.h"
 #include "control.h"
-#include "entrynodes.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
 #include "hs_common.h"
 #include "networkstatus.h"
+#include "or.h"
 #include "rendservice.h"
 #include "routerlist.h"
 #include "test.h"
 #include "test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_format.h"
 
 static void
 test_add_onion_helper_keyarg_v3(void *arg)

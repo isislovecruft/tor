@@ -1,7 +1,24 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <stdint.h>
+#include <string.h>
+#include <syslog.h>
+#include <time.h>
+
+#include "address.h"
+#include "compat.h"
+#include "confline.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "di_ops.h"
 #include "orconfig.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 #define CIRCUITLIST_PRIVATE
 #define STATEFILE_PRIVATE
@@ -9,27 +26,22 @@
 #define ROUTERLIST_PRIVATE
 #define DIRECTORY_PRIVATE
 
-#include "or.h"
-#include "test.h"
-
 #include "bridges.h"
 #include "circuitlist.h"
 #include "config.h"
-#include "confparse.h"
 #include "crypto_rand.h"
 #include "directory.h"
 #include "entrynodes.h"
-#include "nodelist.h"
+#include "log_test_helpers.h"
 #include "networkstatus.h"
+#include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "routerlist.h"
-#include "routerparse.h"
 #include "routerset.h"
 #include "statefile.h"
+#include "test.h"
 #include "util.h"
-
-#include "test_helpers.h"
-#include "log_test_helpers.h"
 
 /* TODO:
  * choose_random_entry() test with state set.

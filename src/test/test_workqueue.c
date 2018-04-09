@@ -3,16 +3,24 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
+#include <event2/event.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
+
+#include "compat.h"
+#include "compat_libevent.h"
 #include "compat_threads.h"
-#include "onion.h"
-#include "workqueue.h"
+#include "crypto.h"
 #include "crypto_curve25519.h"
 #include "crypto_rand.h"
-#include "compat_libevent.h"
-
-#include <stdio.h>
-#include <event2/event.h>
+#include "crypto_rsa.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "workqueue.h"
 
 #define MAX_INFLIGHT (1<<16)
 

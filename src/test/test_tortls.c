@@ -4,12 +4,33 @@
 #define TORTLS_PRIVATE
 #define TORTLS_OPENSSL_PRIVATE
 #define LOG_PRIVATE
+#include "crypto_digest.h"
+#include "crypto_openssl_mgt.h"
+#include "crypto_rsa.h"
 #include "orconfig.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 #ifdef _WIN32
 #include <winsock2.h>
 #endif
+#include <errno.h>
 #include <math.h>
+#include <openssl/asn1.h>
+#include <openssl/bio.h>
+#include <openssl/ossl_typ.h>
+#include <openssl/pem.h>
+#include <openssl/safestack.h>
+#include <openssl/ssl2.h>
+#include <openssl/tls1.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <syslog.h>
+#include <time.h>
 
 #include "compat.h"
 
@@ -17,26 +38,21 @@
  * srtp.h. Suppress the GCC warning so we can build with -Wredundant-decl. */
 DISABLE_GCC_WARNING(redundant-decls)
 
+#include <openssl/err.h>
+#include <openssl/evp.h>
 #include <openssl/opensslv.h>
-
+#include <openssl/rsa.h>
 #include <openssl/ssl.h>
 #include <openssl/ssl3.h>
-#include <openssl/err.h>
-#include <openssl/asn1t.h>
 #include <openssl/x509.h>
-#include <openssl/rsa.h>
-#include <openssl/evp.h>
-#include <openssl/bn.h>
 
 ENABLE_GCC_WARNING(redundant-decls)
 
-#include "or.h"
+#include "log_test_helpers.h"
+#include "test.h"
 #include "torlog.h"
-#include "config.h"
 #include "tortls.h"
 
-#include "test.h"
-#include "log_test_helpers.h"
 #define NS_MODULE tortls
 
 #ifndef HAVE_SSL_STATE

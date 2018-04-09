@@ -1,8 +1,18 @@
 /* Copyright (c) 2015-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
+#include <errno.h>
+#include <linux/capability.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <syslog.h>
+#include <unistd.h>
 
+#include "compat.h"
+#include "orconfig.h"
+#include "torlog.h"
 #ifdef HAVE_SYS_CAPABILITY_H
 #include <sys/capability.h>
 #endif

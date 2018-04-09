@@ -7,6 +7,10 @@
 #ifndef TOR_PROTO_HTTP_H
 #define TOR_PROTO_HTTP_H
 
+#include <stddef.h>
+
+#include "testsupport.h"
+
 struct buf_t;
 
 int fetch_from_buf_http(struct buf_t *buf,

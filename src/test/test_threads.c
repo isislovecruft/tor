@@ -3,10 +3,19 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include "or.h"
+#include <string.h>
+#include <sys/time.h>
+#include <time.h>
+
+#include "compat.h"
 #include "compat_threads.h"
+#include "compat_time.h"
+#include "container.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** mutex for thread test to stop the threads hitting data at the same time. */
 static tor_mutex_t *thread_test_mutex_ = NULL;

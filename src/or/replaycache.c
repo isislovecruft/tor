@@ -21,8 +21,11 @@
 
 #define REPLAYCACHE_PRIVATE
 
-#include "or.h"
+#include <stdint.h>
+
+#include "crypto_digest.h"
 #include "replaycache.h"
+#include "torlog.h"
 
 /** Free the replaycache r and all of its entries.
  */

@@ -9,17 +9,25 @@
 #ifndef TOR_HS_SERVICE_H
 #define TOR_HS_SERVICE_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "container.h"
 #include "crypto_curve25519.h"
 #include "crypto_ed25519.h"
-#include "replaycache.h"
-
+#include "crypto_rsa.h"
+/* Trunnel */
+#include "hs/cell_establish_intro.h"
 #include "hs_common.h"
 #include "hs_descriptor.h"
 #include "hs_ident.h"
 #include "hs_intropoint.h"
-
-/* Trunnel */
-#include "hs/cell_establish_intro.h"
+#include "ht.h"
+#include "or.h"
+#include "replaycache.h"
+#include "testsupport.h"
+#include "util.h"
 
 /* When loading and configuring a service, this is the default version it will
  * be configured for as it is possible that no HiddenServiceVersion is

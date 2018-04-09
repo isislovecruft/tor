@@ -7,31 +7,44 @@
  * \brief Client code to access location-hidden services.
  **/
 
-#include "or.h"
+#include <errno.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "address.h"
 #include "circpathbias.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuituse.h"
+#include "compat.h"
 #include "config.h"
+#include "confline.h"
 #include "connection.h"
 #include "connection_edge.h"
 #include "control.h"
+#include "crypto.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
+#include "crypto_rsa.h"
 #include "crypto_util.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "hs_circuit.h"
 #include "hs_client.h"
 #include "hs_common.h"
 #include "main.h"
-#include "networkstatus.h"
-#include "nodelist.h"
+#include "or.h"
 #include "relay.h"
 #include "rendclient.h"
 #include "rendcommon.h"
-#include "rephist.h"
 #include "router.h"
-#include "routerlist.h"
 #include "routerset.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 static extend_info_t *rend_client_get_random_intro_impl(
                           const rend_cache_entry_t *rend_query,

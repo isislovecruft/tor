@@ -9,15 +9,12 @@
  **/
 
 #include "tor_api.h"
-#include "tor_api_internal.h"
-
-// Include this after the above headers, to insure that they don't
-// depend on anything else.
-#include "orconfig.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "tor_api_internal.h"
 
 // We don't want to use tor_malloc and tor_free here, since this needs
 // to run before anything is initialized at all, and ought to run when

@@ -4,19 +4,17 @@
 /* See LICENSE for licensing information */
 
 #include "orconfig.h"
+
 #define CRYPTO_S2K_PRIVATE
-#include "or.h"
-#include "test.h"
-#include "crypto_s2k.h"
 #include "crypto_pwbox.h"
 #include "crypto_rand.h"
+#include "crypto_s2k.h"
+#include "test.h"
 
 #if defined(HAVE_LIBSCRYPT_H) && defined(HAVE_LIBSCRYPT_SCRYPT)
 #define HAVE_LIBSCRYPT
 #include <libscrypt.h>
 #endif
-
-#include <openssl/evp.h>
 
 /** Run unit tests for our secret-to-key passphrase hashing functionality. */
 static void

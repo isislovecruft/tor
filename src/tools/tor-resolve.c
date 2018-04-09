@@ -3,33 +3,29 @@
  */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include "compat.h"
-#include "util.h"
-#include "address.h"
-#include "torlog.h"
-#include "sandbox.h"
-
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <assert.h>
+#include <syslog.h>
+
+#include "address.h"
+#include "compat.h"
+#include "orconfig.h"
+#include "sandbox.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
 #endif
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #endif
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h> /* Must be included before sys/stat.h for Ultrix */
-#endif
-#ifdef HAVE_ERRNO_H
-#include <errno.h>
 #endif
 
 #ifdef _WIN32

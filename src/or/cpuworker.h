@@ -12,9 +12,15 @@
 #ifndef TOR_CPUWORKER_H
 #define TOR_CPUWORKER_H
 
+#include <stdint.h>
+
+#include "or.h"
+#include "testsupport.h"
+
 void cpu_init(void);
 void cpuworkers_rotate_keyinfo(void);
 struct workqueue_entry_s;
+
 enum workqueue_reply_t;
 enum workqueue_priority_t;
 MOCK_DECL(struct workqueue_entry_s *, cpuworker_queue_work, (
@@ -24,6 +30,7 @@ MOCK_DECL(struct workqueue_entry_s *, cpuworker_queue_work, (
                     void *arg));
 
 struct create_cell_t;
+
 int assign_onionskin_to_cpuworker(or_circuit_t *circ,
                                   struct create_cell_t *onionskin);
 

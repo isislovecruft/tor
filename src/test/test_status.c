@@ -6,25 +6,32 @@
 #define LOG_PRIVATE
 #define REPHIST_PRIVATE
 
-#include "orconfig.h"
-
 #include <float.h>
 #include <math.h>
+#include <stdarg.h>
+#include <stdint.h>
+#include <string.h>
+#include <syslog.h>
+#include <time.h>
 
-#include "or.h"
-#include "torlog.h"
-#include "tor_queue.h"
-#include "status.h"
 #include "circuitlist.h"
-#include "config.h"
+#include "compat.h"
+#include "container.h"
 #include "hibernate.h"
-#include "rephist.h"
-#include "relay.h"
-#include "router.h"
 #include "main.h"
 #include "nodelist.h"
+#include "or.h"
+#include "relay.h"
+#include "rephist.h"
+#include "router.h"
 #include "statefile.h"
+#include "status.h"
 #include "test.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "tortls.h"
+#include "util.h"
 
 #define NS_MODULE status
 

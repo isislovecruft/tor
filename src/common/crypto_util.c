@@ -16,12 +16,14 @@
 #include <string.h>
 
 #ifdef _WIN32
-#include <windows.h>
 #include <wincrypt.h>
+#include <windows.h>
 #endif /* defined(_WIN32) */
 
+#include "compat.h"
 #include "crypto_util.h"
-#include "util.h"
+#include "torint.h"
+#include "util_bug.h"
 
 DISABLE_GCC_WARNING(redundant-decls)
 

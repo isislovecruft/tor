@@ -3,11 +3,17 @@
 
 #define CONSDIFF_PRIVATE
 
-#include "orconfig.h"
-#include "or.h"
-#include "consdiff.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
+#include "compat.h"
+#include "consdiff.h"
 #include "fuzzing.h"
+#include "testsupport.h"
+#include "util.h"
+#include "util_bug.h"
 
 static int
 mock_consensus_compute_digest_(const char *c, consensus_digest_t *d)

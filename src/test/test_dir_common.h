@@ -3,8 +3,11 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
+#include <time.h>
+
+#include "crypto_rsa.h"
 #include "networkstatus.h"
+#include "or.h"
 #include "routerparse.h"
 
 #define TEST_DIR_ROUTER_ID_1 3

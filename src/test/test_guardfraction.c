@@ -5,19 +5,24 @@
 #define ROUTERPARSE_PRIVATE
 #define NETWORKSTATUS_PRIVATE
 
-#include "orconfig.h"
-#include "or.h"
-#include "config.h"
-#include "dirserv.h"
-#include "container.h"
-#include "entrynodes.h"
-#include "util.h"
-#include "routerparse.h"
-#include "networkstatus.h"
+#include <string.h>
 
-#include "test.h"
-#include "test_helpers.h"
+#include "compat.h"
+#include "config.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "dirserv.h"
+#include "entrynodes.h"
 #include "log_test_helpers.h"
+#include "networkstatus.h"
+#include "or.h"
+#include "routerparse.h"
+#include "test_helpers.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_format.h"
 
 /** Generate a vote_routerstatus_t for a router with identity digest
  * <b>digest_in_hex</b>. */

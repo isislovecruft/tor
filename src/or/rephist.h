@@ -12,6 +12,15 @@
 #ifndef TOR_REPHIST_H
 #define TOR_REPHIST_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "crypto_rsa.h"
+#include "or.h"
+
 void rep_hist_init(void);
 void rep_hist_dump_stats(time_t now, int severity);
 void rep_hist_note_bytes_read(size_t num_bytes, time_t when);

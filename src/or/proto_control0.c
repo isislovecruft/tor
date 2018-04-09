@@ -4,8 +4,11 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
+#include <netinet/in.h>
+#include <stdint.h>
+
 #include "buffers.h"
+#include "compat.h"
 #include "proto_control0.h"
 
 /** Return 1 iff buf looks more like it has an (obsolete) v0 controller

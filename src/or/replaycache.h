@@ -9,6 +9,15 @@
 #ifndef TOR_REPLAYCACHE_H
 #define TOR_REPLAYCACHE_H
 
+#include <stddef.h>
+#include <time.h>
+
+#include "container.h"
+#include "testsupport.h"
+#include "util.h"
+
+struct replaycache_s;
+
 typedef struct replaycache_s replaycache_t;
 
 #ifdef REPLAYCACHE_PRIVATE

@@ -23,24 +23,16 @@
  * USE OR OTHER DEALINGS IN THE SOFTWARE.
  * ==========================================================================
  */
-#ifdef HAVE_CONFIG_H
-#include "orconfig.h"
-#endif
-#include <limits.h>    /* CHAR_BIT */
-
-#include <stddef.h>    /* NULL */
-#include <stdlib.h>    /* malloc(3) free(3) */
-#include <stdio.h>     /* FILE fprintf(3) */
-
+#include <errno.h>     /* errno */
 #include <inttypes.h>  /* UINT64_C uint64_t */
-
+#include <limits.h>    /* CHAR_BIT */
+#include <stddef.h>    /* NULL */
+#include <stdio.h>     /* FILE fprintf(3) */
+#include <stdlib.h>    /* malloc(3) free(3) */
 #include <string.h>    /* memset(3) */
 
-#include <errno.h>     /* errno */
-
-#include "tor_queue.h" /* TAILQ(3) */
-
 #include "timeout.h"
+#include "tor_queue.h" /* TAILQ(3) */
 
 #ifndef TIMEOUT_DEBUG
 #define TIMEOUT_DEBUG 0

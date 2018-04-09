@@ -9,12 +9,16 @@
 #ifndef TOR_HS_CACHE_H
 #define TOR_HS_CACHE_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <time.h>
 
+#include "container.h"
 #include "crypto_ed25519.h"
 #include "hs_common.h"
 #include "hs_descriptor.h"
 #include "rendcommon.h"
+#include "testsupport.h"
 #include "torcert.h"
 
 /* This is the maximum time an introduction point state object can stay in the

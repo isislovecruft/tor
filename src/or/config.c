@@ -59,25 +59,37 @@
  **/
 
 #define CONFIG_PRIVATE
-#include "or.h"
-#include "bridges.h"
-#include "compat.h"
+#include <errno.h>
+#include <limits.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/stat.h>
+#include <sys/un.h>
+#include <syslog.h>
+#include <unistd.h>
+
 #include "addressmap.h"
-#include "channel.h"
+#include "bridges.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
-#include "circuitmux.h"
 #include "circuitmux_ewma.h"
 #include "circuitstats.h"
+#include "compat.h"
+#include "compat_libevent.h"
+#include "compat_threads.h"
 #include "compress.h"
 #include "config.h"
+#include "confparse.h"
 #include "connection.h"
 #include "connection_edge.h"
 #include "connection_or.h"
 #include "consdiffmgr.h"
 #include "control.h"
-#include "confparse.h"
 #include "cpuworker.h"
+#include "crypto_openssl_mgt.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
 #include "dirserv.h"
@@ -85,27 +97,34 @@
 #include "dns.h"
 #include "dos.h"
 #include "entrynodes.h"
-#include "git_revision.h"
+#include "ext_orport.h"
 #include "geoip.h"
+#include "git_revision.h"
 #include "hibernate.h"
+#include "hs_config.h"
+#include "hs_service.h"
 #include "main.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
 #include "policies.h"
-#include "relay.h"
 #include "rendclient.h"
+#include "rendcommon.h"
 #include "rendservice.h"
-#include "hs_config.h"
 #include "rephist.h"
 #include "router.h"
-#include "sandbox.h"
-#include "util.h"
 #include "routerlist.h"
 #include "routerset.h"
+#include "sandbox.h"
 #include "scheduler.h"
 #include "statefile.h"
+#include "torint.h"
+#include "torlog.h"
 #include "transports.h"
-#include "ext_orport.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 #ifdef _WIN32
 #include <shlobj.h>
 #endif
@@ -1161,7 +1180,6 @@ static const char *default_authorities[] = {
  * relays that meet certain stability criteria.
  */
 static const char *default_fallbacks[] = {
-#include "fallback_dirs.inc"
   NULL
 };
 

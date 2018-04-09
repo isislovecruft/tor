@@ -12,7 +12,13 @@
 #ifndef TOR_NETWORKSTATUS_H
 #define TOR_NETWORKSTATUS_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "container.h"
+#include "or.h"
 #include "testsupport.h"
+#include "util.h"
 
 void networkstatus_reset_warnings(void);
 void networkstatus_reset_download_failures(void);

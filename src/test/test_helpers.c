@@ -11,30 +11,39 @@
 #define CONNECTION_PRIVATE
 #define MAIN_PRIVATE
 
-#include "orconfig.h"
-#include "or.h"
+#include <event2/util.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <time.h>
 
 #include "buffers.h"
+#include "compat.h"
 #include "config.h"
+#include "confline.h"
 #include "confparse.h"
 #include "connection.h"
+#include "container.h"
 #include "crypto_rand.h"
 #include "main.h"
 #include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
 #include "relay.h"
 #include "routerlist.h"
-
-#include "test.h"
-#include "test_helpers.h"
 #include "test_connection.h"
+#include "test_helpers.h"
+#include "testsupport.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 #ifdef HAVE_CFLAG_WOVERLENGTH_STRINGS
 DISABLE_GCC_WARNING(overlength-strings)
 /* We allow huge string constants in the unit tests, but not in the code
  * at large. */
 #endif
-#include "test_descriptors.inc"
 #include "circuitlist.h"
+#include "test_descriptors.inc"
 #ifdef HAVE_CFLAG_WOVERLENGTH_STRINGS
 ENABLE_GCC_WARNING(overlength-strings)
 #endif

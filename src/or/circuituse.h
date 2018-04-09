@@ -12,6 +12,13 @@
 #ifndef TOR_CIRCUITUSE_H
 #define TOR_CIRCUITUSE_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "container.h"
+#include "or.h"
+#include "testsupport.h"
+
 void circuit_expire_building(void);
 void circuit_expire_waiting_for_better_guard(void);
 void circuit_remove_handled_ports(smartlist_t *needed_ports);

@@ -12,8 +12,16 @@
 #ifndef TOR_CIRCUITLIST_H
 #define TOR_CIRCUITLIST_H
 
-#include "testsupport.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "compat.h"
+#include "container.h"
 #include "hs_ident.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
 
 MOCK_DECL(smartlist_t *, circuit_get_global_list, (void));
 smartlist_t *circuit_get_global_origin_circuit_list(void);

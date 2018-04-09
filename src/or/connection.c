@@ -55,10 +55,25 @@
  **/
 
 #define CONNECTION_PRIVATE
-#include "or.h"
+socket_type.h>/socket_type.h>
+#include <errno.h>
+#include <limits.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <syslog.h>
+
 #include "bridges.h"
 #include "buffers.h"
 #include "buffers_tls.h"
+#include "compat_libevent.h"
+#include "compress.h"
+#include "or.h"
+#include "tortls.h"
+#include "util_bug.h"
+#include "util_format.h"
+
 /*
  * Define this so we get channel internal functions, since we're implementing
  * part of a subclass (channel_tls_t).
@@ -68,9 +83,7 @@
 #include "backtrace.h"
 #include "channel.h"
 #include "channeltls.h"
-#include "circuitbuild.h"
 #include "circuitlist.h"
-#include "circuituse.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_edge.h"
@@ -79,29 +92,22 @@
 #include "crypto_util.h"
 #include "directory.h"
 #include "dirserv.h"
-#include "dns.h"
 #include "dnsserv.h"
 #include "dos.h"
 #include "entrynodes.h"
 #include "ext_orport.h"
-#include "geoip.h"
-#include "main.h"
 #include "hs_common.h"
 #include "hs_ident.h"
-#include "nodelist.h"
+#include "main.h"
+#include "policies.h"
 #include "proto_http.h"
 #include "proto_socks.h"
-#include "policies.h"
 #include "reasons.h"
-#include "relay.h"
-#include "rendclient.h"
 #include "rendcommon.h"
 #include "rephist.h"
 #include "router.h"
-#include "routerlist.h"
-#include "transports.h"
-#include "routerparse.h"
 #include "sandbox.h"
+#include "transports.h"
 
 #ifdef HAVE_PWD_H
 #include <pwd.h>

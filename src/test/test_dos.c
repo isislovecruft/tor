@@ -5,18 +5,29 @@
 #define TOR_CHANNEL_INTERNAL_
 #define CIRCUITLIST_PRIVATE
 
-#include "or.h"
-#include "dos.h"
-#include "circuitlist.h"
-#include "crypto_rand.h"
-#include "geoip.h"
+#include <stdint.h>
+#include <sys/socket.h>
+#include <time.h>
+
+#include "address.h"
 #include "channel.h"
+#include "compat.h"
+#include "container.h"
+#include "crypto_rand.h"
+#include "dos.h"
+#include "geoip.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
 #include "routerlist.h"
 #include "test.h"
-#include "log_test_helpers.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 static networkstatus_t *dummy_ns = NULL;
 static networkstatus_t *

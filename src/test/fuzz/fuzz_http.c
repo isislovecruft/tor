@@ -1,20 +1,21 @@
 /* Copyright (c) 2016-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
 #define BUFFERS_PRIVATE
 #define DIRECTORY_PRIVATE
 
-#include "or.h"
-#include "backtrace.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+
 #include "buffers.h"
-#include "config.h"
 #include "connection.h"
 #include "directory.h"
-#include "torlog.h"
-
 #include "fuzzing.h"
+#include "or.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util.h"
 
 static void
 mock_connection_write_to_buf_impl_(const char *string, size_t len,

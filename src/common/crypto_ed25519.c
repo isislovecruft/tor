@@ -16,10 +16,9 @@
  */
 
 #define CRYPTO_ED25519_PRIVATE
-#include "orconfig.h"
-#ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
-#endif
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
 
 #include "crypto_curve25519.h"
 #include "crypto_digest.h"
@@ -27,12 +26,14 @@
 #include "crypto_format.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
+#include "di_ops.h"
+#include "ed25519/donna/ed25519_donna_tor.h"
+#include "ed25519/ref10/ed25519_ref10.h"
+#include "orconfig.h"
+#include "torint.h"
 #include "torlog.h"
 #include "util.h"
-#include "util_format.h"
-
-#include "ed25519/ref10/ed25519_ref10.h"
-#include "ed25519/donna/ed25519_donna_tor.h"
+#include "util_bug.h"
 
 static void pick_ed25519_impl(void);
 

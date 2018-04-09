@@ -27,17 +27,22 @@
  * stuck with legacy libevents for some time.
  */
 
-#include "orconfig.h"
-
 #define TOR_TIMERS_PRIVATE
 
-#include "compat.h"
+#include <event2/event.h>
+#include <event2/util.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/time.h>
+#include <time.h>
+
 #include "compat_libevent.h"
+#include "compat_time.h"
+#include "timeouts/timeout.h"
 #include "timers.h"
 #include "torlog.h"
 #include "util.h"
-
-#include <event2/event.h>
+#include "util_bug.h"
 
 struct timeout_cb {
   timer_cb_fn_t cb;

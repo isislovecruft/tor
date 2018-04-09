@@ -5,6 +5,8 @@
 #ifndef TOR_MEMAREA_H
 #define TOR_MEMAREA_H
 
+#include <stddef.h>
+
 typedef struct memarea_t memarea_t;
 
 memarea_t *memarea_new(void);

@@ -10,14 +10,19 @@
  * functions.
  */
 
-#include "orconfig.h"
+#include <errno.h>
 #include <pthread.h>
 #include <signal.h>
+#include <string.h>
+#include <sys/time.h>
 #include <time.h>
 
 #include "compat.h"
+#include "compat_threads.h"
+#include "orconfig.h"
 #include "torlog.h"
 #include "util.h"
+#include "util_bug.h"
 
 /** Wraps a void (*)(void*) function and its argument so we can
  * invoke them in a way pthreads would expect.

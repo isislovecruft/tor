@@ -17,8 +17,16 @@
  * certificate for any (ID key, signing key) pair.
  **/
 
-#include "or.h"
+#include <string.h>
+
+#include "crypto_digest.h"
+#include "di_ops.h"
 #include "fp_pair.h"
+#include "ht.h"
+#include "or.h"
+#include "siphash.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* Define fp_pair_map_t structures */
 

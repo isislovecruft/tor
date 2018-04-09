@@ -10,15 +10,22 @@
  **/
 
 #define COMPAT_TIME_PRIVATE
+#include <errno.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
+#include <time.h>
+
 #include "compat.h"
+#include "compat_time.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "util_bug.h"
 
 #ifdef _WIN32
-#include <winsock2.h>
 #include <windows.h>
-#endif
-
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
+#include <winsock2.h>
 #endif
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -36,7 +43,6 @@
 
 #include "torlog.h"
 #include "util.h"
-#include "container.h"
 
 #ifndef HAVE_GETTIMEOFDAY
 #ifdef HAVE_FTIME

@@ -12,7 +12,16 @@
 #ifndef TOR_CONNECTION_EDGE_H
 #define TOR_CONNECTION_EDGE_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "address.h"
+#include "compat.h"
+#include "or.h"
+#include "orconfig.h"
 #include "testsupport.h"
+#include "torlog.h"
 
 #define connection_mark_unattached_ap(conn, endreason) \
   connection_mark_unattached_ap_((conn), (endreason), __LINE__, SHORT_FILE__)

@@ -34,26 +34,27 @@
 
 #define CONTROL_PRIVATE
 
-#include "or.h"
 #include "addressmap.h"
 #include "bridges.h"
-#include "buffers.h"
 #include "channel.h"
 #include "channeltls.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
-#include "circuitstats.h"
 #include "circuituse.h"
 #include "command.h"
 #include "compat_libevent.h"
+#include "compat_threads.h"
+#include "compat_time.h"
 #include "config.h"
 #include "confparse.h"
 #include "connection.h"
 #include "connection_edge.h"
 #include "connection_or.h"
 #include "control.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "dirserv.h"
 #include "dnsserv.h"
@@ -63,14 +64,19 @@
 #include "hs_cache.h"
 #include "hs_common.h"
 #include "hs_control.h"
+#include "hs_ident.h"
+#include "hs_service.h"
 #include "main.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
 #include "policies.h"
 #include "proto_control0.h"
 #include "proto_http.h"
 #include "reasons.h"
+#include "rendcache.h"
 #include "rendclient.h"
 #include "rendcommon.h"
 #include "rendservice.h"
@@ -79,13 +85,28 @@
 #include "routerlist.h"
 #include "routerparse.h"
 #include "shared_random.h"
+#include "torint.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 #ifndef _WIN32
 #include <pwd.h>
-#include <sys/resource.h>
 #endif
 
+#include <errno.h>
 #include <event2/event.h>
+#include <event2/util.h>
+#include <limits.h>
+#include <netinet/in.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <syslog.h>
+#include <unistd.h>
 
 #include "crypto_s2k.h"
 #include "procmon.h"

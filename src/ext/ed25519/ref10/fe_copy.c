@@ -1,3 +1,6 @@
+#include <stdint.h>
+
+#include "ed25519/ref10/crypto_int32.h"
 #include "fe.h"
 
 /*

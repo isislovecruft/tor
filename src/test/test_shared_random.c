@@ -6,19 +6,36 @@
 #define CONFIG_PRIVATE
 #define DIRVOTE_PRIVATE
 
-#include "or.h"
-#include "test.h"
+#include <errno.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <time.h>
+
+#include "compat.h"
 #include "config.h"
+#include "container.h"
+#include "crypto.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
+#include "crypto_rsa.h"
 #include "dirvote.h"
-#include "shared_random.h"
-#include "shared_random_state.h"
+#include "log_test_helpers.h"
+#include "networkstatus.h"
+#include "or.h"
+#include "router.h"
 #include "routerkeys.h"
 #include "routerlist.h"
-#include "router.h"
 #include "routerparse.h"
-#include "networkstatus.h"
-#include "log_test_helpers.h"
+#include "shared_random.h"
+#include "shared_random_state.h"
+#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 static authority_cert_t *mock_cert;
 

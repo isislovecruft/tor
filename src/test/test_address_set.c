@@ -1,16 +1,27 @@
 /* Copyright (c) 2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
-#include "crypto_rand.h"
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+
+#include "address.h"
 #include "address_set.h"
+#include "compat.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_rand.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "routerlist.h"
-#include "torcert.h"
-
 #include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 static networkstatus_t *dummy_ns = NULL;
 static networkstatus_t *

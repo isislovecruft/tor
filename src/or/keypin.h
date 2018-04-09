@@ -4,6 +4,11 @@
 #ifndef TOR_KEYPIN_H
 #define TOR_KEYPIN_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "crypto_digest.h"
+#include "ht.h"
 #include "testsupport.h"
 
 int keypin_check_and_add(const uint8_t *rsa_id_digest,

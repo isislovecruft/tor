@@ -3,13 +3,19 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+
 #define UTIL_PRIVATE
+#include "compat.h"
+#include "compat_time.h"
+#include "orconfig.h"
+#include "test.h"
+#include "tinytest.h"
+#include "torlog.h"
 #include "util.h"
 #include "util_process.h"
-#include "crypto.h"
-#include "torlog.h"
-#include "test.h"
 
 #ifndef BUILDDIR
 #define BUILDDIR "."

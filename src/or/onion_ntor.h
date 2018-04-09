@@ -4,9 +4,16 @@
 #ifndef TOR_ONION_NTOR_H
 #define TOR_ONION_NTOR_H
 
-#include "torint.h"
+#include <stddef.h>
+#include <stdint.h>
+
 #include "crypto_curve25519.h"
+#include "crypto_digest.h"
 #include "di_ops.h"
+#include "torint.h"
+#include "util.h"
+
+struct ntor_handshake_state_t;
 
 /** State to be maintained by a client between sending an ntor onionskin
  * and receiving a reply. */

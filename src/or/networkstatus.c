@@ -37,19 +37,28 @@
  */
 
 #define NETWORKSTATUS_PRIVATE
-#include "or.h"
-#include "bridges.h"
-#include "channel.h"
-#include "circuitmux.h"
+#include <errno.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+#include <syslog.h>
+#include <unistd.h>
+
+#include "channelpadding.h"
 #include "circuitmux_ewma.h"
 #include "circuitstats.h"
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_or.h"
 #include "consdiffmgr.h"
 #include "control.h"
+#include "crypto.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
+#include "crypto_rsa.h"
 #include "crypto_util.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "dirserv.h"
 #include "dirvote.h"
@@ -60,16 +69,18 @@
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
 #include "protover.h"
-#include "relay.h"
 #include "router.h"
 #include "routerlist.h"
 #include "routerparse.h"
 #include "scheduler.h"
 #include "shared_random.h"
+#include "torlog.h"
 #include "transports.h"
-#include "torcert.h"
-#include "channelpadding.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** Most recently received and validated v3 "ns"-flavored consensus network
  * status. */

@@ -47,30 +47,38 @@
  **/
 
 #define MAIN_PRIVATE
-#include "or.h"
+#include "address.h"
 #include "addressmap.h"
 #include "backtrace.h"
 #include "bridges.h"
 #include "buffers.h"
 #include "buffers_tls.h"
 #include "channel.h"
-#include "channeltls.h"
 #include "channelpadding.h"
+#include "channeltls.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuituse.h"
 #include "command.h"
+#include "compat.h"
+#include "compat_libevent.h"
+#include "compat_threads.h"
+#include "compat_time.h"
 #include "compress.h"
 #include "config.h"
-#include "confparse.h"
+#include "confline.h"
 #include "connection.h"
 #include "connection_edge.h"
 #include "connection_or.h"
 #include "consdiffmgr.h"
 #include "control.h"
 #include "cpuworker.h"
-#include "crypto_s2k.h"
+#include "crypto.h"
+#include "crypto_digest.h"
+#include "crypto_openssl_mgt.h"
 #include "crypto_rand.h"
+#include "crypto_rsa.h"
+#include "crypto_s2k.h"
 #include "directory.h"
 #include "dirserv.h"
 #include "dirvote.h"
@@ -78,11 +86,13 @@
 #include "dnsserv.h"
 #include "dos.h"
 #include "entrynodes.h"
+#include "ext_orport.h"
 #include "geoip.h"
 #include "hibernate.h"
 #include "hs_cache.h"
-#include "hs_circuitmap.h"
 #include "hs_client.h"
+#include "hs_common.h"
+#include "hs_service.h"
 #include "keypin.h"
 #include "main.h"
 #include "microdesc.h"
@@ -90,13 +100,13 @@
 #include "nodelist.h"
 #include "ntmain.h"
 #include "onion.h"
+#include "or.h"
 #include "periodic.h"
 #include "policies.h"
 #include "protover.h"
-#include "transports.h"
 #include "relay.h"
+#include "rendcache.h"
 #include "rendclient.h"
-#include "rendcommon.h"
 #include "rendservice.h"
 #include "rephist.h"
 #include "router.h"
@@ -107,17 +117,37 @@
 #include "shared_random.h"
 #include "statefile.h"
 #include "status.h"
+#include "timers.h"
 #include "tor_api.h"
 #include "tor_api_internal.h"
+#include "torint.h"
+#include "torlog.h"
+#include "tortls.h"
+#include "transports.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 #include "util_process.h"
-#include "ext_orport.h"
 #ifdef USE_DMALLOC
 #include <dmalloc.h>
 #endif
-#include "memarea.h"
+#include <errno.h>
+#include <event2/event.h>
+#include <event2/util.h>
+#include <limits.h>
+#include <signal.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <syslog.h>
+#include <unistd.h>
+
 #include "sandbox.h"
 
-#include <event2/event.h>
+struct event;
 
 #ifdef HAVE_SYSTEMD
 #   if defined(__COVERITY__) && !defined(__INCLUDE_LEVEL__)

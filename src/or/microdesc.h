@@ -12,6 +12,12 @@
 #ifndef TOR_MICRODESC_H
 #define TOR_MICRODESC_H
 
+#include <time.h>
+
+#include "container.h"
+#include "or.h"
+#include "testsupport.h"
+
 microdesc_cache_t *get_microdesc_cache(void);
 
 void microdesc_check_counts(void);

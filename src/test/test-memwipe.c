@@ -1,14 +1,12 @@
 /* Copyright (c) 2015-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-#include <string.h>
+#include <stddef.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <stdlib.h>
+#include <string.h>
+#include <sys/param.h>
 
 #include "crypto_util.h"
-#include "compat.h"
 #include "util.h"
 
 static unsigned fill_a_buffer_memset(void) __attribute__((noinline));

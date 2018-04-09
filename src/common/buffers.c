@@ -19,14 +19,18 @@
  **/
 
 #define BUFFERS_PRIVATE
-#include "orconfig.h"
 #include <stddef.h>
+
 #include "buffers.h"
 #include "compat.h"
+#include "compat_time.h"
 #include "compress.h"
-#include "util.h"
+#include "di_ops.h"
+#include "orconfig.h"
 #include "torint.h"
 #include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif

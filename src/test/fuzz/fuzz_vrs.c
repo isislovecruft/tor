@@ -2,12 +2,20 @@
 /* See LICENSE for licensing information */
 #define ROUTERPARSE_PRIVATE
 #define NETWORKSTATUS_PRIVATE
+#include <stddef.h>
+#include <stdint.h>
+
+#include "container.h"
+#include "crypto_ed25519.h"
+#include "fuzzing.h"
+#include "memarea.h"
+#include "networkstatus.h"
 #include "or.h"
 #include "routerparse.h"
-#include "memarea.h"
-#include "microdesc.h"
-#include "networkstatus.h"
-#include "fuzzing.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 static void
 mock_dump_desc__nodump(const char *desc, const char *type)

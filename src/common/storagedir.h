@@ -4,6 +4,13 @@
 #ifndef TOR_STORAGEDIR_H
 #define TOR_STORAGEDIR_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "compat.h"
+#include "container.h"
+#include "util.h"
+
 typedef struct storage_dir_t storage_dir_t;
 struct config_line_t;
 struct sandbox_cfg_elem;

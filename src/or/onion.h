@@ -12,7 +12,20 @@
 #ifndef TOR_ONION_H
 #define TOR_ONION_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "address.h"
+#include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
+#include "or.h"
+#include "util.h"
+
 struct create_cell_t;
+
 int onion_pending_add(or_circuit_t *circ, struct create_cell_t *onionskin);
 or_circuit_t *onion_next_task(struct create_cell_t **onionskin_out);
 int onion_num_pending(uint16_t handshake_type);

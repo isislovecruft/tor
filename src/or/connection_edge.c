@@ -55,11 +55,15 @@
  **/
 #define CONNECTION_EDGE_PRIVATE
 
-#include "or.h"
-
-#include "backtrace.h"
+#include <errno.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <syslog.h>
 
 #include "addressmap.h"
+#include "backtrace.h"
 #include "buffers.h"
 #include "channel.h"
 #include "circpathbias.h"
@@ -69,25 +73,31 @@
 #include "connection.h"
 #include "connection_edge.h"
 #include "connection_or.h"
+#include "container.h"
 #include "control.h"
+#include "crypto_digest.h"
 #include "crypto_util.h"
-#include "dns.h"
-#include "dnsserv.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "dirserv.h"
+#include "dns.h"
+#include "dnsserv.h"
 #include "hibernate.h"
-#include "hs_common.h"
 #include "hs_cache.h"
 #include "hs_client.h"
-#include "hs_circuit.h"
+#include "hs_common.h"
+#include "hs_descriptor.h"
+#include "hs_ident.h"
+#include "hs_service.h"
 #include "main.h"
-#include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "proto_http.h"
 #include "proto_socks.h"
 #include "reasons.h"
 #include "relay.h"
+#include "rendcache.h"
 #include "rendclient.h"
 #include "rendcommon.h"
 #include "rendservice.h"
@@ -95,19 +105,15 @@
 #include "router.h"
 #include "routerlist.h"
 #include "routerset.h"
-#include "circuitbuild.h"
-
-#ifdef HAVE_LINUX_TYPES_H
-#include <linux/types.h>
-#endif
+#include "torint.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 #ifdef HAVE_LINUX_NETFILTER_IPV4_H
 #include <linux/netfilter_ipv4.h>
+
 #define TRANS_NETFILTER
 #define TRANS_NETFILTER_IPV4
-#endif
-
-#ifdef HAVE_LINUX_IF_H
-#include <linux/if.h>
 #endif
 
 #ifdef HAVE_LINUX_NETFILTER_IPV6_IP6_TABLES_H
@@ -121,6 +127,7 @@
 #if defined(HAVE_NET_IF_H) && defined(HAVE_NET_PFVAR_H)
 #include <net/if.h>
 #include <net/pfvar.h>
+
 #define TRANS_PF
 #endif
 

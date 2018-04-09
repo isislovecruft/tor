@@ -11,12 +11,12 @@
  * instead.
  **/
 
-#include "orconfig.h"
-
-#include "util.h"
-#include "torlog.h"
+#include "compat_threads.h"
 #include "compress.h"
 #include "compress_zstd.h"
+#include "orconfig.h"
+#include "util.h"
+#include "util_bug.h"
 
 #ifdef ENABLE_ZSTD_ADVANCED_APIS
 /* This is a lie, but we make sure it doesn't get us in trouble by wrapping

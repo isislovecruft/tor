@@ -4,10 +4,12 @@
 #ifndef TOR_CRYPTO_CURVE25519_H
 #define TOR_CRYPTO_CURVE25519_H
 
-#include "testsupport.h"
-#include "torint.h"
+#include <stdint.h>
+
 #include "crypto_digest.h"
 #include "crypto_openssl_mgt.h"
+#include "testsupport.h"
+#include "torint.h"
 
 /** Length of a curve25519 public key when encoded. */
 #define CURVE25519_PUBKEY_LEN 32

@@ -9,15 +9,17 @@
  * \brief Implements a counter-mode stream cipher on top of AES.
  **/
 
-#include "orconfig.h"
-
 #ifdef _WIN32 /*wrkard for dtls1.h >= 0.9.8m of "#include <winsock.h>"*/
   #include <winsock2.h>
   #include <ws2tcpip.h>
 #endif
 
+#include <limits.h>
 #include <openssl/opensslv.h>
+#include <openssl/ossl_typ.h>
+
 #include "crypto_openssl_mgt.h"
+#include "util_bug.h"
 
 #if OPENSSL_VERSION_NUMBER < OPENSSL_V_SERIES(1,0,0)
 #error "We require OpenSSL >= 1.0.0"
@@ -25,21 +27,13 @@
 
 DISABLE_GCC_WARNING(redundant-decls)
 
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <openssl/aes.h>
 #include <openssl/evp.h>
-#include <openssl/engine.h>
-#include <openssl/modes.h>
 
 ENABLE_GCC_WARNING(redundant-decls)
 
-#include "compat.h"
 #include "aes.h"
-#include "util.h"
+#include "compat.h"
 #include "torlog.h"
-#include "di_ops.h"
 
 #ifdef ANDROID
 /* Android's OpenSSL seems to have removed all of its Engine support. */

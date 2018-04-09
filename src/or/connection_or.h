@@ -12,6 +12,18 @@
 #ifndef TOR_CONNECTION_OR_H
 #define TOR_CONNECTION_OR_H
 
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
 void connection_or_clear_identity(or_connection_t *conn);
 void connection_or_clear_identity_map(void);
 void clear_broken_connection_map(int disable);

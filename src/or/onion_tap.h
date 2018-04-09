@@ -12,6 +12,13 @@
 #ifndef TOR_ONION_TAP_H
 #define TOR_ONION_TAP_H
 
+#include <stddef.h>
+
+#include "crypto.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
+#include "or.h"
+
 #define TAP_ONIONSKIN_CHALLENGE_LEN (PKCS1_OAEP_PADDING_OVERHEAD+\
                                  CIPHER_KEY_LEN+\
                                  DH_KEY_LEN)

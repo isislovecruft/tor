@@ -12,6 +12,16 @@
 #ifndef TOR_RENDCOMMON_H
 #define TOR_RENDCOMMON_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
+#include "container.h"
+#include "crypto_rsa.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util.h"
+
 typedef enum rend_intro_point_failure_t {
   INTRO_POINT_FAILURE_GENERIC     = 0,
   INTRO_POINT_FAILURE_TIMEOUT     = 1,

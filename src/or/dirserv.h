@@ -12,7 +12,22 @@
 #ifndef TOR_DIRSERV_H
 #define TOR_DIRSERV_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "address.h"
+#include "compat.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "or.h"
 #include "testsupport.h"
+#include "util.h"
+
+struct consensus_cache_entry_t;
 
 /** What fraction (1 over this number) of the relay ID space do we
  * (as a directory authority) launch connections to at each reachability

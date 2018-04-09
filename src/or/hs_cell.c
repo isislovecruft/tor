@@ -6,22 +6,31 @@
  * \brief Hidden service API for cell creation and handling.
  **/
 
-#include "or.h"
+#include <string.h>
+#include <time.h>
+
 #include "config.h"
+#include "crypto.h"
+#include "crypto_digest.h"
 #include "crypto_util.h"
-#include "rendservice.h"
-#include "replaycache.h"
-#include "util.h"
-
-#include "hs_cell.h"
-#include "hs_ntor.h"
-
+#include "di_ops.h"
 /* Trunnel. */
 #include "ed25519_cert.h"
 #include "hs/cell_common.h"
 #include "hs/cell_establish_intro.h"
 #include "hs/cell_introduce1.h"
 #include "hs/cell_rendezvous.h"
+#include "hs_cell.h"
+#include "hs_common.h"
+#include "hs_ident.h"
+#include "hs_intropoint.h"
+#include "hs_ntor.h"
+#include "or.h"
+#include "rendservice.h"
+#include "replaycache.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* Compute the MAC of an INTRODUCE cell in mac_out. The encoded_cell param is
  * the cell content up to the ENCRYPTED section of length encoded_cell_len.

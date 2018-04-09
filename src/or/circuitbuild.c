@@ -27,10 +27,24 @@
 
 #define CIRCUITBUILD_PRIVATE
 
-#include "or.h"
+#include <string.h>
+#include <sys/socket.h>
+#include <syslog.h>
+
 #include "bridges.h"
 #include "channel.h"
 #include "circpathbias.h"
+#include "circuitmux.h"
+#include "compat.h"
+#include "compat_time.h"
+#include "crypto.h"
+#include "crypto_digest.h"
+#include "di_ops.h"
+#include "or.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
+
 #define CIRCUITBUILD_PRIVATE
 #include "circuitbuild.h"
 #include "circuitlist.h"
@@ -38,13 +52,10 @@
 #include "circuituse.h"
 #include "command.h"
 #include "config.h"
-#include "confparse.h"
-#include "connection.h"
 #include "connection_edge.h"
 #include "connection_or.h"
 #include "control.h"
 #include "crypto_rand.h"
-#include "directory.h"
 #include "entrynodes.h"
 #include "hs_ntor.h"
 #include "main.h"
@@ -52,17 +63,13 @@
 #include "networkstatus.h"
 #include "nodelist.h"
 #include "onion.h"
-#include "onion_tap.h"
-#include "onion_fast.h"
 #include "policies.h"
 #include "relay.h"
 #include "rendcommon.h"
 #include "rephist.h"
 #include "router.h"
 #include "routerlist.h"
-#include "routerparse.h"
 #include "routerset.h"
-#include "transports.h"
 
 static channel_t * channel_connect_for_circuit(const tor_addr_t *addr,
                                             uint16_t port,

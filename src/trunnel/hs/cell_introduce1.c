@@ -3,9 +3,11 @@
  * You probably shouldn't edit this file.
  */
 #include <stdlib.h>
-#include "trunnel-impl.h"
+#include <string.h>
 
 #include "cell_introduce1.h"
+#include "trunnel-impl.h"
+#include "trunnel-local.h"
 
 #define TRUNNEL_SET_ERROR_CODE(obj) \
   do {                              \

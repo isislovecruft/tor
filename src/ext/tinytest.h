@@ -26,6 +26,8 @@
 #ifndef TINYTEST_H_INCLUDED_
 #define TINYTEST_H_INCLUDED_
 
+#include <stddef.h>
+
 /** Flag for a test that needs to run in a subprocess. */
 #define TT_FORK  (1<<0)
 /** Runtime flag for a test we've decided to skip. */

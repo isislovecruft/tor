@@ -9,7 +9,12 @@
 #ifndef TOR_HS_CONTROL_H
 #define TOR_HS_CONTROL_H
 
+#include <stdint.h>
+
+#include "container.h"
+#include "crypto_ed25519.h"
 #include "hs_ident.h"
+#include "or.h"
 
 /* Event "HS_DESC REQUESTED [...]" */
 void hs_control_desc_event_requested(const ed25519_public_key_t *onion_pk,

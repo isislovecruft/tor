@@ -11,10 +11,22 @@
  * \brief Headers for tortls.c
  **/
 
-#include "crypto_rsa.h"
-#include "compat_openssl.h"
+#include <openssl/ossl_typ.h>
+#include <openssl/safestack.h>
+#include <openssl/ssl.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <time.h>
+
 #include "compat.h"
+#include "compat_openssl.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
 #include "testsupport.h"
+#include "util.h"
+
+struct tor_tls_t;
+struct tor_x509_cert_t;
 
 /* Opaque structure to hold a TLS connection. */
 typedef struct tor_tls_t tor_tls_t;
@@ -63,10 +75,10 @@ typedef enum {
 } tor_tls_state_t;
 #define tor_tls_state_bitfield_t ENUM_BF(tor_tls_state_t)
 
-struct x509_st;
-struct ssl_st;
 struct ssl_ctx_st;
 struct ssl_session_st;
+struct ssl_st;
+struct x509_st;
 
 /** Holds a SSL_CTX object and related state used to configure TLS
  * connections.

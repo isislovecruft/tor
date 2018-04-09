@@ -11,15 +11,16 @@
  *   in base{16,32,64}.
  */
 
-#include "orconfig.h"
-#include "torlog.h"
-#include "util.h"
-#include "util_format.h"
-#include "torint.h"
-
+#include <limits.h>
 #include <stddef.h>
 #include <string.h>
-#include <stdlib.h>
+
+#include "compat.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /* Return the base32 encoded size in bytes using the source length srclen.
  *

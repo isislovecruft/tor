@@ -9,8 +9,12 @@
 #ifndef TOR_PARSECOMMON_H
 #define TOR_PARSECOMMON_H
 
+#include <limits.h>
+#include <stddef.h>
+
 #include "container.h"
 #include "crypto.h"
+#include "crypto_rsa.h"
 #include "memarea.h"
 
 /** Enumeration of possible token types.  The ones starting with K_ correspond

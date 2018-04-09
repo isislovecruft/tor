@@ -11,11 +11,22 @@
 #ifndef TOR_ADDRESS_H
 #define TOR_ADDRESS_H
 
-//#include <sys/sockio.h>
-#include "orconfig.h"
-#include "torint.h"
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+
 #include "compat.h"
 #include "container.h"
+//#include <sys/sockio.h>
+#include "orconfig.h"
+#include "testsupport.h"
+#include "torint.h"
+#include "util.h"
+#include "util_bug.h"
+
+struct ifaddrs;
 
 #ifdef ADDRESS_PRIVATE
 
@@ -51,6 +62,7 @@
 typedef uint8_t maskbits_t;
 
 struct in_addr;
+
 /** Holds an IPv4 or IPv6 address.  (Uses less memory than struct
  * sockaddr_storage.) */
 typedef struct tor_addr_t
@@ -232,6 +244,7 @@ int tor_addr_compare_masked(const tor_addr_t *addr1, const tor_addr_t *addr2,
 
 uint64_t tor_addr_hash(const tor_addr_t *addr);
 struct sipkey;
+
 uint64_t tor_addr_keyed_hash(const struct sipkey *key, const tor_addr_t *addr);
 int tor_addr_is_v4(const tor_addr_t *addr);
 int tor_addr_is_internal_(const tor_addr_t *ip, int for_listening,

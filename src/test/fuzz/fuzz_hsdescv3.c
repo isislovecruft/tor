@@ -4,14 +4,21 @@
 #define ROUTERPARSE_PRIVATE
 #define HS_DESCRIPTOR_PRIVATE
 
-#include "or.h"
-#include "ed25519_cert.h" /* Trunnel interface. */
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
+#include "crypto_digest.h"
 #include "crypto_ed25519.h"
+#include "crypto_rsa.h"
+#include "fuzzing.h"
 #include "hs_descriptor.h"
 #include "routerparse.h"
+#include "testsupport.h"
+#include "torcert.h"
+#include "torlog.h"
 #include "util.h"
-
-#include "fuzzing.h"
 
 static void
 mock_dump_desc__nodump(const char *desc, const char *type)

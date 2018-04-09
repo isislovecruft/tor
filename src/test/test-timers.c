@@ -1,19 +1,20 @@
 /* Copyright 2016-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
+#include <event2/event.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-
-#include <event2/event.h>
+#include <sys/time.h>
+#include <sys/types.h>
 
 #include "compat.h"
 #include "compat_libevent.h"
+#include "compat_time.h"
 #include "crypto_rand.h"
 #include "timers.h"
-#include "util.h"
+#include "util_bug.h"
 
 #define N_TIMERS 1000
 #define MAX_DURATION 30

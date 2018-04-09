@@ -10,14 +10,12 @@
  * conservative way, and should be susceptible to improvement later on.
  **/
 
-#include "orconfig.h"
-#include "address_set.h"
 #include "address.h"
-#include "compat.h"
+#include "address_set.h"
 #include "container.h"
 #include "crypto_rand.h"
-#include "util.h"
 #include "siphash.h"
+#include "util.h"
 
 /** How many 64-bit siphash values to extract per address */
 #define N_HASHES 2

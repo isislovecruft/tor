@@ -13,6 +13,8 @@
 #ifndef TOR_ADDRESS_SET_H
 #define TOR_ADDRESS_SET_H
 
+#include <stdint.h>
+
 #include "orconfig.h"
 #include "torint.h"
 

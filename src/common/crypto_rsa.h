@@ -13,15 +13,17 @@
 #ifndef TOR_CRYPTO_RSA_H
 #define TOR_CRYPTO_RSA_H
 
-#include "orconfig.h"
-
-#include "crypto_digest.h"
+#include <stddef.h>
 #include <stdio.h>
-#include "torint.h"
-#include "testsupport.h"
+#include <sys/types.h>
+
 #include "compat.h"
-#include "util.h"
+#include "crypto_digest.h"
+#include "orconfig.h"
+#include "testsupport.h"
+#include "torint.h"
 #include "torlog.h"
+#include "util.h"
 
 /** Length of our public keys. */
 #define PK_BYTES (1024/8)
@@ -105,6 +107,7 @@ crypto_pk_t *crypto_pk_base64_decode(const char *str, size_t len);
 /* Prototypes for private functions only used by tortls.c, crypto.c, and the
  * unit tests. */
 struct rsa_st;
+
 struct rsa_st *crypto_pk_get_rsa_(crypto_pk_t *env);
 crypto_pk_t *crypto_new_pk_from_rsa_(struct rsa_st *rsa);
 MOCK_DECL(struct evp_pkey_st *, crypto_pk_get_evp_pkey_,(crypto_pk_t *env,

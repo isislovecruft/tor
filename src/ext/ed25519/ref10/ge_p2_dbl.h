@@ -28,6 +28,9 @@
 /* qhasm: XX=X1^2 */
 /* asm 1: fe_sq(>XX=fe#1,<X1=fe#11); */
 /* asm 2: fe_sq(>XX=r->X,<X1=p->X); */
+#include "ed25519/ref10/fe.h"
+#include "ed25519/ref10/ge.h"
+
 fe_sq(r->X,p->X);
 
 /* qhasm: YY=Y1^2 */

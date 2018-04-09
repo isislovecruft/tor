@@ -6,14 +6,16 @@
  * small objects that will be freed all at once.
  */
 
-#include "orconfig.h"
 #include <stddef.h>
-#include <stdlib.h>
-#include "memarea.h"
-#include "util.h"
+#include <stdint.h>
+#include <string.h>
+
 #include "compat.h"
-#include "torlog.h"
-#include "container.h"
+#include "memarea.h"
+#include "orconfig.h"
+#include "torint.h"
+#include "util.h"
+#include "util_bug.h"
 
 #ifndef DISABLE_MEMORY_SENTINELS
 

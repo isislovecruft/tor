@@ -87,18 +87,23 @@
 
 #define SHARED_RANDOM_PRIVATE
 
-#include "or.h"
-#include "shared_random.h"
+#include <inttypes.h>
+#include <netinet/in.h>
+#include <string.h>
+
+#include "compat.h"
 #include "config.h"
-#include "confparse.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
+#include "di_ops.h"
 #include "dirvote.h"
 #include "networkstatus.h"
-#include "routerkeys.h"
+#include "or.h"
 #include "router.h"
 #include "routerlist.h"
+#include "shared_random.h"
 #include "shared_random_state.h"
+#include "torlog.h"
 #include "util.h"
 
 /* String prefix of shared random values in votes/consensuses. */

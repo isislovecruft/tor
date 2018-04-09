@@ -3,6 +3,23 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <event2/event.h>
+#include <event2/util.h>
+#include <string.h>
+#include <sys/time.h>
+
+#include "channel.h"
+#include "circuitbuild.h"
+#include "circuitlist.h"
+#include "compat.h"
+#include "compat_libevent.h"
+#include "compat_time.h"
+#include "config.h"
+#include "cpuworker.h"
+#include "crypto_digest.h"
+#include "crypto_rand.h"
+#include "crypto_util.h"
+#include "onion.h"
 /**
  * \file cpuworker.c
  * \brief Uses the workqueue/threadpool code to farm CPU-intensive activities
@@ -18,21 +35,11 @@
  *  </ul>
  **/
 #include "or.h"
-#include "channel.h"
-#include "circuitbuild.h"
-#include "circuitlist.h"
-#include "connection_or.h"
-#include "config.h"
-#include "cpuworker.h"
-#include "crypto_rand.h"
-#include "crypto_util.h"
-#include "main.h"
-#include "onion.h"
 #include "rephist.h"
-#include "router.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 #include "workqueue.h"
-
-#include <event2/event.h>
 
 static void queue_pending_tasks(void);
 

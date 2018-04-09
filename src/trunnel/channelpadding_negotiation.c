@@ -3,9 +3,10 @@
  * You probably shouldn't edit this file.
  */
 #include <stdlib.h>
-#include "trunnel-impl.h"
 
 #include "channelpadding_negotiation.h"
+#include "trunnel-impl.h"
+#include "trunnel-local.h"
 
 #define TRUNNEL_SET_ERROR_CODE(obj) \
   do {                              \

@@ -9,9 +9,14 @@
 #ifndef TOR_HS_CLIENT_H
 #define TOR_HS_CLIENT_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include "crypto_ed25519.h"
 #include "hs_descriptor.h"
 #include "hs_ident.h"
+#include "or.h"
+#include "testsupport.h"
 
 /* Status code of a descriptor fetch request. */
 typedef enum {

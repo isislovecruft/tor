@@ -17,18 +17,26 @@
 
 #define POLICIES_PRIVATE
 
-#include "or.h"
+#include <string.h>
+#include <sys/socket.h>
+#include <syslog.h>
+
 #include "bridges.h"
+#include "compat.h"
 #include "config.h"
 #include "dirserv.h"
+#include "geoip.h"
+#include "ht.h"
 #include "microdesc.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "router.h"
 #include "routerparse.h"
-#include "geoip.h"
-#include "ht.h"
+#include "siphash.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 /** Policy that addresses for incoming SOCKS connections must match. */
 static smartlist_t *socks_policy = NULL;

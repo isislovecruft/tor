@@ -11,12 +11,16 @@
  * other places.
  **/
 
+#include "crypto_openssl_mgt.h"
 #include "orconfig.h"
+#include "siphash.h"
+#include "util_bug.h"
 
 #ifdef _WIN32
-#include <winsock2.h>
-#include <windows.h>
 #include <wincrypt.h>
+#include <windows.h>
+#include <winsock2.h>
+
 /* Windows defines this; so does OpenSSL 0.9.8h and later. We don't actually
  * use either definition. */
 #undef OCSP_RESPONSE
@@ -28,19 +32,25 @@
 #include "crypto_curve25519.h"
 #include "crypto_digest.h"
 #include "crypto_ed25519.h"
-#include "crypto_format.h"
 #include "crypto_rand.h"
-#include "crypto_rsa.h"
 #include "crypto_util.h"
 
 DISABLE_GCC_WARNING(redundant-decls)
 
+#include <limits.h>
+#include <openssl/bn.h>
+#include <openssl/conf.h>
+#include <openssl/crypto.h>
+#include <openssl/dh.h>
+#include <openssl/engine.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
-#include <openssl/engine.h>
-#include <openssl/bn.h>
-#include <openssl/dh.h>
-#include <openssl/conf.h>
+#include <openssl/obj_mac.h>
+#include <openssl/opensslv.h>
+#include <openssl/ossl_typ.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/param.h>
 
 ENABLE_GCC_WARNING(redundant-decls)
 
@@ -58,23 +68,15 @@ ENABLE_GCC_WARNING(redundant-decls)
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_SYS_SYSCALL_H
-#include <sys/syscall.h>
-#endif
 #ifdef HAVE_SYS_RANDOM_H
 #include <sys/random.h>
 #endif
 
-#include "torlog.h"
-#include "torint.h"
 #include "aes.h"
-#include "util.h"
-#include "container.h"
 #include "compat.h"
-#include "sandbox.h"
-#include "util_format.h"
-
-#include "keccak-tiny/keccak-tiny.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util.h"
 
 /** A structure to hold the first half (x, g^x) of a Diffie-Hellman handshake
  * while we're waiting for the second.*/

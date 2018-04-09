@@ -1,17 +1,25 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <stddef.h>
+
+#include "channel.h"
+#include "circuitmux.h"
+#include "compat.h"
 #include "or.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+
 #define CIRCUITBUILD_PRIVATE
 #include "circuitbuild.h"
+
 #define RELAY_PRIVATE
+#include "fakechans.h"
 #include "relay.h"
 /* For init/free stuff */
 #include "scheduler.h"
-
-/* Test suite stuff */
-#include "test.h"
-#include "fakechans.h"
 
 static or_circuit_t * new_fake_orcirc(channel_t *nchan, channel_t *pchan);
 

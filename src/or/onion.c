@@ -62,23 +62,32 @@
  * onion_fast.c for more information.
  **/
 
-#include "or.h"
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <time.h>
+
 #include "circuitbuild.h"
 #include "circuitlist.h"
+#include "compat.h"
 #include "config.h"
 #include "cpuworker.h"
+#include "crypto.h"
 #include "crypto_util.h"
+// trunnel
+#include "ed25519_cert.h"
 #include "networkstatus.h"
 #include "onion.h"
 #include "onion_fast.h"
 #include "onion_ntor.h"
 #include "onion_tap.h"
-#include "relay.h"
-#include "rephist.h"
+#include "or.h"
 #include "router.h"
-
-// trunnel
-#include "ed25519_cert.h"
+#include "tor_queue.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 /** Type for a linked list of circuits that are waiting for a free CPU worker
  * to process a waiting onion handshake. */

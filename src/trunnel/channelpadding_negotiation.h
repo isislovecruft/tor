@@ -5,7 +5,10 @@
 #ifndef TRUNNEL_CHANNELPADDING_NEGOTIATION_H
 #define TRUNNEL_CHANNELPADDING_NEGOTIATION_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "trunnel.h"
 
 #define CHANNELPADDING_COMMAND_STOP 1

@@ -10,9 +10,15 @@
  * See trunnel-impl.h for documentation of these functions.
  */
 
-#include "trunnel-impl.h"
+#include <endian.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "trunnel-impl.h"
+#include "trunnel-local.h"
+#include "trunnel.h"
 
 #if defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && \
 	__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
@@ -24,6 +30,7 @@
 #  define IS_LITTLE_ENDIAN 1
 #elif defined(__APPLE__)
 #  include <libkern/OSByteOrder.h>
+
 #  define BSWAP64(x) OSSwapLittleToHostInt64(x)
 #elif defined(sun) || defined(__sun)
 #  include <sys/byteorder.h>

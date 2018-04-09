@@ -6,11 +6,13 @@
  * License: CC0, attribution kindly requested. Blame taken too,
  * but not liability.
  */
-#include "keccak-tiny.h"
-
+#include <stddef.h>
+#include <stdint.h>
 #include <string.h>
-#include "crypto_util.h"
+
 #include "byteorder.h"
+#include "crypto_util.h"
+#include "keccak-tiny.h"
 
 /******** Endianness conversion helpers ********/
 

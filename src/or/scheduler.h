@@ -9,9 +9,17 @@
 #ifndef TOR_SCHEDULER_H
 #define TOR_SCHEDULER_H
 
-#include "or.h"
+#include <stdint.h>
+
 #include "channel.h"
+#include "compat.h"
+#include "container.h"
+#include "ht.h"
+#include "or.h"
 #include "testsupport.h"
+#include "util_bug.h"
+
+struct timeval;
 
 /** Scheduler type, we build an ordered list with those values from the
  * parsed strings in Schedulers. The reason to do such a thing is so we can

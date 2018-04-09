@@ -9,9 +9,17 @@
 #ifndef TOR_HS_CIRCUITMAP_H
 #define TOR_HS_CIRCUITMAP_H
 
+#include <stddef.h>
+#include <stdint.h>
+
+#include "crypto_ed25519.h"
+#include "ht.h"
+
 typedef HT_HEAD(hs_circuitmap_ht, circuit_t) hs_circuitmap_ht;
 
 typedef struct hs_token_s hs_token_t;
+struct circuit_t;
+struct hs_token_s;
 struct or_circuit_t;
 struct origin_circuit_t;
 

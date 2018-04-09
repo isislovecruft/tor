@@ -14,8 +14,8 @@
 #define SIO_IDEAL_SEND_BACKLOG_QUERY 0x4004747b
 #endif
 #endif
-#include "torint.h"
 #include "testsupport.h"
+#include "torint.h"
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
 #endif
@@ -32,6 +32,8 @@
 #include <string.h>
 #endif
 #include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
 #ifdef HAVE_SYS_RESOURCE_H
 #include <sys/resource.h>
 #endif
@@ -56,8 +58,8 @@
 #endif /* __has_feature(address_sanitizer) */
 #endif /* defined(__has_feature) */
 
-#include <stdio.h>
 #include <errno.h>
+#include <stdio.h>
 
 #ifndef NULL_REP_IS_ZERO_BYTES
 #error "It seems your platform does not represent NULL as zero. We can't cope."
@@ -511,6 +513,7 @@ MOCK_DECL(int,
 tor_getsockname,(tor_socket_t socket, struct sockaddr *address,
                  socklen_t *address_len));
 struct tor_addr_t;
+
 int tor_addr_from_getsockname(struct tor_addr_t *addr_out, tor_socket_t sock);
 
 #define tor_socket_send(s, buf, len, flags) send(s, buf, len, flags)

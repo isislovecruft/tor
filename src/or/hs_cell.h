@@ -9,8 +9,17 @@
 #ifndef TOR_HS_CELL_H
 #define TOR_HS_CELL_H
 
-#include "or.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+
+#include "container.h"
+#include "crypto_curve25519.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
 #include "hs_service.h"
+#include "or.h"
+#include "replaycache.h"
 
 /* An INTRODUCE1 cell requires at least this amount of bytes (see section
  * 3.2.2 of the specification). Below this value, the cell must be padded. */

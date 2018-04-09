@@ -27,27 +27,40 @@
  * logic in circuitstats.c.
  **/
 
-#include "or.h"
+#include <inttypes.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/time.h>
+#include <syslog.h>
+
+#include "address.h"
 #include "addressmap.h"
-#include "bridges.h"
 #include "channel.h"
 #include "circpathbias.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuitstats.h"
 #include "circuituse.h"
+#include "compat.h"
+#include "compat_time.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_edge.h"
 #include "control.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "di_ops.h"
 #include "entrynodes.h"
-#include "hs_common.h"
-#include "hs_client.h"
 #include "hs_circuit.h"
+#include "hs_client.h"
+#include "hs_common.h"
 #include "hs_ident.h"
+#include "hs_service.h"
 #include "hs_stats.h"
-#include "nodelist.h"
 #include "networkstatus.h"
+#include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "rendclient.h"
 #include "rendcommon.h"
@@ -55,6 +68,11 @@
 #include "rephist.h"
 #include "router.h"
 #include "routerlist.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 static void circuit_expire_old_circuits_clientside(void);
 static void circuit_increment_failure_count(void);

@@ -7,7 +7,13 @@
  **/
 
 #include "parsecommon.h"
+
+#include <string.h>
+
+#include "compat.h"
 #include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 #include "util_format.h"
 
 #define MIN_ANNOTATION A_PURPOSE

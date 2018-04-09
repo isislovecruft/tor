@@ -6,16 +6,19 @@
 #define CIRCUITLIST_PRIVATE
 #define CHANNEL_PRIVATE_
 
-#include "or.h"
-#include "test.h"
-#include "test_helpers.h"
-#include "log_test_helpers.h"
-#include "config.h"
+#include <string.h>
+#include <sys/time.h>
+
 #include "circuitlist.h"
-#include "circuitbuild.h"
 #include "circuitstats.h"
 #include "circuituse.h"
-#include "channel.h"
+#include "compat.h"
+#include "compat_time.h"
+#include "or.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 void test_circuitstats_timeout(void *arg);
 void test_circuitstats_hoplen(void *arg);

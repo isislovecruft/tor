@@ -4,24 +4,38 @@
 /* See LICENSE for licensing information */
 
 #define DIRVOTE_PRIVATE
-#include "or.h"
+#include <limits.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/socket.h>
+#include <syslog.h>
+
+#include "address.h"
+#include "compat.h"
 #include "config.h"
+#include "crypto.h"
+#include "crypto_curve25519.h"
+#include "crypto_ed25519.h"
+#include "crypto_format.h"
+#include "di_ops.h"
 #include "dircollate.h"
 #include "directory.h"
 #include "dirserv.h"
 #include "dirvote.h"
+#include "entrynodes.h" /* needed for guardfraction methods */
 #include "microdesc.h"
 #include "networkstatus.h"
+#include "or.h"
 #include "policies.h"
 #include "protover.h"
-#include "rephist.h"
 #include "router.h"
-#include "routerkeys.h"
 #include "routerlist.h"
 #include "routerparse.h"
-#include "entrynodes.h" /* needed for guardfraction methods */
+#include "shared_random.h"
 #include "torcert.h"
-#include "shared_random_state.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /**
  * \file dirvote.c

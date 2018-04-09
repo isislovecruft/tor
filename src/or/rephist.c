@@ -74,20 +74,32 @@
  * (The "rephist" name originally stood for "reputation and history". )
  **/
 
-#include "or.h"
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/time.h>
+
+#include "channelpadding.h"
 #include "circuitlist.h"
 #include "circuituse.h"
+#include "compat.h"
 #include "config.h"
+#include "connection_or.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
+#include "ht.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "rephist.h"
 #include "router.h"
-#include "routerlist.h"
-#include "ht.h"
-#include "channelpadding.h"
-
-#include "connection_or.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 static void bw_arrays_init(void);
 static void predicted_ports_alloc(void);

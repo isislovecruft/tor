@@ -1,6 +1,9 @@
-#include "fe.h"
+#include <stdint.h>
+
 #include "crypto_int64.h"
 #include "crypto_uint64.h"
+#include "ed25519/ref10/crypto_int32.h"
+#include "fe.h"
 
 static crypto_uint64 load_3(const unsigned char *in)
 {

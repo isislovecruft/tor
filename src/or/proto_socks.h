@@ -7,8 +7,12 @@
 #ifndef TOR_PROTO_SOCKS_H
 #define TOR_PROTO_SOCKS_H
 
-struct socks_request_t;
+#include "buffers.h"
+#include "or.h"
+#include "util.h"
+
 struct buf_t;
+struct socks_request_t;
 
 struct socks_request_t *socks_request_new(void);
 void socks_request_free_(struct socks_request_t *req);

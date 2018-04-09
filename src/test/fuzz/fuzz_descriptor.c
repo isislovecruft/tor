@@ -1,11 +1,21 @@
 /* Copyright (c) 2016-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 #define ROUTERPARSE_PRIVATE
-#include "or.h"
-#include "routerparse.h"
-#include "routerlist.h"
-#include "routerkeys.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_rsa.h"
 #include "fuzzing.h"
+#include "or.h"
+#include "routerkeys.h"
+#include "routerlist.h"
+#include "routerparse.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 static int
 mock_check_tap_onion_key_crosscert__nocheck(const uint8_t *crosscert,

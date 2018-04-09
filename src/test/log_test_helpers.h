@@ -1,6 +1,7 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include "container.h"
 #include "or.h"
 
 #ifndef TOR_LOG_TEST_HELPERS_H

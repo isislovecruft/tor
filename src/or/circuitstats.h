@@ -12,6 +12,12 @@
 #ifndef TOR_CIRCUITSTATS_H
 #define TOR_CIRCUITSTATS_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "or.h"
+#include "testsupport.h"
+
 const circuit_build_times_t *get_circuit_build_times(void);
 circuit_build_times_t *get_circuit_build_times_mutable(void);
 double get_circuit_build_close_time_ms(void);

@@ -9,6 +9,7 @@
 #ifndef TOR_UTIL_PROCESS_H
 #define TOR_UTIL_PROCESS_H
 
+#include <sys/types.h>
 #ifndef _WIN32
 /** A callback structure waiting for us to get a SIGCHLD informing us that a
  * PID has been closed. Created by set_waitpid_callback. Cancelled or cleaned-

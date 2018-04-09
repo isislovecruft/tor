@@ -3,19 +3,21 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
 #define CRYPTO_RAND_PRIVATE
 
+#include <openssl/evp.h>
+#include <openssl/ossl_typ.h>
+#include <openssl/rand.h>
+#include <stddef.h>
+#include <string.h>
+
+#include "compat.h"
+#include "compat_openssl.h"
 #include "crypto_rand.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
 #include "util.h"
 #include "util_format.h"
-#include "compat.h"
-#include "test.h"
-
-#include <openssl/evp.h>
-#include <openssl/rand.h>
-#include "compat_openssl.h"
 
 /* Test for rectifying openssl RAND engine. */
 static void

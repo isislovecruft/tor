@@ -3,10 +3,13 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <string.h>
+
 #include "crypto_rand.h"
-#include "orconfig.h"
-#include "or.h"
-#include "test.h"
+#include "crypto_rsa.h"
+#include "testsupport.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** Define this if unit tests spend too much time generating public keys.
  * This module is meant to save time by using a bunch of pregenerated RSA

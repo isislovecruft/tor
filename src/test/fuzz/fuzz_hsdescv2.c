@@ -1,10 +1,17 @@
 /* Copyright (c) 2016-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 #define ROUTERPARSE_PRIVATE
-#include "or.h"
-#include "routerparse.h"
-#include "rendcommon.h"
+#include <stddef.h>
+#include <stdint.h>
+
+#include "crypto_ed25519.h"
 #include "fuzzing.h"
+#include "or.h"
+#include "rendcommon.h"
+#include "routerparse.h"
+#include "testsupport.h"
+#include "torlog.h"
+#include "util.h"
 
 static void
 mock_dump_desc__nodump(const char *desc, const char *type)

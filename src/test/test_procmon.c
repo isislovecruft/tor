@@ -2,17 +2,15 @@
 /* See LICENSE for licensing information */
 
 #define PROCMON_PRIVATE
-#include "orconfig.h"
-#include "or.h"
-#include "test.h"
+#include <stddef.h>
 
+#include "compat.h"
+#include "compat_libevent.h"
 #include "procmon.h"
-
-#include "log_test_helpers.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
 
 #define NS_MODULE procmon
-
-struct event_base;
 
 static void
 test_procmon_tor_process_monitor_new(void *ignored)

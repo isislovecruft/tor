@@ -10,24 +10,35 @@
 
 #define RENDCOMMON_PRIVATE
 
-#include "or.h"
+#include <netinet/in.h>
+#include <string.h>
+
+#include "address.h"
 #include "circuitbuild.h"
+#include "compat.h"
 #include "config.h"
 #include "control.h"
+#include "crypto.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
+#include "di_ops.h"
 #include "hs_client.h"
 #include "hs_common.h"
 #include "hs_intropoint.h"
+#include "hs_service.h"
 #include "networkstatus.h"
+#include "or.h"
+#include "rendcache.h"
 #include "rendclient.h"
 #include "rendcommon.h"
 #include "rendmid.h"
 #include "rendservice.h"
-#include "rephist.h"
-#include "router.h"
-#include "routerlist.h"
+#include "replaycache.h"
 #include "routerparse.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** Return 0 if one and two are the same service ids, else -1 or 1 */
 int

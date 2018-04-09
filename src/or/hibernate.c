@@ -28,19 +28,32 @@ hibernating, phase 2:
 */
 
 #define HIBERNATE_PRIVATE
-#include "or.h"
-#include "channel.h"
-#include "channeltls.h"
+#include <errno.h>
+#include <limits.h>
+#include <string.h>
+#include <sys/param.h>
+#include <syslog.h>
+#include <unistd.h>
+
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_edge.h"
 #include "connection_or.h"
+#include "container.h"
 #include "control.h"
+#include "crypto_digest.h"
 #include "crypto_rand.h"
+#include "crypto_rsa.h"
 #include "hibernate.h"
 #include "main.h"
+#include "or.h"
 #include "router.h"
 #include "statefile.h"
+#include "torint.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** Are we currently awake, asleep, running out of bandwidth, or shutting
  * down? */

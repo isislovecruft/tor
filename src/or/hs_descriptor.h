@@ -9,15 +9,21 @@
 #ifndef TOR_HS_DESCRIPTOR_H
 #define TOR_HS_DESCRIPTOR_H
 
+#include <stddef.h>
 #include <stdint.h>
 
-#include "or.h"
 #include "address.h"
 #include "container.h"
 #include "crypto.h"
+#include "crypto_curve25519.h"
+#include "crypto_digest.h"
 #include "crypto_ed25519.h"
+#include "crypto_rsa.h"
 #include "ed25519_cert.h" /* needed for trunnel */
+#include "or.h"
+#include "testsupport.h"
 #include "torcert.h"
+#include "util.h"
 
 /* Trunnel */
 struct link_specifier_t;

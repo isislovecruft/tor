@@ -1,13 +1,18 @@
 /* Copyright (c) 2014-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
 #define KEYPIN_PRIVATE
-#include "or.h"
-#include "keypin.h"
-#include "util.h"
+#include <stdint.h>
+#include <string.h>
 
+#include "compat.h"
+#include "container.h"
+#include "keypin.h"
 #include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 static void
 test_keypin_parse_line(void *arg)

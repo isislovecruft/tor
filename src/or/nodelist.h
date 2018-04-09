@@ -12,6 +12,19 @@
 #ifndef TOR_NODELIST_H
 #define TOR_NODELIST_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/un.h>
+
+#include "address.h"
+#include "compat.h"
+#include "container.h"
+#include "crypto_curve25519.h"
+#include "crypto_ed25519.h"
+#include "or.h"
+#include "testsupport.h"
+#include "util_bug.h"
+
 #define node_assert_ok(n) STMT_BEGIN {                          \
     tor_assert((n)->ri || (n)->rs);                             \
   } STMT_END

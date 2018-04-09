@@ -22,18 +22,17 @@
 
 /* OPENBSD ORIGINAL: lib/libc/gen/readpassphrase.c */
 
-#include "orconfig.h"
-
+#include <stddef.h>
 #ifndef HAVE_READPASSPHRASE
 
-#include <termios.h>
-#include <signal.h>
-#include <ctype.h>
-#include <fcntl.h>
-#include "tor_readpassphrase.h"
 #include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
 #include <string.h>
+#include <termios.h>
 #include <unistd.h>
+
+#include "tor_readpassphrase.h"
 
 #ifndef _PATH_TTY
 # define _PATH_TTY "/dev/tty"

@@ -3,7 +3,6 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
 #ifdef ENABLE_RESTART_DEBUGGING
 #include <stdlib.h>
 #endif

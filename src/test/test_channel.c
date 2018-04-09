@@ -3,8 +3,25 @@
 
 #define TOR_CHANNEL_INTERNAL_
 #define CHANNEL_PRIVATE_
-#include "or.h"
+#include <limits.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/types.h>
+#include <syslog.h>
+#include <time.h>
+
+#include "address.h"
 #include "channel.h"
+#include "compat.h"
+#include "compat_time.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "or.h"
+#include "test.h"
+#include "util.h"
+#include "util_bug.h"
+
 /* For channel_note_destroy_not_pending */
 #define CIRCUITLIST_PRIVATE
 #include "circuitlist.h"
@@ -13,12 +30,13 @@
 /* For var_cell_free */
 #include "connection_or.h"
 #include "crypto_rand.h"
+
 /* For packed_cell stuff */
 #define RELAY_PRIVATE
+#include "networkstatus.h"
 #include "relay.h"
 /* For init/free stuff */
 #include "scheduler.h"
-#include "networkstatus.h"
 
 /* Test suite stuff */
 #include "log_test_helpers.h"

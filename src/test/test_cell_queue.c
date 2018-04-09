@@ -3,8 +3,11 @@
 
 #define CIRCUITLIST_PRIVATE
 #define RELAY_PRIVATE
-#include "or.h"
+#include <string.h>
+
 #include "circuitlist.h"
+#include "compat.h"
+#include "or.h"
 #include "relay.h"
 #include "test.h"
 

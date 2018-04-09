@@ -38,27 +38,43 @@
 
 #define CHANNELTLS_PRIVATE
 
-#include "or.h"
+#include <limits.h>
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <syslog.h>
+#include <time.h>
+
 #include "channel.h"
+#include "channelpadding.h"
+#include "channelpadding_negotiation.h"
 #include "channeltls.h"
 #include "circuitmux.h"
 #include "circuitmux_ewma.h"
-#include "command.h"
+#include "compat.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_or.h"
-#include "control.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_rsa.h"
+#include "di_ops.h"
 #include "entrynodes.h"
 #include "link_handshake.h"
+#include "or.h"
+#include "orconfig.h"
 #include "relay.h"
 #include "rephist.h"
 #include "router.h"
 #include "routerlist.h"
 #include "scheduler.h"
 #include "torcert.h"
-#include "networkstatus.h"
-#include "channelpadding_negotiation.h"
-#include "channelpadding.h"
+#include "torlog.h"
+#include "tortls.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** How many CELL_PADDING cells have we received, ever? */
 uint64_t stats_n_padding_cells_processed = 0;

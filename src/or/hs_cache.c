@@ -9,17 +9,22 @@
 /* For unit tests.*/
 #define HS_CACHE_PRIVATE
 
-#include "or.h"
+#include <string.h>
+
 #include "config.h"
+#include "crypto_digest.h"
+#include "crypto_format.h"
 #include "crypto_util.h"
-#include "hs_ident.h"
-#include "hs_common.h"
+#include "hs_cache.h"
 #include "hs_client.h"
+#include "hs_common.h"
 #include "hs_descriptor.h"
 #include "networkstatus.h"
+#include "or.h"
 #include "rendcache.h"
-
-#include "hs_cache.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 static int cached_client_descriptor_has_expired(time_t now,
            const hs_cache_client_descriptor_t *cached_desc);

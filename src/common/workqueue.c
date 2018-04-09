@@ -22,14 +22,16 @@
  * In Tor today, there is currently only one thread pool, used in cpuworker.c.
  */
 
-#include "orconfig.h"
+#include <string.h>
+
 #include "compat.h"
 #include "compat_threads.h"
 #include "crypto_rand.h"
-#include "util.h"
-#include "workqueue.h"
 #include "tor_queue.h"
 #include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
+#include "workqueue.h"
 
 #define WORKQUEUE_PRIORITY_FIRST WQ_PRI_HIGH
 #define WORKQUEUE_PRIORITY_LAST WQ_PRI_LOW

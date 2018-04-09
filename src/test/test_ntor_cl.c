@@ -1,17 +1,20 @@
 /* Copyright (c) 2012-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define ONION_NTOR_PRIVATE
-#include "or.h"
-#include "util.h"
 #include "compat.h"
-#include "crypto.h"
 #include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "di_ops.h"
 #include "onion_ntor.h"
+#include "util.h"
+#include "util_format.h"
 
 #define N_ARGS(n) STMT_BEGIN {                                  \
     if (argc < (n)) {                                           \

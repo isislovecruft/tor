@@ -57,27 +57,33 @@
 /* This one's for stuff only channel.c and the test suite should see */
 #define CHANNEL_PRIVATE_
 
-#include "or.h"
+#include <netinet/in.h>
+#include <string.h>
+
 #include "channel.h"
-#include "channeltls.h"
 #include "channelpadding.h"
+#include "channeltls.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
+#include "circuitmux.h"
 #include "circuitstats.h"
+#include "compat.h"
+#include "compat_time.h"
 #include "config.h"
 #include "connection_or.h" /* For var_cell_free() */
-#include "circuitmux.h"
-#include "entrynodes.h"
+#include "di_ops.h"
+#include "dos.h"
 #include "geoip.h"
-#include "nodelist.h"
-#include "relay.h"
-#include "rephist.h"
-#include "router.h"
-#include "routerlist.h"
-#include "scheduler.h"
-#include "compat_time.h"
 #include "networkstatus.h"
+#include "nodelist.h"
+#include "or.h"
+#include "relay.h"
 #include "rendservice.h"
+#include "router.h"
+#include "scheduler.h"
+#include "siphash.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 /* Global lists of channels */
 

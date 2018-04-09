@@ -1,48 +1,52 @@
 /* Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "orconfig.h"
-
+#include <netinet/in.h>
+#include <openssl/bio.h>
+#include <openssl/buffer.h>
+#include <openssl/ossl_typ.h>
+#include <openssl/sha.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
+#include <sys/types.h>
+#include <syslog.h>
+#include <time.h>
 
 #include "compat.h"
+#include "crypto_rsa.h"
+#include "orconfig.h"
 
 /* Some versions of OpenSSL declare X509_STORE_CTX_set_verify_cb twice in
  * x509.h and x509_vfy.h. Suppress the GCC warning so we can build with
  * -Wredundant-decl. */
 DISABLE_GCC_WARNING(redundant-decls)
 
+#include <openssl/err.h>
 #include <openssl/evp.h>
+#include <openssl/obj_mac.h>
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
-#include <openssl/objects.h>
-#include <openssl/obj_mac.h>
-#include <openssl/err.h>
 
 ENABLE_GCC_WARNING(redundant-decls)
 
 #include <errno.h>
 #if 0
-#include <stdlib.h>
-#include <stdarg.h>
 #include <assert.h>
+#include <stdarg.h>
+#include <stdlib.h>
 #endif
 
-#include "util.h"
-#include "torlog.h"
+#include "address.h"
 #include "crypto.h"
 #include "crypto_digest.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
-#include "address.h"
+#include "torlog.h"
+#include "util.h"
 #include "util_format.h"
 
 #define IDENTITY_KEY_BITS 3072

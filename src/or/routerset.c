@@ -27,14 +27,21 @@
 
 #define ROUTERSET_PRIVATE
 
-#include "or.h"
+#include <string.h>
+#include <sys/socket.h>
+
 #include "bridges.h"
+#include "crypto_digest.h"
 #include "geoip.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "router.h"
 #include "routerparse.h"
 #include "routerset.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** Return a new empty routerset. */
 routerset_t *

@@ -11,30 +11,35 @@
 
 #define HS_COMMON_PRIVATE
 
-#include "or.h"
+#include <string.h>
+#include <sys/socket.h>
 
-#include "config.h"
 #include "circuitbuild.h"
+#include "compat.h"
+#include "config.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
-#include "networkstatus.h"
-#include "nodelist.h"
-#include "hs_cache.h"
-#include "hs_common.h"
-#include "hs_client.h"
-#include "hs_ident.h"
-#include "hs_service.h"
-#include "hs_circuitmap.h"
-#include "policies.h"
-#include "rendcommon.h"
-#include "rendservice.h"
-#include "routerset.h"
-#include "router.h"
-#include "shared_random.h"
-#include "shared_random_state.h"
-
+#include "di_ops.h"
 /* Trunnel */
 #include "ed25519_cert.h"
+#include "hs_cache.h"
+#include "hs_circuitmap.h"
+#include "hs_client.h"
+#include "hs_common.h"
+#include "hs_ident.h"
+#include "hs_service.h"
+#include "networkstatus.h"
+#include "nodelist.h"
+#include "or.h"
+#include "policies.h"
+#include "rendcommon.h"
+#include "router.h"
+#include "routerset.h"
+#include "shared_random.h"
+#include "shared_random_state.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /* Ed25519 Basepoint value. Taken from section 5 of
  * https://tools.ietf.org/html/draft-josefsson-eddsa-ed25519-03 */

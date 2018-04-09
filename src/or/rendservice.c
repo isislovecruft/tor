@@ -9,34 +9,50 @@
 
 #define RENDSERVICE_PRIVATE
 
-#include "or.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/param.h>
+#include <sys/stat.h>
+#include <syslog.h>
+#include <unistd.h>
+
+#include "address.h"
 #include "circpathbias.h"
 #include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuituse.h"
+#include "compat.h"
 #include "config.h"
 #include "control.h"
+#include "crypto.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "hs_common.h"
 #include "hs_config.h"
 #include "main.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
+#include "orconfig.h"
 #include "policies.h"
-#include "rendclient.h"
+#include "relay.h"
 #include "rendcommon.h"
 #include "rendservice.h"
-#include "router.h"
-#include "relay.h"
 #include "rephist.h"
 #include "replaycache.h"
+#include "router.h"
 #include "routerlist.h"
 #include "routerparse.h"
 #include "routerset.h"
+#include "torlog.h"
+#include "util_bug.h"
+#include "util_format.h"
 
-struct rend_service_t;
 static origin_circuit_t *find_intro_circuit(rend_intro_point_t *intro,
                                             const char *pk_digest);
 static rend_intro_point_t *find_intro_point(origin_circuit_t *circ);

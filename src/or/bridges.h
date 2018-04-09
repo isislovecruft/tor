@@ -12,6 +12,15 @@
 #ifndef TOR_BRIDGES_H
 #define TOR_BRIDGES_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "address.h"
+#include "container.h"
+#include "crypto_ed25519.h"
+#include "or.h"
+#include "testsupport.h"
+
 struct bridge_line_t;
 
 /* Opaque handle to a configured bridge */
@@ -53,6 +62,7 @@ int any_bridges_dont_support_microdescriptors(void);
 const char *find_transport_name_by_bridge_addrport(const tor_addr_t *addr,
                                                    uint16_t port);
 struct transport_t;
+
 int get_transport_by_bridge_addrport(const tor_addr_t *addr, uint16_t port,
                                       const struct transport_t **transport);
 

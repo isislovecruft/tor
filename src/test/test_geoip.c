@@ -3,14 +3,28 @@
  * Copyright (c) 2007-2018, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <time.h>
+
+#include "address.h"
+#include "compat.h"
+#include "crypto_digest.h"
 #include "orconfig.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
+#include "util_bug.h"
 
 /* These macros pull in declarations for some functions and structures that
  * are typically file-private. */
 #define GEOIP_PRIVATE
-#include "or.h"
 #include "config.h"
 #include "geoip.h"
+#include "or.h"
 #include "test.h"
 
   /* Record odd numbered fake-IPs using ipv6, even numbered fake-IPs

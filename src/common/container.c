@@ -11,17 +11,17 @@
  * a digest-to-void* map.
  **/
 
-#include "compat.h"
-#include "util.h"
-#include "torlog.h"
-#include "container.h"
-#include "crypto_digest.h"
-
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
+#include "compat.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "di_ops.h"
 #include "ht.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** All newly allocated smartlists have this capacity. */
 #define SMARTLIST_DEFAULT_CAPACITY 16

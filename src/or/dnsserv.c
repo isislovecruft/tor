@@ -21,18 +21,27 @@
  * DNS client.
  **/
 
-#include "or.h"
-#include "dnsserv.h"
+#include <event2/dns.h>
+/* XXXX this implies we want an improved evdns  */
+#include <event2/dns_struct.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/socket.h>
+
+#include "address.h"
+#include "compat.h"
+#include "compat_libevent.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_edge.h"
 #include "control.h"
+#include "dnsserv.h"
 #include "main.h"
+#include "or.h"
 #include "policies.h"
-#include <event2/dns.h>
-#include <event2/dns_compat.h>
-/* XXXX this implies we want an improved evdns  */
-#include <event2/dns_struct.h>
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** Helper function: called by evdns whenever the client sends a request to our
  * DNSPort.  We need to eventually answer the request <b>req</b>.

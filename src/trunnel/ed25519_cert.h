@@ -5,7 +5,10 @@
 #ifndef TRUNNEL_ED25519_CERT_H
 #define TRUNNEL_ED25519_CERT_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <sys/types.h>
+
 #include "trunnel.h"
 
 #define CERTEXT_SIGNED_WITH_KEY 4

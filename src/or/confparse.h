@@ -7,6 +7,18 @@
 #ifndef TOR_CONFPARSE_H
 #define TOR_CONFPARSE_H
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
+
+#include "compat.h"
+#include "confline.h"
+#include "container.h"
+#include "or.h"
+#include "util.h"
+#include "util_bug.h"
+
 /** Enumeration of types which option values can take */
 typedef enum config_type_t {
   CONFIG_TYPE_STRING = 0,   /**< An arbitrary string. */

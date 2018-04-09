@@ -12,8 +12,18 @@
 #ifndef TOR_GEOIP_H
 #define TOR_GEOIP_H
 
-#include "testsupport.h"
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/un.h>
+#include <time.h>
+
+#include "address.h"
 #include "dos.h"
+#include "ht.h"
+#include "or.h"
+#include "testsupport.h"
+
+struct in6_addr;
 
 #ifdef GEOIP_PRIVATE
 STATIC int geoip_parse_entry(const char *line, sa_family_t family);

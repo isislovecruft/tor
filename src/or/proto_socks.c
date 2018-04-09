@@ -4,15 +4,24 @@
  * Copyright (c) 2007-2017, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
+#include <netinet/in.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include "address.h"
 #include "addressmap.h"
 #include "buffers.h"
-#include "control.h"
+#include "compat.h"
 #include "config.h"
+#include "control.h"
 #include "crypto_util.h"
-#include "ext_orport.h"
+#include "or.h"
 #include "proto_socks.h"
 #include "reasons.h"
+#include "torlog.h"
+#include "util_bug.h"
 
 static void socks_request_set_socks5_error(socks_request_t *req,
                               socks5_reply_status_t reason);

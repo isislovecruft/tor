@@ -1,3 +1,4 @@
+#include "ed25519/ref10/fe.h"
 #include "ge.h"
 
 void ge_p2_0(ge_p2 *h)

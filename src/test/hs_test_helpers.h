@@ -4,6 +4,10 @@
 #ifndef TOR_HS_TEST_HELPERS_H
 #define TOR_HS_TEST_HELPERS_H
 
+#include <stdint.h>
+#include <time.h>
+
+#include "crypto_ed25519.h"
 #include "ed25519_cert.h"
 #include "hs_descriptor.h"
 

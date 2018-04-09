@@ -11,26 +11,43 @@
 #define HS_SERVICE_PRIVATE
 #define NODELIST_PRIVATE
 
-#include "test.h"
-#include "test_helpers.h"
-#include "log_test_helpers.h"
-#include "hs_test_helpers.h"
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
 
-#include "connection_edge.h"
-#include "crypto_rand.h"
-#include "hs_common.h"
-#include "hs_client.h"
-#include "hs_service.h"
+#include "address.h"
+#include "circuitlist.h"
+#include "compat.h"
 #include "config.h"
-#include "networkstatus.h"
+#include "connection_edge.h"
+#include "container.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_format.h"
+#include "crypto_rand.h"
+#include "di_ops.h"
 #include "directory.h"
 #include "dirvote.h"
+#include "hs_client.h"
+#include "hs_common.h"
+#include "hs_descriptor.h"
+#include "hs_service.h"
+#include "log_test_helpers.h"
+#include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "routerlist.h"
-#include "statefile.h"
-#include "circuitlist.h"
 #include "shared_random.h"
+#include "statefile.h"
+#include "test.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "torcert.h"
+#include "torlog.h"
 #include "util.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /** Test the validation of HS v3 addresses */
 static void

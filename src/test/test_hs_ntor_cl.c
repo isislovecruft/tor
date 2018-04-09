@@ -8,18 +8,17 @@
  *  The logic of this wrapper is basically copied from src/test/test_ntor_cl.c
  */
 
-#include "orconfig.h"
+#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
 #define ONION_NTOR_PRIVATE
-#include "or.h"
-#include "util.h"
 #include "compat.h"
-#include "crypto.h"
 #include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
 #include "hs_ntor.h"
-#include "onion_ntor.h"
+#include "util_format.h"
 
 #define N_ARGS(n) STMT_BEGIN {                                  \
     if (argc < (n)) {                                           \

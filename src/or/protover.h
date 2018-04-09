@@ -9,7 +9,11 @@
 #ifndef TOR_PROTOVER_H
 #define TOR_PROTOVER_H
 
+#include <stdint.h>
+
 #include "container.h"
+#include "testsupport.h"
+#include "util.h"
 
 /** The first version of Tor that included "proto" entries in its
  * descriptors.  Authorities should use this to decide whether to

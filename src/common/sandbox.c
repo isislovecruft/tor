@@ -10,6 +10,7 @@
  **/
 
 #include "orconfig.h"
+#include "siphash.h"
 
 #ifndef _LARGEFILE64_SOURCE
 /**
@@ -28,48 +29,43 @@
  */
 #define MALLOC_MP_LIM (20*1024*1024)
 
+socket_type.h>/socket_type.h>
+#include <errno.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <stddef.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <syscall.h>
+#include <ucontext.h>
 
-#include "sandbox.h"
 #include "container.h"
-#include "torlog.h"
-#include "torint.h"
-#include "util.h"
-#include "tor_queue.h"
-
 #include "ht.h"
+#include "sandbox.h"
+#include "torlog.h"
+#include "util.h"
 
 #define DEBUGGING_CLOSE
 
 #if defined(USE_LIBSECCOMP)
 
-#include <sys/mman.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <sys/epoll.h>
+#include <sys/mman.h>
 #include <sys/prctl.h>
 #include <linux/futex.h>
-#include <sys/file.h>
-
-#include <stdarg.h>
+#include <fcntl.h>
 #include <seccomp.h>
 #include <signal.h>
+#include <sys/file.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <time.h>
-#include <poll.h>
 
 #ifdef HAVE_GNU_LIBC_VERSION_H
 #include <gnu/libc-version.h>
 #endif
 #ifdef HAVE_LINUX_NETFILTER_IPV4_H
 #include <linux/netfilter_ipv4.h>
-#endif
-#ifdef HAVE_LINUX_IF_H
-#include <linux/if.h>
 #endif
 #ifdef HAVE_LINUX_NETFILTER_IPV6_IP6_TABLES_H
 #include <linux/netfilter_ipv6/ip6_tables.h>
@@ -850,6 +846,7 @@ sb_getsockopt(scmp_filter_ctx ctx, sandbox_cfg_t *filter)
 
 #ifdef HAVE_KIST_SUPPORT
 #include <netinet/tcp.h>
+
   rc = seccomp_rule_add_2(ctx, SCMP_ACT_ALLOW, SCMP_SYS(getsockopt),
       SCMP_CMP(1, SCMP_CMP_EQ, SOL_TCP),
       SCMP_CMP(2, SCMP_CMP_EQ, TCP_INFO));
@@ -1728,6 +1725,7 @@ install_syscall_filter(sandbox_cfg_t* cfg)
 }
 
 #include "linux_syscalls.inc"
+
 static const char *
 get_syscall_name(int syscall_num)
 {

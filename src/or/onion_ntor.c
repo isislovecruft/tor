@@ -18,15 +18,18 @@
  * invoked from onion.c.
  */
 
-#include "orconfig.h"
-
 #define ONION_NTOR_PRIVATE
+#include <string.h>
+#include <syslog.h>
+
+#include "compat.h"
 #include "crypto.h"
 #include "crypto_digest.h"
 #include "crypto_util.h"
 #include "onion_ntor.h"
 #include "torlog.h"
 #include "util.h"
+#include "util_bug.h"
 
 /** Free storage held in an ntor handshake state. */
 void

@@ -6,16 +6,27 @@
 
 #define ROUTER_PRIVATE
 
-#include "or.h"
+#include <errno.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <syslog.h>
+
 #include "circuitbuild.h"
 #include "circuitlist.h"
 #include "circuituse.h"
+#include "compat.h"
+#include "compat_threads.h"
 #include "config.h"
+#include "confline.h"
 #include "connection.h"
 #include "control.h"
+#include "crypto.h"
+#include "crypto_curve25519.h"
+#include "crypto_digest.h"
+#include "crypto_format.h"
 #include "crypto_rand.h"
 #include "crypto_util.h"
-#include "crypto_curve25519.h"
 #include "directory.h"
 #include "dirserv.h"
 #include "dns.h"
@@ -24,6 +35,7 @@
 #include "main.h"
 #include "networkstatus.h"
 #include "nodelist.h"
+#include "or.h"
 #include "policies.h"
 #include "protover.h"
 #include "relay.h"
@@ -32,10 +44,14 @@
 #include "routerkeys.h"
 #include "routerlist.h"
 #include "routerparse.h"
+#include "routerset.h"
 #include "statefile.h"
 #include "torcert.h"
+#include "torlog.h"
+#include "tortls.h"
 #include "transports.h"
-#include "routerset.h"
+#include "util_bug.h"
+#include "util_format.h"
 
 /**
  * \file router.c

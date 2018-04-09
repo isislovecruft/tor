@@ -49,23 +49,41 @@
 
 #define DNS_PRIVATE
 
-#include "or.h"
+#include <errno.h>
+#include <event2/dns.h>
+#include <event2/event.h>
+#include <event2/util.h>
+#include <netinet/in.h>
+#include <stddef.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <syslog.h>
+#include <time.h>
+
+#include "address.h"
 #include "circuitlist.h"
 #include "circuituse.h"
+#include "compat.h"
+#include "compat_libevent.h"
 #include "config.h"
 #include "connection.h"
 #include "connection_edge.h"
+#include "container.h"
 #include "control.h"
 #include "crypto_rand.h"
 #include "dns.h"
+#include "ht.h"
 #include "main.h"
-#include "policies.h"
+#include "or.h"
 #include "relay.h"
 #include "router.h"
-#include "ht.h"
 #include "sandbox.h"
-#include <event2/event.h>
-#include <event2/dns.h>
+#include "siphash.h"
+#include "torlog.h"
+#include "util.h"
+#include "util_bug.h"
 
 /** How long will we wait for an answer from the resolver before we decide
  * that the resolver is wedged? */

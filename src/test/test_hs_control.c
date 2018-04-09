@@ -12,18 +12,23 @@
 #define RENDSERVICE_PRIVATE
 #define HS_SERVICE_PRIVATE
 
-#include "or.h"
-#include "test.h"
+#include <stdint.h>
+#include <string.h>
+
+#include "compat.h"
 #include "control.h"
-#include "config.h"
+#include "crypto_digest.h"
+#include "crypto_ed25519.h"
+#include "crypto_format.h"
 #include "hs_common.h"
 #include "hs_control.h"
+#include "hs_ident.h"
 #include "nodelist.h"
-//#include "rendcommon.h"
-//#include "rendservice.h"
-//#include "routerset.h"
-//#include "circuitbuild.h"
-#include "test_helpers.h"
+#include "or.h"
+#include "testsupport.h"
+#include "tinytest.h"
+#include "tinytest_macros.h"
+#include "util.h"
 
 /* mock ID digest and longname for node that's in nodelist */
 #define HSDIR_EXIST_ID \
