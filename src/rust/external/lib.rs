@@ -1,4 +1,4 @@
-//! Copyright (c) 2016-2017, The Tor Project, Inc. */
+//! Copyright (c) 2016-2018, The Tor Project, Inc. */
 //! See LICENSE for licensing information */
 
 //! Interface for external calls to tor C ABI
@@ -9,6 +9,10 @@
 
 extern crate libc;
 
+extern crate smartlist;
+
+mod crypto_rand;
 mod external;
 
+pub use crypto_rand::*;
 pub use external::*;
