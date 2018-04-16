@@ -53,7 +53,8 @@
  *     too long.
  *   <li>Packaging private keys on the server side in order to pass
  *     them to worker threads.
- *   <li>Encoding and decoding CREATE, CREATED, CREATE2, and CREATED2 cells.
+ *   <li>Encoding and decoding CREATE, CREATED, CREATE2, CREATED2, CREATE2V,
+ *       and CREATED2V cells.
  *   <li>Encoding and decodign EXTEND, EXTENDED, EXTEND2, and EXTENDED2
  *    relay cells.
  * </ul>
@@ -685,6 +686,8 @@ check_create_cell(const create_cell_t *cell, int unknown_ok)
     break;
   case CELL_CREATE2:
     break;
+  case CELL_CREATE2V:
+    break;
   default:
     return -1;
   }
@@ -726,6 +729,30 @@ create_cell_init(create_cell_t *cell_out, uint8_t cell_type,
   memcpy(cell_out->onionskin, onionskin, handshake_len);
 }
 
+/**
+ * Initialise a CREATE2V cell.
+ *
+ * Copies <b>handshake_len</b> bytes of <b>handshake_data</b> into the
+ * <b>cell_out</b>'s body.hdata member, and then copies <b>padding_len</b> bytes
+ * of <b>padding_data</b> into the <b>cell_out</b>'s body.ignored member.
+ * Also sets cell_out->body.htype to <b>handshake_type</b>.
+ */
+void
+create2v_cell_init(create2v_cell_t *cell_out,
+                   const uint16_t handshake_type,
+                   const uint8_t *handshake_data,
+                   const uint16_t handshake_len,
+                   const uint8_t *padding_data,
+                   const uint16_t padding_len)
+{
+  memset(cell_out, 0, sizeof(*cell_out));
+
+  create2v_cell_body_set_htype(cell_out->body, handshake_type);
+  create2v_cell_body_set_hlen(ell_out->body, handshake_len);
+  memcpy(cell_out->body.hdata, handshake_data, handshake_len);
+  memcpy(cell_out->body.ignored, padding_data, padding_len);
+}
+
 /** Helper: parse the CREATE2 payload at <b>p</b>, which could be up to
  * <b>p_len</b> bytes long, and use it to fill the fields of
  * <b>cell_out</b>. Return 0 on success and -1 on failure.
@@ -754,6 +781,35 @@ parse_create2_payload(create_cell_t *cell_out, const uint8_t *p, size_t p_len)
   return 0;
 }
 
+/**
+ * Parse the CREATE2V payload at <b>p</b>, which could be up to <b>p_len</b>
+ * bytes long, and use it to fill the fields of <b>cell_out</b>. Return 0 on
+ * success and -1 on failure.
+ *
+ * Note that part of the body of an EXTEND2 cell is a CREATE2 payload, so
+ * this function is also used for parsing those.
+ */
+static int
+parse_create2v_payload(create_cell_t *cell_out, const uint8_t *p, size_t p_len)
+{
+  uint16_t handshake_type, handshake_len;
+
+  if (p_len < 4)
+    return -1;
+
+  handshake_type = ntohs(get_uint16(p));
+  handshake_len = ntohs(get_uint16(p+2));
+
+  if (handshake_len > CELL_PAYLOAD_SIZE - 4 || handshake_len > p_len - 4)
+    return -1;
+  if (handshake_type == ONION_HANDSHAKE_TYPE_FAST)
+    return -1;
+
+  create_cell_init(cell_out, CELL_CREATE2, handshake_type, handshake_len,
+                   p+4);
+  return 0;
+}
+
 /** Magic string which, in a CREATE or EXTEND cell, indicates that a seeming
  * TAP payload is really an ntor payload.  We'd do away with this if every
  * relay supported EXTEND2, but we want to be able to extend from A to B with
@@ -762,7 +818,7 @@ parse_create2_payload(create_cell_t *cell_out, const uint8_t *p, size_t p_len)
  **/
 #define NTOR_CREATE_MAGIC "ntorNTORntorNTOR"
 
-/** Parse a CREATE, CREATE_FAST, or CREATE2 cell from <b>cell_in</b> into
+/** Parse a CREATE, CREATE_FAST, CREATE2, or CREATE2V cell from <b>cell_in</b> into
  * <b>cell_out</b>. Return 0 on success, -1 on failure. (We reject some
  * syntactically valid CREATE2 cells that we can't generate or react to.) */
 int
@@ -785,6 +841,10 @@ create_cell_parse(create_cell_t *cell_out, const cell_t *cell_in)
   case CELL_CREATE2:
     if (parse_create2_payload(cell_out, cell_in->payload,
                               CELL_PAYLOAD_SIZE) < 0)
+      return -1;
+    break;
+  case CELL_CREATE2V:
+    if (parse_create2v_payload(cell_out, cell_in->payload, CELL_PAYLOAD_SIZE)<0)
       return -1;
     break;
   default:
@@ -812,12 +872,17 @@ check_created_cell(const created_cell_t *cell)
     if (cell->handshake_len > RELAY_PAYLOAD_SIZE-2)
       return -1;
     break;
+    /* XXXXXisis I'm not sure about this part... should the created2v_cell_body_t be
+     * inside the created_cell_t?  */
+  case CELL_CREATED2V:
+    if (cell->handshake_len != 0)
+      return -1;
   }
-
+    
   return 0;
 }
 
-/** Parse a CREATED, CREATED_FAST, or CREATED2 cell from <b>cell_in</b> into
+/** Parse a CREATED, CREATED_FAST, CREATED2, or CREATED2V cell from <b>cell_in</b> into
  * <b>cell_out</b>. Return 0 on success, -1 on failure. */
 int
 created_cell_parse(created_cell_t *cell_out, const cell_t *cell_in)
@@ -845,6 +910,10 @@ created_cell_parse(created_cell_t *cell_out, const cell_t *cell_in)
       memcpy(cell_out->reply, p+2, cell_out->handshake_len);
       break;
     }
+  case CELL_CREATED2V:
+    cell_out->cell_type = CELL_CREATED2V;
+    cell_out->handshake_len = 0;
+    // XXX
   }
 
   return check_created_cell(cell_out);

@@ -66,6 +66,25 @@ typedef struct create_cell_t {
   uint8_t onionskin[CELL_PAYLOAD_SIZE - 4];
 } create_cell_t;
 
+/**
+ * A parsed CREATE2V cell.
+ */
+typedef struct create2v_cell_t {
+  /**
+   * The body of the cell, containing the htype, hlen, hdata, and ignored
+   * (padding) fields.  Note that the body->hdata is not ready for actual
+   * parsing by handshake code until this struct's <b>finished</b> bit is set.
+   */
+  create2v_cell_body_t body;
+  /**
+   * Whether or not we're done parsing incoming fragments of this cell.  If the
+   * bit is set to 1, then we've collected all the data that the first cell
+   * fragment specified as the length of all fragments combined.  Otherwise, if
+   * 0, we're still waiting on incoming data.
+   */
+  unsigned int finished:1;  // XXXisis Ugh we're wasting 7 perfectly good bits here.
+} create2v_cell_t;
+
 /** A parsed CREATED, CREATED_FAST, or CREATED2 cell. */
 typedef struct created_cell_t {
   /** The cell command. One of CREATED{,_FAST,2} */
@@ -120,6 +139,14 @@ int extend_cell_format(uint8_t *command_out, uint16_t *len_out,
                        uint8_t *payload_out, const extend_cell_t *cell_in);
 int extended_cell_format(uint8_t *command_out, uint16_t *len_out,
                          uint8_t *payload_out, const extended_cell_t *cell_in);
+
+void create2v_cell_init(create2v_cell_t *cell_out,
+                        const uint16_t handshake_type,
+                        const uint8_t *handshake_data,
+                        const uint16_t handshake_len,
+                        const uint8_t *padding_data,
+                        const uint16_t padding_len);
+int create2v_cell_parse(create2v_cell_t *cell_out, const cell_t *cell_in);
 
 #endif /* !defined(TOR_ONION_H) */
 
