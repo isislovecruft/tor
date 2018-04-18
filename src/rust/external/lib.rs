@@ -9,8 +9,6 @@
 
 extern crate libc;
 
-extern crate smartlist;
-
 mod crypto_rand;
 mod external;
 
