@@ -3,7 +3,6 @@ name = "external"
 version = "0.0.1"
 dependencies = [
  "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
- "smartlist 0.0.1",
 ]
 
 [[package]]

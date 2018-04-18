@@ -21,13 +21,6 @@ use libc::time_t;
 use libc::uint8_t;
 use libc::uint64_t;
 
-use smartlist::Stringlist;
-
-/// A `smartlist_t` is just an alias for the `#[repr(C)]` type `Stringlist`, to
-/// make it more clear that we're working with a smartlist which is owned by C.
-#[allow(non_camel_case_types)]
-type smartlist_t = Stringlist;
-
 extern "C" {
     fn crypto_seed_rng() -> c_int;
     fn crypto_rand(to: *mut c_char, n: size_t);
@@ -41,13 +34,6 @@ extern "C" {
     // fn crypto_init_siphash_key() -> c_int;
     // fn crypto_random_hostname(min_rand_len: c_int, max_rand_len: c_int,
     //                           prefix: *const c_char, suffix: *const c_char) -> *mut c_char;
-    /* XXX c_void is an enum, is it actually safe to pass over the boundary?
-     * cf. https://doc.rust-lang.org/libc/x86_64-unknown-linux-gnu/src/libc/lib.rs.html#111-121
-     * --isis
-     */
-    // fn smartlist_choose(sl: *const smartlist_t) -> *mut c_void;
-    // fn smartlist_shuffle(sl: *mut smartlist_t);
-    // fn crypto_force_rand_ssleay() -> c_int;
 }
 
 /// Seed OpenSSL's random number generator with bytes from the operating
