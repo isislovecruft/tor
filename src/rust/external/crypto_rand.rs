@@ -23,13 +23,8 @@ use libc::uint64_t;
 
 extern "C" {
     fn crypto_seed_rng() -> c_int;
-    fn crypto_rand(to: *mut c_char, n: size_t);
     fn crypto_strongest_rand(out: *mut uint8_t, out_len: size_t);
-    fn crypto_rand_int(max: c_uint) -> c_int;
-    fn crypto_rand_int_range(min: c_uint, max: c_uint) -> c_int;
-    fn crypto_rand_uint64_range(min: uint64_t, max: uint64_t) -> uint64_t;
     fn crypto_rand_time_range(min: time_t, max: time_t) -> time_t;
-    fn crypto_rand_uint64(max: uint64_t) -> uint64_t;
     fn crypto_rand_double() -> c_double;
     // fn crypto_random_hostname(min_rand_len: c_int, max_rand_len: c_int,
     //                           prefix: *const c_char, suffix: *const c_char) -> *mut c_char;
@@ -53,7 +48,6 @@ pub fn c_tor_crypto_seed_rng() -> bool {
     }
 }
 
-
 /// Fill the bytes of `dest` with strong random data.
 pub fn c_tor_crypto_strongest_rand(dest: &mut [u8]) {
     // We'll let the C side panic if the len is larger than
@@ -62,54 +56,6 @@ pub fn c_tor_crypto_strongest_rand(dest: &mut [u8]) {
     // function.
     unsafe {
         crypto_strongest_rand(dest.as_mut_ptr(), dest.len() as size_t);
-    }
-}
-
-/// Return a pseudorandom integer, chosen uniformly from the values
-/// between 0 and `max - 1`, inclusive.
-///
-/// # Inputs
-///
-/// `max` must be between 1 and INT_MAX+1, inclusive.
-///
-/// # Errors
-///
-/// (On the C side) if `max` isn't between 1 and INT_MAX+1.
-pub fn c_tor_crypto_rand_int(max: &usize) -> i32 {
-    unsafe {
-        crypto_rand_int(*max as c_uint)
-    }
-}
-
-/// Return a pseudorandom integer, chosen uniformly from the values `i` such
-/// that `min <= i < max`.
-///
-/// # Inputs
-///
-/// `min` MUST be in range `[0, max)`.
-/// `max` MUST be in range `(min, INT_MAX]`.
-///
-/// # Errors
-///
-/// (On the C side) if the above two conditions aren't upheld.
-pub fn c_tor_crypto_rand_int_range(min: &usize, max: &usize) -> i32 {
-    unsafe {
-        crypto_rand_int_range(*min as c_uint, *max as c_uint)
-    }
-}
-
-/// Return a pseudorandom 64-bit integer, chosen uniformly from the values
-/// between 0 and `max - 1`, inclusive.
-pub fn c_tor_crypto_rand_uint64(max: &u64) -> u64 {
-    unsafe {
-        crypto_rand_uint64(*max as uint64_t)
-    }
-}
-
-/// As crypto_rand_int_range, but supports 64-bit unsigned integers.
-pub fn c_tor_crypto_rand_uint64_range(min: &u64, max: &u64) -> u64 {
-    unsafe {
-        crypto_rand_uint64_range(*min as uint64_t, *max as uint64_t)
     }
 }
 

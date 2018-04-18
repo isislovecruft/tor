@@ -18,9 +18,10 @@ mod internal {
     use rand_core::CryptoRng;
     use rand_core::Error;
     use rand_core::RngCore;
+    use rand_core::impls::next_u32_via_fill;
+    use rand_core::impls::next_u64_via_fill;
 
     use external::c_tor_crypto_strongest_rand;
-    use external::c_tor_crypto_rand_uint64;
     use external::c_tor_crypto_seed_rng;
 
     use tor_log::LogDomain;
@@ -57,12 +58,12 @@ mod internal {
     impl RngCore for TorRng {
         // C_RUST_COUPLED: `crypto_rand_uint64()` /src/common/crypto_rand.c
         fn next_u32(&mut self) -> u32 {
-            c_tor_crypto_rand_uint64(&u64::MAX) as u32
+            next_u32_via_fill()
         }
 
         // C_RUST_COUPLED: `crypto_rand_uint64()` /src/common/crypto_rand.c
         fn next_u64(&mut self) -> u64 {
-            c_tor_crypto_rand_uint64(&u64::MAX)
+            next_u64_via_fill()
         }
 
         // C_RUST_COUPLED: `crypto_rand()` /src/common/crypto_rand.c
