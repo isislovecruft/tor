@@ -56,24 +56,24 @@ mod internal {
     }
 
     impl RngCore for TorRng {
-        // C_RUST_COUPLED: `crypto_rand_uint64()` /src/common/crypto_rand.c
+        // C_RUST_COUPLED: `crypto_strongest_rand()` /src/common/crypto_rand.c
         fn next_u32(&mut self) -> u32 {
-            next_u32_via_fill()
+            next_u32_via_fill(self)
         }
 
-        // C_RUST_COUPLED: `crypto_rand_uint64()` /src/common/crypto_rand.c
+        // C_RUST_COUPLED: `crypto_strongest_rand()` /src/common/crypto_rand.c
         fn next_u64(&mut self) -> u64 {
-            next_u64_via_fill()
+            next_u64_via_fill(self)
         }
 
-        // C_RUST_COUPLED: `crypto_rand()` /src/common/crypto_rand.c
+        // C_RUST_COUPLED: `crypto_strongest_rand()` /src/common/crypto_rand.c
         fn fill_bytes(&mut self, dest: &mut [u8]) {
             debug_assert!(dest.len() <= MAX_STRONGEST_RAND_SIZE);
 
             c_tor_crypto_strongest_rand(dest);
         }
 
-        // C_RUST_COUPLED: `crypto_rand()` /src/common/crypto_rand.c
+        // C_RUST_COUPLED: `crypto_strongest_rand()` /src/common/crypto_rand.c
         fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), Error> {
             Ok(self.fill_bytes(dest))
         }
