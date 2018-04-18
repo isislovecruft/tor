@@ -59,7 +59,7 @@ pub fn c_tor_crypto_seed_rng() -> bool {
 ///
 /// Supports mocking for unit tests.
 ///
-/// # Abortions
+/// # Aborts
 ///
 /// This function is not allowed to fail; if it would fail to generate strong
 /// entropy, it must terminate the process instead.
