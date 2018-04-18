@@ -31,7 +31,6 @@ extern "C" {
     fn crypto_rand_time_range(min: time_t, max: time_t) -> time_t;
     fn crypto_rand_uint64(max: uint64_t) -> uint64_t;
     fn crypto_rand_double() -> c_double;
-    // fn crypto_init_siphash_key() -> c_int;
     // fn crypto_random_hostname(min_rand_len: c_int, max_rand_len: c_int,
     //                           prefix: *const c_char, suffix: *const c_char) -> *mut c_char;
 }
