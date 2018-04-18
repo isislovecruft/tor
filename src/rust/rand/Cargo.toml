@@ -4,13 +4,14 @@
 authors = ["The Tor Project"]
 version = "0.0.1"
 name = "rand"
+publish = false
 
 [features]
 testing = ["tor_log/testing"]
 
 [dependencies]
 libc = "=0.2.39"
-rand_core = "=0.1.0-pre.0"
+rand_core = "=0.1.0"
 
 [dependencies.external]
 path = "../external"

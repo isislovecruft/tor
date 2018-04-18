@@ -28,7 +28,7 @@ version = "0.0.1"
 dependencies = [
  "external 0.0.1",
  "libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)",
- "rand_core 0.1.0-pre.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand_core 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tor_allocate 0.0.1",
  "tor_log 0.1.0",
  "tor_util 0.0.1",
@@ -36,7 +36,7 @@ dependencies = [
 
 [[package]]
 name = "rand_core"
-version = "0.1.0-pre.0"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -80,4 +80,4 @@ dependencies = [
 
 [metadata]
 "checksum libc 0.2.39 (registry+https://github.com/rust-lang/crates.io-index)" = "f54263ad99207254cf58b5f701ecb432c717445ea2ee8af387334bdd1a03fdff"
-"checksum rand_core 0.1.0-pre.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2362a41734390a5953cfbf12dbb74b4573137f7ba9dad344bba804ea4355f23a"
+"checksum rand_core 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "0224284424a4b818387b58d59336c288f99b48f69681aa60cc681fe038bbca5d"
