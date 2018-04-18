@@ -55,24 +55,11 @@ pub fn c_tor_crypto_seed_rng() -> bool {
 
 
 /// Fill the bytes of `dest` with strong random data.
-///
-/// Supports mocking for unit tests.
-///
-/// # Aborts
-///
-/// This function is not allowed to fail; if it would fail to generate strong
-/// entropy, it must terminate the process instead.
-pub fn c_tor_crypto_rand(dest: &mut [u8]) {
+pub fn c_tor_crypto_strongest_rand(dest: &mut [u8]) {
     // We'll let the C side panic if the len is larger than
     // MAX_STRONGEST_RAND_SIZE, rather than potentially panicking here.  A
     // paranoid caller should assert on the length of dest *before* calling this
     // function.
-    unsafe {
-        crypto_rand(dest.as_mut_ptr() as *mut c_char, dest.len() as size_t);
-    }
-}
-
-pub fn c_tor_crypto_strongest_rand(dest: &mut [u8]) {
     unsafe {
         crypto_strongest_rand(dest.as_mut_ptr(), dest.len() as size_t);
     }

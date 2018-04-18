@@ -19,7 +19,7 @@ mod internal {
     use rand_core::Error;
     use rand_core::RngCore;
 
-    use external::c_tor_crypto_rand;
+    use external::c_tor_crypto_strongest_rand;
     use external::c_tor_crypto_rand_uint64;
     use external::c_tor_crypto_seed_rng;
 
@@ -69,7 +69,7 @@ mod internal {
         fn fill_bytes(&mut self, dest: &mut [u8]) {
             debug_assert!(dest.len() <= MAX_STRONGEST_RAND_SIZE);
 
-            c_tor_crypto_rand(dest);
+            c_tor_crypto_strongest_rand(dest);
         }
 
         // C_RUST_COUPLED: `crypto_rand()` /src/common/crypto_rand.c
