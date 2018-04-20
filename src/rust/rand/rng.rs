@@ -8,9 +8,6 @@
 // This is the real implementation, in use in production, which calls into our C
 // wrappers in /src/common/crypto_rand.c, which call into OpenSSL, system
 // libraries, and make syscalls.
-//
-// TODO: If/when we sort linkage errors (https://bugs.torproject.org/25386), we
-// can safely remove this code and the mocked version for testing below. -isis
 #[cfg(not(test))]
 mod internal {
     use std::u64;
@@ -44,6 +41,7 @@ mod internal {
 
     impl TorRng {
         // C_RUST_COUPLED: `crypto_seed_rng()` /src/common/crypto_rand.c
+        #[allow(dead_code)]
         fn new() -> Self {
             if !c_tor_crypto_seed_rng() {
                 tor_log_msg!(LogSeverity::Warn, LogDomain::General,
