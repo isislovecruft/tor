@@ -9,6 +9,10 @@
 
 extern crate libc;
 
+extern crate smartlist;
+
 mod external;
+
+pub mod crypto_digest;
 
 pub use external::*;

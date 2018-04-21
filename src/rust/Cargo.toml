@@ -1,6 +1,20 @@
 [workspace]
+<<<<<<< HEAD
 members = ["tor_util", "protover", "smartlist", "external", "tor_allocate",
-"tor_rust", "tor_log"]
+"tor_rust", "tor_log",
+"crypto",
+=======
+members = [
+    "crypto",
+    "external",
+    "protover",
+    "smartlist",
+    "tor_allocate",
+    "tor_log",
+    "tor_rust",
+    "tor_util",
+>>>>>>> 1a911889af... fixup! WIP rust: Add crypto crate and implement Rust wrappers for SHA2 code.
+]
 
 [profile.release]
 debug = true
