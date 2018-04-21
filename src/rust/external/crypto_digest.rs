@@ -122,6 +122,10 @@ type smartlist_t = Stringlist;
 /// All of the external functions from `src/common/crypto_digest.h`.
 ///
 /// These are kept private because they should be wrapped with Rust to make their usage safer.
+//
+// BINDGEN_GENERATED: These definitions were generated with bindgen and cleaned
+// up manually.  As such, there are more bindings than are likely necessary or
+// which are in use.
 #[allow(dead_code)]
 #[link(name = "or-crypto-digest", kind = "static")]
 extern "C" {
