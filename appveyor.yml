@@ -29,8 +29,8 @@ build_script:
 - ps: >-
     if ($env:compiler -eq "mingw") {
             $oldpath = ${env:Path} -split ';'
-            $buildpath = @("C:\msys64\${env:compiler_path}\bin", "C:\msys64\usr\bin") + $oldpath
-            $env:Path = $buildpath -join ';'
+            # $buildpath = @("C:\msys64\${env:compiler_path}\bin", "C:\msys64\usr\bin") + $oldpath
+            # $env:Path = $buildpath -join ';'
             $env:build = @("${env:APPVEYOR_BUILD_FOLDER}", $env:target) -join '\'
             Execute-Bash 'autoreconf -i'
             mkdir "${env:build}"
