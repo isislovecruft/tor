@@ -49,6 +49,12 @@ test_script:
             Execute-Bash "make check"
     }
 
+on_success:
+- "python scripts/test/appveyor-irc-notify.py irc.oftc.net:6697 tor-ci '{repo_name} {color_white}{branch}{color_reset} {short_commit} - {author}: {message}','Build #{build_version} {color_green}passed{color_reset}. Details: {color_blue}{build_url}{color_reset} |  Commit: {color_blue}{commit_url}{color_reset}'"
+
+on_failure:
+- "python scripts/test/appveyor-irc-notify.py irc.oftc.net:6697 tor-ci '{repo_name} {color_white}{branch}{color_reset} {short_commit} - {author}: {message}','Build #{build_version} {color_red}failed{color_reset}. Details: {color_blue}{build_url}{color_reset} |  Commit: {color_blue}{commit_url}{color_reset}'"
+
 artifacts:
 - path: /${env:compiler_path}
 
