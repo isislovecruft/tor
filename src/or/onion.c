@@ -729,30 +729,6 @@ create_cell_init(create_cell_t *cell_out, uint8_t cell_type,
   memcpy(cell_out->onionskin, onionskin, handshake_len);
 }
 
-/**
- * Initialise a CREATE2V cell.
- *
- * Copies <b>handshake_len</b> bytes of <b>handshake_data</b> into the
- * <b>cell_out</b>'s body.hdata member, and then copies <b>padding_len</b> bytes
- * of <b>padding_data</b> into the <b>cell_out</b>'s body.ignored member.
- * Also sets cell_out->body.htype to <b>handshake_type</b>.
- */
-void
-create2v_cell_init(create2v_cell_t *cell_out,
-                   const uint16_t handshake_type,
-                   const uint8_t *handshake_data,
-                   const uint16_t handshake_len,
-                   const uint8_t *padding_data,
-                   const uint16_t padding_len)
-{
-  memset(cell_out, 0, sizeof(*cell_out));
-
-  create2v_cell_body_set_htype(cell_out->body, handshake_type);
-  create2v_cell_body_set_hlen(ell_out->body, handshake_len);
-  memcpy(cell_out->body.hdata, handshake_data, handshake_len);
-  memcpy(cell_out->body.ignored, padding_data, padding_len);
-}
-
 /** Helper: parse the CREATE2 payload at <b>p</b>, which could be up to
  * <b>p_len</b> bytes long, and use it to fill the fields of
  * <b>cell_out</b>. Return 0 on success and -1 on failure.
@@ -781,35 +757,6 @@ parse_create2_payload(create_cell_t *cell_out, const uint8_t *p, size_t p_len)
   return 0;
 }
 
-/**
- * Parse the CREATE2V payload at <b>p</b>, which could be up to <b>p_len</b>
- * bytes long, and use it to fill the fields of <b>cell_out</b>. Return 0 on
- * success and -1 on failure.
- *
- * Note that part of the body of an EXTEND2 cell is a CREATE2 payload, so
- * this function is also used for parsing those.
- */
-static int
-parse_create2v_payload(create_cell_t *cell_out, const uint8_t *p, size_t p_len)
-{
-  uint16_t handshake_type, handshake_len;
-
-  if (p_len < 4)
-    return -1;
-
-  handshake_type = ntohs(get_uint16(p));
-  handshake_len = ntohs(get_uint16(p+2));
-
-  if (handshake_len > CELL_PAYLOAD_SIZE - 4 || handshake_len > p_len - 4)
-    return -1;
-  if (handshake_type == ONION_HANDSHAKE_TYPE_FAST)
-    return -1;
-
-  create_cell_init(cell_out, CELL_CREATE2, handshake_type, handshake_len,
-                   p+4);
-  return 0;
-}
-
 /** Magic string which, in a CREATE or EXTEND cell, indicates that a seeming
  * TAP payload is really an ntor payload.  We'd do away with this if every
  * relay supported EXTEND2, but we want to be able to extend from A to B with
@@ -818,7 +765,7 @@ parse_create2v_payload(create_cell_t *cell_out, const uint8_t *p, size_t p_len)
  **/
 #define NTOR_CREATE_MAGIC "ntorNTORntorNTOR"
 
-/** Parse a CREATE, CREATE_FAST, CREATE2, or CREATE2V cell from <b>cell_in</b> into
+/** Parse a CREATE, CREATE_FAST, or CREATE2 cell from <b>cell_in</b> into
  * <b>cell_out</b>. Return 0 on success, -1 on failure. (We reject some
  * syntactically valid CREATE2 cells that we can't generate or react to.) */
 int
@@ -841,10 +788,6 @@ create_cell_parse(create_cell_t *cell_out, const cell_t *cell_in)
   case CELL_CREATE2:
     if (parse_create2_payload(cell_out, cell_in->payload,
                               CELL_PAYLOAD_SIZE) < 0)
-      return -1;
-    break;
-  case CELL_CREATE2V:
-    if (parse_create2v_payload(cell_out, cell_in->payload, CELL_PAYLOAD_SIZE)<0)
       return -1;
     break;
   default:
@@ -882,7 +825,7 @@ check_created_cell(const created_cell_t *cell)
   return 0;
 }
 
-/** Parse a CREATED, CREATED_FAST, CREATED2, or CREATED2V cell from <b>cell_in</b> into
+/** Parse a CREATED, CREATED_FAST, or CREATED2 cell from <b>cell_in</b> into
  * <b>cell_out</b>. Return 0 on success, -1 on failure. */
 int
 created_cell_parse(created_cell_t *cell_out, const cell_t *cell_in)
@@ -1400,5 +1343,233 @@ extended_cell_format(uint8_t *command_out, uint16_t *len_out,
   }
 
   return 0;
+}
+
+/******************************************************************************/
+/*                          CREATE2V CELL HANDLING                            */
+/******************************************************************************/
+
+/**
+ * Initialise a CREATE2V cell.
+ *
+ * Copies <b>handshake_len</b> bytes of <b>handshake_data</b> into the
+ * <b>cell_out</b>'s body.hdata member, and then copies <b>padding_len</b> bytes
+ * of <b>padding_data</b> into the <b>cell_out</b>'s body.ignored member.
+ * Also sets cell_out->body.htype to <b>handshake_type</b>.
+ */
+void
+create2v_cell_init(create2v_cell_t *cell_out,
+                   const uint16_t handshake_type,
+                   const uint8_t *handshake_data,
+                   const uint16_t handshake_len,
+                   const uint8_t *padding_data,
+                   const uint16_t padding_len)
+{
+  tor_assert(cell_out);
+  tor_assert(cell_out->body);
+  tor_assert(handshake_data);
+
+  memset(cell_out, 0, sizeof(*cell_out));
+
+  create2v_cell_body_set_htype(cell_out->body, handshake_type);
+  create2v_cell_body_set_hlen(cell_out->body, handshake_len);
+  create2v_cell_body_setlen_hdata(cell_out, (size_t)handshake_len);
+  create2v_cell_body_setlen_ignored(cell_out, (size_t)padding_len);
+
+  memcpy(create2v_cell_body_getarray_hdata(cell_out->body),
+         handshake_data, handshake_len);
+
+  if (padding_data && padding_len) {
+    memcpy(create2v_cell_body_getaarray_ignored(cell_out->body),
+           padding_data, padding_len);
+  }
+}
+
+/**
+ * Given the Create2VMaximumData consensus parameter, calculate the
+ * total maximum allowable size of an incoming CREATE(D)2V buffer.
+ */
+static int
+calculate_create2v_maximum_total(void *arg)
+{
+  (void)arg;
+
+  // XXXisis what about the extra bits of stuff? are we only counting
+  // "ignored" and "hdata" as data?
+  return networkstatus_get_create2v_maximum_data(NULL)
+    + 2 // for the uint16_t htype
+    + 2 // for the uint16_t hlen
+    + sizeof(size_t) * 4 // for n_ and allocated_ in TRUNNEL_DYNARRAY_HEADs
+    + 1; // for the uint8_t trunnel_error_code_
+}
+
+/**
+ * Parse the CREATE2V payload at <b>p</b>, which could be up to <b>p_len</b>
+ * bytes long, and use it to fill the fields of <b>cell_out->body</b>.
+ *
+ * Note that part of the body of an EXTEND2V cell is a CREATE2V payload, so
+ * this function is also used for parsing those.
+ *
+ * Returns true if parsing was successful, and false otherwise.
+ */
+static bool
+parse_create2v_payload(create2v_cell_t *cell_out, const uint8_t *p, const size_t p_len)
+{ 
+  create2v_cell_body_t *body;
+  const uint16_t max_len;
+
+  max_len = calculate_create2v_maximum_total();
+
+  /* If the incoming buffer is reportedly way larger than that which would fill
+   * the allowable space for hdata and the ignored padding, then fail parsing
+   * early.
+   */
+  if (p_len > max_len) {
+    log_info(LD_OR, "Received a suspicious CREATE2V cell whose reported length "
+             "(%z bytes) was greater that the maximum allowed (%h bytes)."
+             "This is either an attempted DoS, or there exist newer/other "
+             "onion routers speaking a circuit handshake we don't know about.",
+             p_len, max_len);
+    return false;
+  }
+
+  create2v_cell_body_parse(&body, p, p_len);
+  cell_out->body = body;
+
+  if (create2v_cell_check(cell_out))
+    return true;
+  return false;
+}
+
+/**
+ * Parse any type of create cell, CREATE, CREATE_FAST, CREATE2, or CREATE2V,
+ * depending on its cell headers.
+ */
+// XXXisis is this function a good idea???
+bool
+create_cell_parse_any_type(void **cell_out, const cell_header_t *headers, const void *cell_in)
+{
+  return false;
+}
+
+/**
+ * Parse a CREATE2V cell from <b>cell_in</b> into <b>cell_out</b>.
+ *
+ * Returns true if parsing was successful, and false otherwise.
+ */
+bool
+create2v_cell_parse(create2v_cell_t *cell_out, const var_cell_t *cell_in)
+{
+  switch (cell_in->header.command) {
+  case CELL_CREATE2V:
+    if (!parse_create2v_payload(cell_out,
+                                cell_in->payload,
+                                cell_in->payload_len)) {
+      return false;
+    }
+    break;
+  default:
+    return false;
+  }
+
+  return 
+}
+
+/**
+ * Run various checks to ensure that a create2v_cell_t, <b>cell</b>, is
+ * well-formed.
+ *
+ * If <b>unknown_ok</b> is true, then handshake types we don't know about yet
+ * are okay.
+ *
+ * In the future, checks such as verifying that the handshake data (for a
+ * particular handshake) should go here.
+ */
+bool
+create2v_cell_check(create2v_cell_t *cell, bool unknown_ok)
+{
+  const char *not_okay;
+
+  not_okay = create2v_cell_body_check(body);
+
+  if (not_okay) {
+    log_warn(LD_BUG, "Unable to parse a CREATE2V cell: %s", not_okay);
+    return false;
+  }
+
+  switch (create2v_cell_body_get_htype(cell->body)) {
+  // TODO Remove these defines when we implement the first handshake that uses
+  // CREATE(D)2V cells. --isis
+#ifndef ONION_HANDSHAKE_TYPE_NTOR2_NULL
+#define ONION_HANDSHAKE_TYPE_NTOR2_NULL 0x0003
+#ifndef ONION_HANDSHAKE_TYPE_NTOR2_NULL_MAXLEN
+#define ONION_HANDSHAKE_TYPE_NTOR2_NULL_MAXLEN NTOR_ONIONSKIN_LEN
+  case ONION_HANDSHAKE_TYPE_NTOR2_NULL:
+    if (create2v_cell_body_get_hlen(cell->body) >
+        ONION_HANDSHAKE_TYPE_NTOR2_NULL_MAXLEN) {
+      return false;
+    }
+#undef ONION_HANDSHAKE_TYPE_NTOR2_NULL_MAXLEN
+#undef ONION_HANDSHAKE_TYPE_NTOR2_NULL
+  default:
+    if (! unknown_ok)
+      return false;
+  }
+
+  return false;
+}
+
+/**
+ * Fill <b>cell_out</b> with a correctly formatted version of the CREATE2V cell
+ * in <b>cell_in</b>.
+ *
+ * If <b>relayed</b> is true, then this is a cell not originating from us.
+ *
+ * Returns true if the formatting was successful, and false otherwise.
+ */
+static bool
+create2v_cell_format_impl(cell_t *cell_out,
+                          const create2v_cell_t *cell_in,
+                          int relayed)
+{
+  uint8_t *p;
+  size_t p_len;
+
+  if (!create2v_cell_check(cell_in, relayed))
+    return -1;
+
+  
+}
+
+/******************************************************************************/
+/*                          CREATED2V CELL HANDLING                           */
+/******************************************************************************/
+
+/**
+ * Parse a CREATED2V cell from <b>cell_in</b> into <b>cell_out</b>.
+ *
+ * Returns true if parsing was successful, and false otherwise.
+ */
+bool
+created2v_cell_parse(created2v_cell_t *cell_out, const var_cell_t *cell_in)
+{
+  // XXXisis
+  return false;
+}
+
+/******************************************************************************/
+/*                           EXTEND2V CELL HANDLING                           */
+/******************************************************************************/
+
+/**
+ * Parse an EXTEND2V cell from <b>cell_in</b> into <b>cell_out</b>.
+ *
+ * Returns true if parsing was successful, and false otherwise.
+ */
+bool
+extend2v_cell_parse(created2v_cell_t *cell_out, const var_cell_t *cell_in)
+{
+  // XXXisis
+  return false;
 }
 
