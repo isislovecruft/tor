@@ -875,6 +875,9 @@ check_extend_cell(const extend_cell_t *cell)
     if (cell->cell_type != RELAY_COMMAND_EXTEND2 &&
         cell->cell_type != RELAY_COMMAND_EXTEND)
       return -1;
+  } else if (cell->create_cell.cell_type == CELL_CREATE2V {
+      if (cell->cell_type != RELAY_COMMAND_EXTEND2)
+        return -1;
   } else {
     /* In particular, no CREATE_FAST cells are allowed */
     return -1;
@@ -1240,6 +1243,13 @@ extend_cell_format(uint8_t *command_out, uint16_t *len_out,
     }
     break;
   case RELAY_COMMAND_EXTEND2:
+    /* It's a fragmented CREATE2V cell inside EXTEND2 cells if the
+     * handshake length is larger than would fit in one cell. */
+    if (cell_in->create_cell.handshake_len > CELL_PAYLOAD_SIZE) {
+      log_debug(LD_CIRC, "Received a fragmented extend cell");
+      // XXXisis need a mapping from circids to smartlist_ts
+      // containing cell fragments.
+    } else {
     {
       uint8_t n_specifiers = 2;
       *command_out = RELAY_COMMAND_EXTEND2;
