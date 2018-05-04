@@ -152,6 +152,19 @@ install:
   - if [[ "$TOR_RUST_DEPENDENCIES" == "true" ]]; then export TOR_RUST_DEPENDENCIES=$PWD/src/ext/rust/crates; fi
 
 script:
+  ## lmao devopppppsssssss
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/src/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/src/ext/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/src/ext/rust/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/src/ext/rust/vendor/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/src/ext/rust/vendor/rand-8c5b0ac51d
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/_build/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/_build/src/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/_build/src/ext/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/_build/src/ext/rust/
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/_build/src/ext/rust/vendor
+  - ls /home/travis/build/torproject/tor/tor-0.3.4.0-alpha-dev/_build/src/ext/rust/vendor/rand-8c5b0ac51d
   - ./autogen.sh
   - ./configure $RUST_OPTIONS $COVERAGE_OPTIONS $MODULES_OPTIONS --disable-asciidoc --enable-fatal-warnings --disable-silent-rules --enable-fragile-hardening
   ## We run `make check` because that's what https://jenkins.torproject.org does.
