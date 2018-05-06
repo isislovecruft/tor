@@ -369,6 +369,11 @@ DECLARE_MAP_FNS(digestmap_t, const char *, digestmap_);
 /* Map from const uint8_t[DIGEST256_LEN] to void *. Implemented with a hash
  * table. */
 DECLARE_MAP_FNS(digest256map_t, const uint8_t *, digest256map_);
+/**
+ * Map from wide circ_ids to buf_ts, used for temporarily storing fragmented
+ * extend2v and extended2v cells.
+ */
+DECLARE_MAP_FNS(extend2vmap_t, const uint32_t, extend2vmap_);
 
 #define MAP_FREE_AND_NULL(maptype, map, fn)     \
   do {                                          \
@@ -379,6 +384,7 @@ DECLARE_MAP_FNS(digest256map_t, const uint8_t *, digest256map_);
 #define strmap_free(map, fn) MAP_FREE_AND_NULL(strmap, (map), (fn))
 #define digestmap_free(map, fn) MAP_FREE_AND_NULL(digestmap, (map), (fn))
 #define digest256map_free(map, fn) MAP_FREE_AND_NULL(digest256map, (map), (fn))
+#define extend2vmap_free(map, fn) MAP_FREE_AND_NULL(extend2vmap, (map), (fn))
 
 #undef DECLARE_MAP_FNS
 
@@ -506,6 +512,12 @@ DECLARE_MAP_FNS(digest256map_t, const uint8_t *, digest256map_);
 #define STRMAP_FOREACH_MODIFY(map, keyvar, valtype, valvar)          \
   MAP_FOREACH_MODIFY(strmap_, map, const char *, keyvar, valtype, valvar)
 #define STRMAP_FOREACH_END MAP_FOREACH_END
+
+#define EXTEND2VMAP_FOREACH(map, keyvar, valtype, valvar)                 \
+  MAP_FOREACH(extend2vmap_, map, const uint32_t, keyvar, valtype, valvar)
+#define EXTEND2VMAP_FOREACH_MODIFY(map, keyvar, valtype, valvar)          \
+  MAP_FOREACH_MODIFY(extend2vmap_, map, const uint32_t, keyvar, valtype, valvar)
+#define EXTEND2VMAP_FOREACH_END MAP_FOREACH_END
 
 void* strmap_set_lc(strmap_t *map, const char *key, void *val);
 void* strmap_get_lc(const strmap_t *map, const char *key);
