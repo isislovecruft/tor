@@ -997,14 +997,107 @@ extend_cell_from_extend2_cell_body(extend_cell_t *cell_out,
                                             cell->create2);
 }
 
+/**
+ * Determine if an EXTEND2 cell <b>body</b> is actually a fragment
+ *
+ * If the handshake_len field describes a handshake data section that would be
+ * too long to fit in the EXTEND2 cell's payload, the handshake data is to be
+ * continued in one or more subsequent EXTEND2 cells.  Subsequent fragmented
+ * cells will have their handshake_len field set to 0.
+ *
+ * Returns true if this is an extend2v cell, and false otherwise.
+ */
+static bool
+extend2_cell_body_is_extend2v(extend2v_cell_body_t *body)
+{
+  uint16_t handshake_len = create2_cell_body_get_handshake_len(body->create);
+
+  if (handshake_len > RELAY_PAYLOAD_SIZE)
+    return true;
+  if (handshake_len == 0)
+    return true;
+
+  return false;
+}
+
+/**
+ * DOCDOC
+ *
+ * Returns -REASON if the circuit should be torn down, and 0 otherwise.
+ */
+static int
+extend2v_cell_process_fragment(extend2v_cell_body_t *body, circuit_t *circ)
+{
+  tor_assert(circ);
+  tor_assert(body);
+  tor_assert(body->create);
+
+  const uint16_t type = create2_cell_body_get_handshake_type(body->create);
+  const uint16_t hlen = create2_cell_body_get_handshake_length(body->create);
+  const uint16_t dlen = create2_cell_body_getlen_handshake_data(body->create);
+  const uint8_t *data = create2_cell_body_getconstarray_handshake_data(
+    body->create);
+
+  if (!check_handshake_and_padding_len(htype, len, true)) {
+    log_warn(LD_OR, "Received bad lengths for handshake data in fragmented "
+             "extend2v cell.");
+      return - END_CIRC_REASON_TORPROTOCOL;
+  }
+
+  if (!circ->extend_cell_fragments) {
+    circ->extend_cell_fragment_received_at = time();
+    circ->extend_cell_fragments = buf_new_with_capacity(dlen);
+    circ->extend_cell_fragments_hlen = hlen;
+    circ->extend_cell_fragments_htype = type;
+  } else {
+    /* This is an additional fragment. */
+    log_debug(LD_OR, "Received an additional fragment of an extend2v cell.");
+
+    /* It must have no link specifiers. */
+    if (extend2_cell_body_get_n_spec(body) != 0 ||
+        extend2_cell_body_getlen_ls(body) != 0) {
+      return - END_CIRC_REASON_TORPROTOCOL;
+    }
+    /* It must have handshake_type 0xFFFF and have handshake_len set to 0. */
+    if (type != 0xFFFF || hlen != 0) {
+      return - END_CIRC_REASON_TORPROTOCOL;
+    }
+    /* If we don't have a timestamp for when we got the first bit of the
+     * handshake, something is wrong. */
+    if (!buf_get_oldest_chunk_timestamp(circ->extend_cell_fragments, time())) {
+      return - END_CIRC_REASON_TORPROTOCOL;
+    }
+    /* If the amount of data would exceed what we're supposed to have for the
+     * handshake, something is wrong. */
+    if (buf_datalen(circ->extend_cell_fragments) + dlen >
+        circ->extend_cell_fragments_hlen) {
+      log_warn(LD_OR, "Additional fragmented extend2v cell data would result "
+               "in the total handshake data being larger than reported. This "
+               "is either an attack or a bug.");
+      return - END_CIRC_REASON_TORPROTOCOL;
+    }
+  }
+  /* Add the handshake data to the buffer. */
+  buf_add(circ->extend_cell_fragments, data, (size_t)dlen);
+
+  /* If we've received the expected amount of data, proceed to construct the
+   * extend2 cell. */
+  if (buf_datalen(circ->extend_cell_fragments) ==
+      circ->extend_cell_fragments_hlen) {
+    return extend2_cell_from_fragments(circ);
+  }
+
+  return 0;
+}
+
 /** Parse an EXTEND or EXTEND2 cell (according to <b>command</b>) from the
  * <b>payload_length</b> bytes of <b>payload</b> into <b>cell_out</b>. Return
  * 0 on success, -1 on failure. */
 int
 extend_cell_parse(extend_cell_t *cell_out, const uint8_t command,
-                  const uint8_t *payload, size_t payload_length)
+                  const uint8_t *payload, size_t payload_length,
+                  circuit_t *circ)
 {
-
   tor_assert(cell_out);
   tor_assert(payload);
 
@@ -1036,8 +1129,15 @@ extend_cell_parse(extend_cell_t *cell_out, const uint8_t command,
           extend2_cell_body_free(cell);
         return -1;
       }
-      int r = extend_cell_from_extend2_cell_body(cell_out, cell);
+      int r;
+
+      if (extend2_cell_body_is_extend2v(cell)) {
+        r = extend2v_cell_process_fragment(cell, circ);
+      } else {
+        r = extend_cell_from_extend2_cell_body(cell_out, cell);
+      }
       extend2_cell_body_free(cell);
+
       if (r < 0)
         return r;
     }
