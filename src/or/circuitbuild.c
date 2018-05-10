@@ -1194,9 +1194,15 @@ circuit_extend(cell_t *cell, circuit_t *circ)
 
   relay_header_unpack(&rh, cell->payload);
 
+  // XXXisis if ec is always an extend_cell_t, what am i supposed to do about
+  // the fragmented case? what type should it be stored in?  should i refactor
+  // to move everything except the create_cell_t inside extend_cell_t into a
+  // new "extend_cell_headers_t" and change the rest of this function to work
+  // on the headers?  or...?
+
   if (extend_cell_parse(&ec, rh.command,
                         cell->payload+RELAY_HEADER_SIZE,
-                        rh.length) < 0) {
+                        rh.length, circ) < 0) {
     log_fn(LOG_PROTOCOL_WARN, LD_PROTOCOL,
            "Can't parse extend cell. Closing circuit.");
     return -1;

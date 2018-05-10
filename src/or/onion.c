@@ -943,7 +943,8 @@ create_cell_from_create2_cell_body(create_cell_t *cell_out,
 
 static int
 extend_cell_from_extend2_cell_body(extend_cell_t *cell_out,
-                                   const extend2_cell_body_t *cell)
+                                   const extend2_cell_body_t *cell,
+                                   const bool is_create2v)
 {
   tor_assert(cell_out);
   tor_assert(cell);
@@ -993,8 +994,13 @@ extend_cell_from_extend2_cell_body(extend_cell_t *cell_out,
   if (!found_rsa_id || !found_ipv4) /* These are mandatory */
     return -1;
 
-  return create_cell_from_create2_cell_body(&cell_out->create_cell,
-                                            cell->create2);
+  if (is_create2v) {
+    // XXXisis how do i get this thing into an extend_cell_t???
+    return circ->create2v; // XXXisis what the heck do i do here???
+  } else {
+    return create_cell_from_create2_cell_body(&cell_out->create_cell,
+                                              cell->create2);
+  }
 }
 
 /**
@@ -1022,21 +1028,47 @@ extend2_cell_body_is_extend2v(extend2v_cell_body_t *body)
 
 /**
  * DOCDOC
+ */
+static int
+extend_cell_body_from_fragments(extend_cell_t *cell_out,
+                                circuit_t *circ)
+{
+  tor_assert(circ);
+  tor_assert(circ->extend_cell_fragments);
+  tor_assert(circ->extend_cell_fragments_hlen);
+
+  create2v_cell_body_t *body;
+  char *contents;
+
+  contents = buf_extract(circ->extend_cell_fragments,
+                         circ->extend_cell_fragments_hlen);
+  create2v_cell_body_parse(&body, contents,
+                           circ->extend_cell_fragments_hlen);
+  create2v_cell_body_check(body);
+
+  // XXXisis TODO
+
+  return 0;
+}
+
+/**
+ * DOCDOC
  *
  * Returns -REASON if the circuit should be torn down, and 0 otherwise.
  */
 static int
-extend2v_cell_process_fragment(extend2v_cell_body_t *body, circuit_t *circ)
+extend2_cell_process_fragment(extend_cell_t *cell_out,
+                              extend2_cell_body_t *body,
+                              circuit_t *circ)
 {
   tor_assert(circ);
   tor_assert(body);
-  tor_assert(body->create);
 
-  const uint16_t type = create2_cell_body_get_handshake_type(body->create);
-  const uint16_t hlen = create2_cell_body_get_handshake_length(body->create);
-  const uint16_t dlen = create2_cell_body_getlen_handshake_data(body->create);
-  const uint8_t *data = create2_cell_body_getconstarray_handshake_data(
-    body->create);
+  const create2_cell_body_t *create = extend2_cell_body_get_create2(body);
+  const uint16_t type = create2_cell_body_get_handshake_type(create);
+  const uint16_t hlen = create2_cell_body_get_handshake_length(create);
+  const uint16_t dlen = create2_cell_body_getlen_handshake_data(create);
+  const uint8_t *data = create2_cell_body_getconstarray_handshake_data(create);
 
   if (!check_handshake_and_padding_len(htype, len, true)) {
     log_warn(LD_OR, "Received bad lengths for handshake data in fragmented "
@@ -1049,6 +1081,11 @@ extend2v_cell_process_fragment(extend2v_cell_body_t *body, circuit_t *circ)
     circ->extend_cell_fragments = buf_new_with_capacity(dlen);
     circ->extend_cell_fragments_hlen = hlen;
     circ->extend_cell_fragments_htype = type;
+    circ->extend_cell_fragments_ls = link_specifier_list_new();
+    link_specifier_list_set_n_spec(circ->extend_cell_fragments_ls,
+                                   extend2_cell_body_get_n_spec(body));
+    link_specifier_list_getarray_spec(circ->extend_cell_fragments_ls) =
+      extend2_cell_body_getarray_ls(body);
   } else {
     /* This is an additional fragment. */
     log_debug(LD_OR, "Received an additional fragment of an extend2v cell.");
@@ -1084,7 +1121,7 @@ extend2v_cell_process_fragment(extend2v_cell_body_t *body, circuit_t *circ)
    * extend2 cell. */
   if (buf_datalen(circ->extend_cell_fragments) ==
       circ->extend_cell_fragments_hlen) {
-    return extend2_cell_from_fragments(circ);
+    return extend2_cell_body_from_fragments(cell_out, circ);
   }
 
   return 0;
@@ -1132,7 +1169,7 @@ extend_cell_parse(extend_cell_t *cell_out, const uint8_t command,
       int r;
 
       if (extend2_cell_body_is_extend2v(cell)) {
-        r = extend2v_cell_process_fragment(cell, circ);
+        r = extend2_cell_process_fragment(cell_out, cell, circ);
       } else {
         r = extend_cell_from_extend2_cell_body(cell_out, cell);
       }

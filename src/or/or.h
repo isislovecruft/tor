@@ -3148,6 +3148,9 @@ typedef struct circuit_t {
   /** The handshake type for the extend_cell_fragments. */
   uint16_t extend_cell_fragments_htype;
 
+  /** The link specifiers from the first cell in the extend_cell_fragments. */
+  uint8_t extend_cell_fragments_ls;
+
   /** When did circuit construction actually begin (ie send the
    * CREATE cell or begin cannibalization).
    *
