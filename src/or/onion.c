@@ -875,7 +875,7 @@ check_extend_cell(const extend_cell_t *cell)
     if (cell->cell_type != RELAY_COMMAND_EXTEND2 &&
         cell->cell_type != RELAY_COMMAND_EXTEND)
       return -1;
-  } else if (cell->create_cell.cell_type == CELL_CREATE2V {
+  } else if (cell->create_cell.cell_type == CELL_CREATE2V) {
       if (cell->cell_type != RELAY_COMMAND_EXTEND2)
         return -1;
   } else {
