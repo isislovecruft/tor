@@ -1058,7 +1058,7 @@ extend_cell_from_extend2_cell_body(extend_cell_t *cell_out,
 }
 
 /**
- * Determine if an EXTEND2 cell <b>body</b> is actually a fragment
+ * Determine if an EXTEND2 cell <b>body</b> is actually a fragment.
  *
  * If the handshake_len field describes a handshake data section that would be
  * too long to fit in the EXTEND2 cell's payload, the handshake data is to be
