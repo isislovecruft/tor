@@ -941,22 +941,24 @@ create_cell_from_create2_cell_body(create_cell_t *cell_out,
   return 0;
 }
 
+/**
+ * Set up to <b>n_spec</b> number of appropriate link specifiers on an extend
+ * cell, <b>cell_out</b>, copying them from <b>lss</b>.
+ *
+ * Returns - REASON if the circuit should be torn down, and 0 otherwise.
+ */
 static int
-extend_cell_from_extend2_cell_body(extend_cell_t *cell_out,
-                                   const extend2_cell_body_t *cell,
-                                   const bool is_create2v)
+extend_cell_set_link_specifiers(extend_cell_t *cell_out,
+                                const uint8_t n_spec,
+                                const struct link_specifier_st **lss)
 {
   tor_assert(cell_out);
-  tor_assert(cell);
+
   int found_ipv4 = 0, found_ipv6 = 0, found_rsa_id = 0, found_ed_id = 0;
-  memset(cell_out, 0, sizeof(*cell_out));
-  tor_addr_make_unspec(&cell_out->orport_ipv4.addr);
-  tor_addr_make_unspec(&cell_out->orport_ipv6.addr);
-  cell_out->cell_type = RELAY_COMMAND_EXTEND2;
 
   unsigned i;
-  for (i = 0; i < cell->n_spec; ++i) {
-    const link_specifier_t *ls = extend2_cell_body_getconst_ls(cell, i);
+  for (i = 0; i < n_spec; ++i) {
+    const link_specifier_t *ls = TRUNNEL_DYNARRY_GET(lss, i);
     switch (ls->ls_type) {
       case LS_IPV4:
         if (found_ipv4)
@@ -994,13 +996,31 @@ extend_cell_from_extend2_cell_body(extend_cell_t *cell_out,
   if (!found_rsa_id || !found_ipv4) /* These are mandatory */
     return -1;
 
-  if (is_create2v) {
-    // XXXisis how do i get this thing into an extend_cell_t???
-    return circ->create2v; // XXXisis what the heck do i do here???
-  } else {
-    return create_cell_from_create2_cell_body(&cell_out->create_cell,
-                                              cell->create2);
+  return 0;
+}
+
+static int
+extend_cell_from_extend2_cell_body(extend_cell_t *cell_out,
+                                   const extend2_cell_body_t *cell)
+{
+  tor_assert(cell_out);
+  tor_assert(cell);
+
+  int r;
+
+  memset(cell_out, 0, sizeof(*cell_out));
+  tor_addr_make_unspec(&cell_out->orport_ipv4.addr);
+  tor_addr_make_unspec(&cell_out->orport_ipv6.addr);
+  cell_out->cell_type = RELAY_COMMAND_EXTEND2;
+
+  uint8_t n_spec = extend2_cell_body_get_n_spec(cell);
+
+  if (r = extend_cell_set_link_specifiers(cell_out, n_spec,
+                                    extend2_cell_body_getconstarray_ls(cell))) {
+    return r;
   }
+  return create2v_cell_from_create2_cell_body(&cell_out->create2v_cell,
+                                              cell->create2);
 }
 
 /**
