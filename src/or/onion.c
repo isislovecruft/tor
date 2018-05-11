@@ -999,6 +999,40 @@ extend_cell_set_link_specifiers(extend_cell_t *cell_out,
   return 0;
 }
 
+/**
+ * Create an extend cell from the metadata stored in an <b>accumulator</b> as
+ * well as the CREATE2V <b>cell</b> body parsed from the extend_cell_fragments
+ * in that accumulator.
+ *
+ * Returns -REASON if the circuit should be torn down, and 0 otherwise.
+ */
+static int
+extend_cell_from_create2v_cell_body(extend_cell_t *cell_out,
+                              const extend_cell_accumulator_t *accumulator,
+                              const create2v_cell_body_t *cell)
+{
+  tor_assert(cell_out);
+  tor_assert(cell);
+
+  int r;
+
+  memset(cell_out, 0, sizeof(*cell_out));
+  tor_addr_make_unspec(&cell_out->orport_ipv4.addr);
+  tor_addr_make_unspec(&cell_out->orport_ipv6.addr);
+  cell_out->cell_type = RELAY_COMMAND_EXTEND2;
+
+  if (r = extend_cell_set_link_specifiers(cell_out,
+                                      accumuator->extend_cell_fragments_n_spec,
+                                      accumulator->extend_cell_fragments_ls)) {
+    return r;
+  }
+  cell_out->create2v_cell = tor_malloc(sizeof(create2v_cell_t));
+  cell_out->create2v_cell->body = cell;
+  cell_out->create2v_cell->finished = 1;
+
+  return 0;
+}
+
 static int
 extend_cell_from_extend2_cell_body(extend_cell_t *cell_out,
                                    const extend2_cell_body_t *cell)
