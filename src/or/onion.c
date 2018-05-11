@@ -1082,25 +1082,32 @@ extend2_cell_body_is_extend2v(extend2v_cell_body_t *body)
 
 /**
  * DOCDOC
+ *
+ * Returns -REASON if the circuit should be torn down, and 0 otherwise.
  */
 static int
-extend_cell_body_from_fragments(extend_cell_t *cell_out,
-                                circuit_t *circ)
+extend_cell_accumulator_to_extend_cell(extend_cell_t *cell_out,
+                                 const extend_cell_accumulator_t *accumulator)
 {
-  tor_assert(circ);
-  tor_assert(circ->extend_cell_fragments);
-  tor_assert(circ->extend_cell_fragments_hlen);
+  tor_assert(cell_out);
+  tor_assert(accumulator);
+  tor_assert(accumulator->extend_cell_fragments);
 
-  create2v_cell_body_t *body;
+  create2v_cell_body_t *create2v;
   char *contents;
+  char *not_okay;
 
-  contents = buf_extract(circ->extend_cell_fragments,
-                         circ->extend_cell_fragments_hlen);
-  create2v_cell_body_parse(&body, contents,
-                           circ->extend_cell_fragments_hlen);
-  create2v_cell_body_check(body);
+  contents = buf_extract(accumulator->extend_cell_fragments,
+                         accumulator->extend_cell_fragments_hlen);
+  create2v_cell_body_parse(&create2v, contents,
+                           accumulator->extend_cell_fragments_hlen);
 
-  // XXXisis TODO
+  if ((not_okay = create2v_cell_body_check(create2v)) != NULL) {
+    log_info(LD_OR, "Could not construct CREATE2V cell from fragments!");
+    return - END_CIRC_REASON_TORPROTOCOL;
+  }
+
+  extend_cell_from_create2v_cell_body(cell_out, accumulator, create2v);
 
   return 0;
 }
@@ -1113,7 +1120,7 @@ extend_cell_body_from_fragments(extend_cell_t *cell_out,
 static int
 extend2_cell_process_fragment(extend_cell_t *cell_out,
                               extend2_cell_body_t *body,
-                              circuit_t *circ)
+                              extend_cell_accumulator_t *accumulator)
 {
   tor_assert(circ);
   tor_assert(body);
@@ -1130,15 +1137,20 @@ extend2_cell_process_fragment(extend_cell_t *cell_out,
       return - END_CIRC_REASON_TORPROTOCOL;
   }
 
-  if (!circ->extend_cell_fragments) {
-    circ->extend_cell_fragment_received_at = time();
-    circ->extend_cell_fragments = buf_new_with_capacity(dlen);
-    circ->extend_cell_fragments_hlen = hlen;
-    circ->extend_cell_fragments_htype = type;
-    circ->extend_cell_fragments_ls = link_specifier_list_new();
-    link_specifier_list_set_n_spec(circ->extend_cell_fragments_ls,
+  if (!accumulator->extend_cell_fragments) {
+    accumulator->extend_cell_fragment_received_at = time(NULL);
+    accumulator->extend_cell_fragments = buf_new_with_capacity(dlen);
+    accumulator->extend_cell_fragments_hlen = hlen;
+    accumulator->extend_cell_fragments_htype = type;
+    accumulator->extend_cell_fragments_ls = link_specifier_list_new();
+
+    // XXXisis Ugh. extend2_cell_body_t has a `TRUNNEL_DYNARRAY_HEAD(, struct
+    // link_specifier_st *) ls` field instead of a link_specifier_list_t for
+    // some reason, and I'm unsure of the "proper" way to parse between the
+    // two, but the latter does seem like the correct structure to be using...
+    link_specifier_list_set_n_spec(accumulator->extend_cell_fragments_ls,
                                    extend2_cell_body_get_n_spec(body));
-    link_specifier_list_getarray_spec(circ->extend_cell_fragments_ls) =
+    link_specifier_list_getarray_spec(accumulator->extend_cell_fragments_ls) =
       extend2_cell_body_getarray_ls(body);
   } else {
     /* This is an additional fragment. */
@@ -1155,13 +1167,14 @@ extend2_cell_process_fragment(extend_cell_t *cell_out,
     }
     /* If we don't have a timestamp for when we got the first bit of the
      * handshake, something is wrong. */
-    if (!buf_get_oldest_chunk_timestamp(circ->extend_cell_fragments, time())) {
+    if (!buf_get_oldest_chunk_timestamp(accumulator->extend_cell_fragments,
+                                        time(NULL))) {
       return - END_CIRC_REASON_TORPROTOCOL;
     }
     /* If the amount of data would exceed what we're supposed to have for the
      * handshake, something is wrong. */
-    if (buf_datalen(circ->extend_cell_fragments) + dlen >
-        circ->extend_cell_fragments_hlen) {
+    if (buf_datalen(accumulator->extend_cell_fragments) + dlen >
+        accumulator->extend_cell_fragments_hlen) {
       log_warn(LD_OR, "Additional fragmented extend2v cell data would result "
                "in the total handshake data being larger than reported. This "
                "is either an attack or a bug.");
@@ -1169,37 +1182,52 @@ extend2_cell_process_fragment(extend_cell_t *cell_out,
     }
   }
   /* Add the handshake data to the buffer. */
-  buf_add(circ->extend_cell_fragments, data, (size_t)dlen);
+  buf_add(accumulator->extend_cell_fragments, data, (size_t)dlen);
 
   /* If we've received the expected amount of data, proceed to construct the
    * extend2 cell. */
-  if (buf_datalen(circ->extend_cell_fragments) ==
-      circ->extend_cell_fragments_hlen) {
-    return extend2_cell_body_from_fragments(cell_out, circ);
+  // XXXisis should this logic for "doneness" be in its own function?
+  if (buf_datalen(accumulator->extend_cell_fragments) ==
+      accumulator->extend_cell_fragments_hlen) {
+    return extend_cell_accumulator_to_extend_cell(cell_out, accumulator);
   }
 
   return 0;
 }
 
-/** Parse an EXTEND or EXTEND2 cell (according to <b>command</b>) from the
- * <b>payload_length</b> bytes of <b>payload</b> into <b>cell_out</b>. Return
- * 0 on success, -1 on failure. */
+/**
+ * Parse an EXTEND or EXTEND2 cell (according to <b>command</b>) from the
+ * <b>payload_length</b> bytes of <b>payload</b> and (optionally) earlier
+ * material in *<b>bufptr</b>.
+ *
+ * If a complete extend COMMAND is available (either because it all arrived in
+ * this cell, or because this cell completes a previously created fragmented
+ * EXTEND command), set *accumulator to NULL and save the parsed extend cell in
+ * *cell_out.  Otherwise, leave *cell_out unchanged, create *accumulator as
+ * needed, and use it to accumulate extend cell data.
+ *
+ * Return 0 on success (including an incomplete cell), -1 on failure.
+ */
 int
-extend_cell_parse(extend_cell_t *cell_out, const uint8_t command,
-                  const uint8_t *payload, size_t payload_length,
-                  circuit_t *circ)
+extend_cell_parse(extend_cell_t *cell_out,
+                  extend_cell_accumulator_t *accumulator,
+                  const uint8_t command,
+                  const uint8_t *payload, size_t payload_length)
 {
   tor_assert(cell_out);
+  tor_assert(accumulator);
   tor_assert(payload);
-
-  if (payload_length > RELAY_PAYLOAD_SIZE)
-    return -1;
 
   switch (command) {
   case RELAY_COMMAND_EXTEND:
+    if (payload_length > RELAY_PAYLOAD_SIZE)
+      return -1;
+
     {
+      // XXXisis Should extend1 cells also go into the accumulator?  I think
+      // this would imply a LARGE amount of refactoring.
       extend1_cell_body_t *cell = NULL;
-      if (extend1_cell_body_parse(&cell, payload, payload_length)<0 ||
+      if (extend1_cell_body_parse(&cell, payload, payload_length) < 0 ||
           cell == NULL) {
         if (cell)
           extend1_cell_body_free(cell);
@@ -1213,6 +1241,11 @@ extend_cell_parse(extend_cell_t *cell_out, const uint8_t command,
     break;
   case RELAY_COMMAND_EXTEND2:
     {
+      // XXXisis Should we just parse this directly into the accumulator here,
+      // and then have this function report when it *is* done, and have
+      // circuit_extend() call an additional function to get the result out of
+      // the accumulator?  (By default, I'm trying to avoid plans that involve
+      // highly invasive changes/refactoring...)
       extend2_cell_body_t *cell = NULL;
       if (extend2_cell_body_parse(&cell, payload, payload_length) < 0 ||
           cell == NULL) {
@@ -1223,14 +1256,15 @@ extend_cell_parse(extend_cell_t *cell_out, const uint8_t command,
       int r;
 
       if (extend2_cell_body_is_extend2v(cell)) {
-        r = extend2_cell_process_fragment(cell_out, cell, circ);
+        r = extend2_cell_process_fragment(cell_out, cell, accumulator);
       } else {
+        if (payload_length > RELAY_PAYLOAD_SIZE)
+          return -1;
         r = extend_cell_from_extend2_cell_body(cell_out, cell);
       }
       extend2_cell_body_free(cell);
 
-      if (r < 0)
-        return r;
+      return r;
     }
     break;
   default:

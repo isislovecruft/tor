@@ -128,10 +128,10 @@ typedef struct extend_cell_t {
   uint8_t node_id[DIGEST_LEN];
   /** Ed25519 public identity key. Zero if not set. */
   ed25519_public_key_t ed_pubkey;
-  /** The "create cell" embedded in this extend cell. Note that unlike the
-   * create cells we generate ourself, this once can have a handshake type we
+  /** The "create2v cell" embedded in this extend cell. Note that unlike the
+   * create cells we generate ourself, this one can have a handshake type we
    * don't recognize. */
-  create_cell_t create_cell;
+  create2v_cell_t create2v_cell;
 } extend_cell_t;
 
 /** A parsed RELAY_EXTEND or RELAY_EXTEND2 cell */
@@ -139,8 +139,32 @@ typedef struct extended_cell_t {
   /** One of RELAY_EXTENDED or RELAY_EXTENDED2. */
   uint8_t cell_type;
   /** The "created cell" embedded in this extended cell. */
-  created_cell_t created_cell;
+  created2v_cell_t created2v_cell;
 } extended_cell_t;
+
+/**
+ * Storage for either an extend_cell_t or fragments thereof.
+ */
+typedef struct extend_cell_accumulator_t {
+  /**
+   * A buffer containing any handshake data from fragmented extend2v
+   * cells we've recieved so far. */
+  buf_t *extend_cell_fragments;
+  /**
+   * The total expected length of all combined handshake data from
+   * the fragmented extend cells in extend_cell_fragments. */
+  uint16_t extend_cell_fragments_hlen;
+  /**
+   * The handshake type for the extend_cell_fragments. */
+  uint16_t extend_cell_fragments_htype;
+  /**
+   * The number of link specifiers from the first cell in the
+   * extend_cell_fragments. */
+  uint8_t extend_cell_fragments_n_spec;
+  /**
+   * The link specifiers from the first cell in the extend_cell_fragments. */
+  struct link_specifier_st **extend_cell_fragments_ls;
+} extend_cell_accumulator_t;
 
 void create_cell_init(create_cell_t *cell_out, uint8_t cell_type,
                       uint16_t handshake_type, uint16_t handshake_len,

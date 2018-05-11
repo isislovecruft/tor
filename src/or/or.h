@@ -3137,19 +3137,8 @@ typedef struct circuit_t {
   /** For storage while n_chan is pending (state CIRCUIT_STATE_CHAN_WAIT). */
   struct create_cell_t *n_chan_create_cell;
 
-  /** A buffer containing any handshake data from fragmented extend2v
-   * cells we've recieved so far. */
-  buf_t *extend_cell_fragments;
-
-  /** The total expected length of all combined handshake data from
-   * the fragmented extend cells in extend_cell_fragments. */
-  uint16_t extend_cell_fragments_hlen;
-
-  /** The handshake type for the extend_cell_fragments. */
-  uint16_t extend_cell_fragments_htype;
-
-  /** The link specifiers from the first cell in the extend_cell_fragments. */
-  uint8_t extend_cell_fragments_ls;
+  /** An accumulator for an EXTEND cell or fragments of one. */
+  extend_cell_accumulator_t *extend_cell_accumulator;
 
   /** When did circuit construction actually begin (ie send the
    * CREATE cell or begin cannibalization).
