@@ -30,6 +30,9 @@
 extern crate digest;
 extern crate libc;
 
+#[cfg(test)]
+extern crate sha2;
+
 // Our local crates.
 extern crate external;
 

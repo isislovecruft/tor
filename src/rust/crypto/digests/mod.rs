@@ -4,4 +4,8 @@
 
 //! Hash Digests and eXtendible Output Functions (XOFs)
 
+#[cfg(test)]
+extern crate sha2 as external_sha2;
+
 pub mod sha2;
+
