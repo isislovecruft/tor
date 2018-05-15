@@ -37,6 +37,9 @@ extern crate rand as rand_crate;
 #[cfg(test)]
 extern crate sha2;
 
+#[cfg(test)]
+extern crate sha2;
+
 // Our local crates.
 extern crate external;
 #[cfg(not(test))]

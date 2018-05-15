@@ -4,6 +4,9 @@
 
 //! Hash Digests and eXtendible Output Functions (XOFs)
 
+
+#[cfg(not(test))]
+mod internal {
 pub use digest::Digest;
 
 use digest::BlockInput;
@@ -163,9 +166,25 @@ impl FixedOutput for Sha512 {
     }
 }
 
+} // END #cfg[(not(tests))] mod internal
+
+#[cfg(test)]
+mod internal {
+    pub use digest::Digest;
+
+    pub use external::crypto_digest::DIGEST256_LEN;
+    pub use external::crypto_digest::DIGEST512_LEN;
+
+    pub use sha2::Sha256;
+    pub use sha2::Sha512;
+}
+
+pub use self::internal::*;
+
 #[cfg(test)]
 mod test {
     use digest::Digest;
+    use digest::FixedOutput;
 
     use super::*;
 
