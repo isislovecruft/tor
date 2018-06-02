@@ -31,10 +31,18 @@ extern crate digest;
 extern crate libc;
 
 #[cfg(test)]
+extern crate rand;
+extern crate rand_core;
+#[cfg(test)]
 extern crate sha2;
 
 // Our local crates.
 extern crate external;
 
+#[cfg(not(test))]
+#[macro_use]
+extern crate tor_log;
+
+pub mod rand;
 pub mod digests;  // Unfortunately named "digests" plural to avoid name conflict with the digest crate
 
