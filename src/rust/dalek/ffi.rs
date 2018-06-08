@@ -95,7 +95,7 @@ pub extern fn ed25519_dalek_selftest() -> c_int {
     0
 }
 
-/// Expand the secret key by hashing it.
+/// "Expand" the `secret_key` by hashing it.
 ///
 /// # Note
 ///
@@ -105,9 +105,9 @@ pub extern fn ed25519_dalek_selftest() -> c_int {
 ///
 /// The donna code instead hashes a seed and treats the lower 32 bytes as the
 /// secret key and the upper 32 bytes as a scalar, which it then multiplies by
-/// the basepoint to the produce the public key.
+/// the basepoint to produce the public key.
 #[no_mangle]
-pub extern fn ed25519_dalek_seckey(secret_key: *mut *mut c_uchar) -> c_int {
+pub extern fn ed25519_dalek_seckey(secret_key: *mut c_uchar) -> c_int {
     let mut csprng: TorRng = TorRng::new();
     let secret: SecretKey = SecretKey::generate(&mut csprng);
     let expand: ExpandedSecretKey = ExpandedSecretKey::from_secret_key::<Sha512>(&secret);
@@ -117,14 +117,22 @@ pub extern fn ed25519_dalek_seckey(secret_key: *mut *mut c_uchar) -> c_int {
     0
 }
 
-/// DOCDOC
+/// "Expand" the `secret_key` by taking the "secret key"¹ and turning it into
+/// the "actual secret key" and static "nonce" by hashing the 256-bit
+/// `secret_key` with a 512-bit output size digest function and then doing other
+/// mostly pointless things with the two halves that would protect against
+/// non-existent theoretically bad implementations.
+///
+/// ¹ Air quotations mine because this "design" is frickin stupid and
+///   pointless. —isis
 ///
 /// # Warning
 ///
-/// Writes 64 octets to the `secret_key` pointer.
+/// Writes 64 octets to the `secret_key` pointer.  It's a pointer.  It's going
+/// to write 64 bytes.  Make sure you have allocated at least 64 bytes.
 #[no_mangle]
-pub extern fn ed25519_dalek_seckey_expand(secret_key: *mut *mut c_uchar,
-                                          seed: *const *const c_uchar) -> c_int {
+pub extern fn ed25519_dalek_seckey_expand(secret_key: *mut c_uchar,
+                                          seed: *const c_uchar) -> c_int {
     fail_if_null!(seed);
 
     let secret: SecretKey;
@@ -141,6 +149,7 @@ pub extern fn ed25519_dalek_seckey_expand(secret_key: *mut *mut c_uchar,
     0
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_pubkey(public_key: *mut *mut c_uchar,
                                    secret_key: *const *const c_uchar) -> c_int {
@@ -154,16 +163,18 @@ pub extern fn ed25519_dalek_pubkey(public_key: *mut *mut c_uchar,
     0
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_keygen(public_key: *mut *mut c_uchar,
-                                   secret_key: *mut *mut c_uchar) -> c_uint {
-    let mut ok: usize = 0;
+                                   secret_key: *mut *mut c_uchar) -> c_int {
+    let mut ok: isize = 0;
 
     ok  = ed25519_dalek_seckey(secret_key);
     ok |= ed25519_dalek_pubkey(public_key, secret_key);
     ok
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_open(signature: *const c_uchar,
                                  message: *const c_uchar,
@@ -183,6 +194,7 @@ pub extern fn ed25519_dalek_open(signature: *const c_uchar,
     1
 }
 
+/// DOCDOC
 #[no_mangle]
 pub unsafe extern fn ed25519_dalek_sign(signature: *mut *mut c_uchar,
                                         message: *const *const c_uchar,
@@ -201,6 +213,7 @@ pub unsafe extern fn ed25519_dalek_sign(signature: *mut *mut c_uchar,
     0
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_open_batch(message: *const *const c_uchar,
                                        message_len: *mut size_t, // XXX wtf donna does *size_t
@@ -211,6 +224,7 @@ pub extern fn ed25519_dalek_open_batch(message: *const *const c_uchar,
     unimplemented!()
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_blind_secret_key(output: *mut *mut c_uchar,
                                              input: *const *const c_uchar,
@@ -218,6 +232,7 @@ pub extern fn ed25519_dalek_blind_secret_key(output: *mut *mut c_uchar,
     unimplemented!()
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_blind_public_key(output: *mut *mut c_uchar,
                                              input: *const *const c_uchar,
@@ -225,6 +240,7 @@ pub extern fn ed25519_dalek_blind_public_key(output: *mut *mut c_uchar,
     unimplemented!()
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_pubkey_from_curve25519_pubkey(output: *mut *mut c_uchar,
                                                           input: *const *const c_uchar,
