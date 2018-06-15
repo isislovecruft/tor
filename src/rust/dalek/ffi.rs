@@ -107,7 +107,7 @@ pub extern fn ed25519_dalek_selftest() -> c_int {
 /// secret key and the upper 32 bytes as a scalar, which it then multiplies by
 /// the basepoint to produce the public key.
 #[no_mangle]
-pub extern fn ed25519_dalek_seckey(secret_key: *mut c_uchar) -> c_int {
+pub extern fn ed25519_dalek_seckey(secret_key: *mut *mut c_uchar) -> c_int {
     let mut csprng: TorRng = TorRng::new();
     let secret: SecretKey = SecretKey::generate(&mut csprng);
     let expand: ExpandedSecretKey = ExpandedSecretKey::from_secret_key::<Sha512>(&secret);
@@ -151,8 +151,8 @@ pub extern fn ed25519_dalek_seckey_expand(secret_key: *mut c_uchar,
 
 /// DOCDOC
 #[no_mangle]
-pub extern fn ed25519_dalek_pubkey(public_key: *mut *mut c_uchar,
-                                   secret_key: *const *const c_uchar) -> c_int {
+pub extern fn ed25519_dalek_pubkey(public_key: *mut c_uchar,
+                                   secret_key: *const c_uchar) -> c_int {
     fail_if_null!(secret_key);
 
     let secret: SecretKey = SecretKey::from_bytes(secret_key);
@@ -165,8 +165,8 @@ pub extern fn ed25519_dalek_pubkey(public_key: *mut *mut c_uchar,
 
 /// DOCDOC
 #[no_mangle]
-pub extern fn ed25519_dalek_keygen(public_key: *mut *mut c_uchar,
-                                   secret_key: *mut *mut c_uchar) -> c_int {
+pub extern fn ed25519_dalek_keygen(public_key: *mut c_uchar,
+                                   secret_key: *mut c_uchar) -> c_int {
     let mut ok: isize = 0;
 
     ok  = ed25519_dalek_seckey(secret_key);
@@ -196,11 +196,11 @@ pub extern fn ed25519_dalek_open(signature: *const c_uchar,
 
 /// DOCDOC
 #[no_mangle]
-pub unsafe extern fn ed25519_dalek_sign(signature: *mut *mut c_uchar,
-                                        message: *const *const c_uchar,
+pub unsafe extern fn ed25519_dalek_sign(signature: *mut c_uchar,
+                                        message: *const c_uchar,
                                         message_len: size_t,
-                                        secret_key: *const *const c_uchar,
-                                        public_key: *const *const c_uchar) -> c_int {
+                                        secret_key: *const c_uchar,
+                                        public_key: *const c_uchar) -> c_int {
     fail_if_null!(secret_key, public_key);
 
     // ptr_to_slice!() calls if_null_return_1!(message) for us
@@ -215,10 +215,10 @@ pub unsafe extern fn ed25519_dalek_sign(signature: *mut *mut c_uchar,
 
 /// DOCDOC
 #[no_mangle]
-pub extern fn ed25519_dalek_open_batch(message: *const *const c_uchar,
+pub extern fn ed25519_dalek_open_batch(message: *const c_uchar,
                                        message_len: *mut size_t, // XXX wtf donna does *size_t
-                                       public_key: *const *const c_uchar,
-                                       RS: *const *const c_uchar,
+                                       public_key: *const c_uchar,
+                                       RS: *const c_uchar,
                                        num: size_t,
                                        valid: *mut c_int) -> c_int { // XXX wtf donna does *int
     unimplemented!()
