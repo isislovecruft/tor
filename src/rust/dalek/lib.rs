@@ -7,6 +7,7 @@
 // External dependencies
 extern crate ed25519_dalek;
 extern crate libc;
+extern crate rand;
 
 // Internal dependencies from src/rust/
 extern crate crypto;
@@ -14,3 +15,4 @@ extern crate crypto;
 mod ffi;
 
 pub use ffi::*;
+

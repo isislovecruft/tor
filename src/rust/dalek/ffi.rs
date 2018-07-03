@@ -23,7 +23,7 @@ use libc::{c_uchar, c_int, size_t};
 use rand::Rng;
 
 use crypto::digests::sha2::Sha512;
-use crypto::random::rng::TorRng;
+use crypto::rand::rng::TorRng;
 
 #[cfg(not(feature = "std"))]
 pub extern fn fix_linking_when_using_no_std() { panic!() }
@@ -77,15 +77,15 @@ macro_rules! keypair_from_bytes {
 #[no_mangle]
 pub extern fn ed25519_dalek_selftest() -> c_int {
     let mut csprng: TorRng = TorRng::new();
-    let keypair: Keypair = Keypair::generate(&mut csprng);
+    let keypair: Keypair = Keypair::generate::<Sha512, TorRng>(&mut csprng);
     let message: &[u8] = "This is a test of the tsunami alert system. This is just a test.".as_bytes();
     let signature1: Signature = keypair.sign(&message);
     // Also perform signatures and verification with the pre-expanded key, as
     // tor does in normal operation with other libraries.
-    let expanded: ExpandedSecretKey = keypair.secret.expand();
-    let signature2: Signature = expanded.sign(&message);
+    let expanded: ExpandedSecretKey = ExpandedSecretKey::from_secret_key::<Sha512>(&keypair.secret);
+    let signature2: Signature = expanded.sign(&message, &keypair.public);
 
-    for sig in (signature1, signature2) {
+    for sig in [signature1, signature2].iter() {
         let verified: bool = keypair.public.verify(&message, &sig);
 
         if ! verified {
@@ -95,7 +95,7 @@ pub extern fn ed25519_dalek_selftest() -> c_int {
     0
 }
 
-/// Expand the secret key by hashing it.
+/// "Expand" the `secret_key` by hashing it.
 ///
 /// # Note
 ///
@@ -105,54 +105,76 @@ pub extern fn ed25519_dalek_selftest() -> c_int {
 ///
 /// The donna code instead hashes a seed and treats the lower 32 bytes as the
 /// secret key and the upper 32 bytes as a scalar, which it then multiplies by
-/// the basepoint to the produce the public key.
+/// the basepoint to produce the public key.
 #[no_mangle]
-pub extern fn ed25519_dalek_seckey(secret_key: *mut c_uchar) -> c_int {
+pub extern fn ed25519_dalek_seckey(secret_key: *mut *mut c_uchar) -> c_int {
     let mut csprng: TorRng = TorRng::new();
     let secret: SecretKey = SecretKey::generate(&mut csprng);
     let expand: ExpandedSecretKey = ExpandedSecretKey::from_secret_key::<Sha512>(&secret);
 
-    *secret_key = expand.key.to_bytes();
+    *secret_key = expand.to_bytes().as_mut_ptr();
 
     0
 }
 
+/// "Expand" the `secret_key` by taking the "secret key"¹ and turning it into
+/// the "actual secret key" and static "nonce" by hashing the 256-bit
+/// `secret_key` with a 512-bit output size digest function and then doing other
+/// mostly pointless things with the two halves that would protect against
+/// non-existent theoretically bad implementations.
+///
+/// ¹ Air quotations mine because this "design" is frickin stupid and
+///   pointless. —isis
+///
+/// # Warning
+///
+/// Writes 64 octets to the `secret_key` pointer.  It's a pointer.  It's going
+/// to write 64 bytes.  Make sure you have allocated at least 64 bytes.
 #[no_mangle]
 pub extern fn ed25519_dalek_seckey_expand(secret_key: *mut c_uchar,
                                           seed: *const c_uchar) -> c_int {
     fail_if_null!(seed);
 
-    let secret: SecretKey = SecretKey::from_bytes(&seed);
-    let expand: ExpandedSecretKey = ExpandedSecretKey::from_secret_key::<Sha512>(&secret);
+    let secret: SecretKey;
+    let expand: ExpandedSecretKey;
 
-    *secret_key = expand.key.to_bytes();
+    secret = match SecretKey::from_bytes(seed) {
+        Ok(key) => key,
+        Err(_)  => return 1,
+    };
+    expand = ExpandedSecretKey::from_secret_key::<Sha512>(&secret);
+
+    *secret_key = expand.to_bytes().as_mut_ptr();
 
     0
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_pubkey(public_key: *mut c_uchar,
                                    secret_key: *const c_uchar) -> c_int {
     fail_if_null!(secret_key);
 
-    let secret: SecretKey = SecretKey::from_bytes(&secret_key);
+    let secret: SecretKey = SecretKey::from_bytes(secret_key);
     let public: PublicKey = PublicKey::from_secret::<Sha512>(&secret);
 
-    *public_key = public.to_bytes();
+    *public_key = public.to_bytes().as_mut_ptr();
 
     0
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_keygen(public_key: *mut c_uchar,
                                    secret_key: *mut c_uchar) -> c_int {
-    let mut ok: usize = 0;
+    let mut ok: isize = 0;
 
     ok  = ed25519_dalek_seckey(secret_key);
     ok |= ed25519_dalek_pubkey(public_key, secret_key);
     ok
 }
 
+/// DOCDOC
 #[no_mangle]
 pub extern fn ed25519_dalek_open(signature: *const c_uchar,
                                  message: *const c_uchar,
@@ -172,6 +194,7 @@ pub extern fn ed25519_dalek_open(signature: *const c_uchar,
     1
 }
 
+/// DOCDOC
 #[no_mangle]
 pub unsafe extern fn ed25519_dalek_sign(signature: *mut c_uchar,
                                         message: *const c_uchar,
@@ -183,40 +206,44 @@ pub unsafe extern fn ed25519_dalek_sign(signature: *mut c_uchar,
     // ptr_to_slice!() calls if_null_return_1!(message) for us
     let msg = ptr_to_slice!(message, message_len);
     let key: Keypair = keypair_from_bytes!(secret_key, public_key);
-    let sig: Signature = key.sign::<Sha512>(&msg);
+    let sig: Signature = key.sign::<Sha512>(msg);
 
-    *signature = sig.to_bytes();
+    *signature = sig.to_bytes().as_mut_ptr();
        
     0
 }
 
+/// DOCDOC
 #[no_mangle]
-pub extern fn ed25519_dalek_open_batch(message: *const *const c_uchar,
+pub extern fn ed25519_dalek_open_batch(message: *const c_uchar,
                                        message_len: *mut size_t, // XXX wtf donna does *size_t
-                                       public_key: *const *const c_uchar,
-                                       RS: *const *const c_uchar,
+                                       public_key: *const c_uchar,
+                                       RS: *const c_uchar,
                                        num: size_t,
                                        valid: *mut c_int) -> c_int { // XXX wtf donna does *int
     unimplemented!()
 }
 
+/// DOCDOC
 #[no_mangle]
-pub extern fn ed25519_dalek_blind_secret_key(output: *mut c_uchar,
-                                             input: *const c_uchar,
-                                             param: *const c_uchar) -> c_int {
+pub extern fn ed25519_dalek_blind_secret_key(output: *mut *mut c_uchar,
+                                             input: *const *const c_uchar,
+                                             param: *const *const c_uchar) -> c_int {
     unimplemented!()
 }
 
+/// DOCDOC
 #[no_mangle]
-pub extern fn ed25519_dalek_blind_public_key(output: *mut c_uchar,
-                                             input: *const c_uchar,
-                                             param: *const c_uchar) -> c_int {
+pub extern fn ed25519_dalek_blind_public_key(output: *mut *mut c_uchar,
+                                             input: *const *const c_uchar,
+                                             param: *const *const c_uchar) -> c_int {
     unimplemented!()
 }
 
+/// DOCDOC
 #[no_mangle]
-pub extern fn ed25519_dalek_pubkey_from_curve25519_pubkey(output: *mut c_uchar,
-                                                          input: *const c_uchar,
+pub extern fn ed25519_dalek_pubkey_from_curve25519_pubkey(output: *mut *mut c_uchar,
+                                                          input: *const *const c_uchar,
                                                           signbit: c_int) -> c_int {
     unimplemented!()
 }

@@ -12,9 +12,11 @@ crate_type = ["rlib", "staticlib"]
 
 [dependencies]
 libc = "=0.2.39"
+rand = "=0.5.0-pre.2"
 
 crypto = { path = "../crypto" }
 
 [dependencies.ed25519-dalek]
-version = "=0.6.2"
+version = "=0.7.0"
 features = ["nightly", "std"]
+path = "/home/isis/code/rust/ed25519-dalek"

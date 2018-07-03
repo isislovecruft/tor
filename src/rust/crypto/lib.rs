@@ -34,6 +34,8 @@ extern crate rand_core;
 // External dependencies for tests.
 #[cfg(test)]
 extern crate rand as rand_crate;
+#[cfg(test)]
+extern crate sha2;
 
 // Our local crates.
 extern crate external;
@@ -41,5 +43,10 @@ extern crate external;
 #[macro_use]
 extern crate tor_log;
 
+#[cfg(not(test))]
+#[macro_use]
+extern crate tor_log;
+
+pub mod rand;
 pub mod digests;  // Unfortunately named "digests" plural to avoid name conflict with the digest crate
 pub mod rand;
